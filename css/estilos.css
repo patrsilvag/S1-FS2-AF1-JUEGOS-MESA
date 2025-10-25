@@ -1,0 +1,354 @@
+/* ===============================
+   VARIABLES CSS PERSONALIZADAS
+   =============================== */
+:root {
+  /* Colores principales */
+  --color-primario: #1e90ff;       /* Azul principal del sitio */
+  --color-secundario: #f4f4f4;     /* Fondo claro */
+  --color-texto: #333333;          /* Texto base */
+  --color-exito: #10b981;          /* Verde esmeralda para descuentos o éxito */
+
+  /* Tipografía y espaciado */
+  --fuente-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --espaciado-md: 1rem;
+
+  /* Fichas (hover) */
+  --ficha-bg: #ffffff;
+  --ficha-bg-hover: #f9fbff;       /* sutil cambio al pasar el mouse */
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* ===============================
+   RESETEO BÁSICO Y ESTILO GLOBAL
+   =============================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--fuente-base);
+  color: var(--color-texto);
+  background-color: var(--color-secundario);
+  line-height: 1.6;
+  padding: var(--espaciado-md);
+}
+
+/* ===============================
+   ENCABEZADO Y NAVEGACIÓN
+   =============================== */
+header {
+  background-color: var(--color-primario);
+  color: #fff;
+  text-align: center;
+  padding: calc(var(--espaciado-md) * 1.5) 0;
+}
+
+header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.3rem;
+  /* Animación de entrada */
+  animation: slide-up 1s ease-out;
+}
+
+nav {
+  background-color: var(--color-primario);
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+nav li {
+  margin: 0.5rem 1rem;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+nav a:hover,
+nav a.activo {
+  color: var(--color-exito);
+}
+
+/* ===============================
+   SECCIÓN PRINCIPAL (categorías)
+   =============================== */
+main {
+  padding: calc(var(--espaciado-md) * 2);
+  text-align: center;
+}
+
+.categorias {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: var(--espaciado-md);
+}
+
+.categoria {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  /* Animación de aparición */
+  animation: fade-in 0.8s ease-out;
+}
+
+.categoria:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+
+.categoria img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.categoria h3 {
+  margin: var(--espaciado-md) 0;
+  color: var(--color-primario);
+}
+
+/* ===============================
+   FICHAS DE JUEGO
+   =============================== */
+.juego-ficha {
+  background-color: var(--ficha-bg);
+  border-radius: 10px;
+  padding: var(--espaciado-md);
+  margin-bottom: var(--espaciado-md);
+  box-shadow: var(--shadow-sm);
+  transition: background-color .3s ease, box-shadow .3s ease, transform .3s ease;
+  will-change: transform, box-shadow, background-color;
+  /* Animación de aparición */
+  animation: fade-in 0.8s ease-out;
+}
+
+.juego-ficha:hover,
+.juego-ficha:focus-within {
+  background-color: var(--ficha-bg-hover);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+.juego-precio {
+  font-weight: bold;
+  color: var(--color-primario);
+}
+
+.juego-descuento {
+  color: var(--color-exito);
+  font-weight: bold;
+  /* Animación de énfasis */
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* ===============================
+   PIE DE PÁGINA
+   =============================== */
+footer {
+  background-color: var(--color-primario);
+  color: #fff;
+  text-align: center;
+  padding: var(--espaciado-md);
+  margin-top: calc(var(--espaciado-md) * 2);
+}
+
+/* ===============================
+   ANIMACIONES CSS EXTRA
+   =============================== */
+@keyframes resaltar {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.categoria:hover img {
+  animation: resaltar 0.5s ease-in-out;
+}
+
+/* 1) Fade-in (aparición suave para tarjetas/sections) */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 2) Pulse (énfasis para descuentos/badges) */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* 3) Slide-up (entrada ascendente para títulos) */
+@keyframes slide-up {
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* 4) Hover-wiggle (pequeño vaivén en botones al hover) */
+@keyframes hover-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(2deg); }
+  50% { transform: rotate(-2deg); }
+  75% { transform: rotate(2deg); }
+}
+
+/* Aplicación del wiggle a botones */
+button:hover,
+.btn-volver:hover,
+[type="button"]:hover,
+[type="submit"]:hover {
+  animation: hover-wiggle 0.4s ease-in-out;
+  transform-origin: center;
+}
+
+/* ===============================
+   MEDIA QUERIES (RESPONSIVIDAD)
+   =============================== */
+@media (max-width: 1024px) {
+  /* Dos columnas en pantallas medianas */
+  .categorias {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 1.5rem;
+  }
+
+  nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Fichas y categorías en una sola columna */
+  .categorias,
+  .categoria,
+  .juego-ficha {
+    display: grid;
+    grid-template-columns: 1fr;
+    max-width: 100%;
+  }
+
+  main {
+    padding: var(--espaciado-md);
+  }
+}
+
+/* =========================================
+   ULTRA RESPONSIVO (≤ 280px)
+   ========================================= */
+@media (max-width: 280px) {
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  main {
+    padding: calc(var(--espaciado-md) * 0.75);
+  }
+
+  header {
+    padding: calc(var(--espaciado-md) * 1) 0;
+  }
+
+  header h1 {
+    font-size: 1.2rem;
+  }
+
+  nav ul {
+    gap: 0.25rem;
+  }
+
+  nav li {
+    margin: 0.25rem 0.5rem;
+  }
+
+  .categorias {
+    gap: 0.75rem;
+  }
+
+  .categoria img {
+    height: 100px;
+  }
+
+  .juego-ficha {
+    padding: 0.6rem;
+    margin-bottom: 0.6rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  }
+
+  .juego-nombre {
+    font-size: 1rem;
+  }
+
+  .juego-descripcion,
+  .juego-precio,
+  .juego-descuento {
+    font-size: 0.9rem;
+  }
+
+  /* Cortes de palabra y ajuste visual */
+  .juego-ficha,
+  .categoria,
+  body {
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .btn-volver {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 0.6rem 0.8rem;
+  }
+}
+
+/* === Alturas consistentes de imágenes en todas las tarjetas (inicio y categorías) === */
+.card-img-top {
+  width: 100%;
+  height: 200px;          /* altura uniforme en todas las cards */
+  object-fit: cover;      /* recorta sin deformar */
+  object-position: center;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  border-bottom-left-radius: 0;    /* evita redondear abajo */
+  border-bottom-right-radius: 0;
+  display: block;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+/* Pequeño efecto al pasar el mouse en cualquier card */
+.card:hover .card-img-top {
+  transform: scale(1.03);
+}
+
+/* Ajuste responsivo para móviles */
+@media (max-width: 576px) {
+  .card-img-top {
+    height: 220px;
+  }
+}
+
+/* ===============================
+   ANIMACIÓN DE ENTRADA GLOBAL OPCIONAL
+   (para tarjetas generadas dinámicamente)
+   =============================== */
+.card,
+.juego-ficha {
+  animation: fade-in 0.8s ease-out;
+}
