@@ -1,41 +1,116 @@
 # 🎲 Juegos de Mesa Cuatro Esquinas
 
 ## 🌟 Descripción del Proyecto
+Este proyecto corresponde al **Front-End del catálogo web** para la PYME “Juegos de Mesa Cuatro Esquinas”.  
+El objetivo es mostrar y promocionar los juegos disponibles, cumpliendo con los criterios de diseño, validación y responsividad establecidos en la **actividad DSY2202 – Semana 2**.
 
-Este proyecto consiste en la creación de la interfaz gráfica (front-end) para el catálogo de la PYME "Juegos de Mesa Cuatro Esquinas". El objetivo es promocionar y mostrar el inventario de juegos de mesa, cumpliendo con los requisitos de diseño y estructura modernos.
-
-El sitio web está organizado en una página principal y cuatro secciones de categorías, asegurando una navegación completa y un diseño responsivo en todos los dispositivos.
+---
 
 ## 📋 Estructura y Contenido
 
-El sitio cumple con los siguientes requisitos de contenido:
+El sitio incluye:
 
-* **Página Principal (`index.html`):** Muestra el listado de **4 categorías** temáticas:
-    * Estrategia
-    * Infantiles
-    * Amigos
-    * Cartas
-* **Páginas de Categoría:** Se desarrollaron 4 páginas internas (`estrategia.html`, `infantiles.html`, `amigos.html`, `cartas.html).
-* **Fichas de Juego:** Cada categoría contiene un máximo de 3 juegos, y cada juego presenta una ficha completa con: Imagen, Nombre, Descripción, Precio y Descuento.
-* **Navegación:** Todos los enlaces y menús están operativos, permitiendo el acceso rápido entre categorías y el retorno al inicio.
+- **Página Principal (`index.html`)** con acceso a las 4 categorías temáticas:
+  - Estrategia  
+  - Infantiles  
+  - Amigos  
+  - Cartas  
 
-## 🛠️ Tecnologías y Características Técnicas
+- **Páginas de categoría:** `estrategia.html`, `infantiles.html`, `amigos.html` y `cartas.html`.
 
-El desarrollo integra elementos modernos de HTML5 y CSS3, asegurando la adaptabilidad y el diseño interactivo:
+- **Ficha de juego:** Cada tarjeta contiene **imagen, nombre, descripción, precio y descuento**.
 
-* **Estructura:** **HTML5** con elementos semánticos (`<nav>`, `<main>`, `<footer>`).
-* **Diseño Responsivo:** Implementación del **Sistema de Grilla de Bootstrap** con puntos de quiebre (XS, SM, MD, LG) para una correcta visualización en celulares, tablets y monitores grandes.
-* **Estilo Avanzado (CSS3):**
-    * Uso de **Variables CSS Personalizadas** en el bloque `:root` para la gestión centralizada de colores y fuentes.
-    * Uso de **Flexbox** (para navegación) y **CSS Grid** (para el *layout* de las categorías).
-    * Más de **4 efectos dinámicos** (Animaciones y Transiciones) para mejorar la interacción:
-        * 3 Animaciones con `@keyframes` (ej. `slide-up`, `fade-in`, y la animación de `descuento`).
-        * Transiciones suaves (`transition`) en enlaces y tarjetas (`:hover`).
-    * Manejo de **`@media` query** para ajustes específicos en dispositivos móviles.
+- **Navegación completa:** Todos los enlaces permiten acceder a cualquier sección y volver al inicio.  
+  El sitio usa `Bootstrap Navbar` y estructura de grilla para mantener un diseño responsivo.
 
-## 🧑‍💻 Autoría
+---
+
+## 🧩 Formulario de Registro (`registro.html`)
+
+Implementa un formulario totalmente funcional con validaciones **en JavaScript puro**, aplicando manipulación del **DOM** y **clases de Bootstrap** para el feedback visual.
+
+### 🧾 Campos:
+1. Nombre completo *(obligatorio)*  
+2. Nombre de usuario *(obligatorio)*  
+3. Correo electrónico *(obligatorio, formato válido)*  
+4. Clave *(obligatorio, 6–18 caracteres, con mayúscula y número)*  
+5. Repetir clave *(debe coincidir con la anterior)*  
+6. Fecha de nacimiento *(obligatorio, mínimo 13 años)*  
+7. Dirección *(opcional)*  
+
+### 🧠 Validaciones implementadas en `js/script.js`:
+- **Campos obligatorios:** No permiten envío si están vacíos.  
+- **Solo letras** para el campo *nombre completo*.  
+- **Email válido:** Estructura tipo `usuario@dominio.com`.  
+- **Clave segura:**  
+  - Longitud entre 6 y 18 caracteres.  
+  - Contiene al menos una mayúscula y un número.  
+- **Coincidencia de claves.**  
+- **Edad mínima (13 años).**  
+- **Dirección opcional:** no genera error si está vacía.  
+- **Feedback dinámico:** bordes y mensajes de error con `is-valid` / `is-invalid`.  
+- **Botones:**
+  - `Enviar registro`: valida y muestra alerta de éxito.  
+  - `Limpiar`: borra campos y restablece el estado visual.  
+- **Validación en tiempo real:** cada campo se revalida al modificarse.
+
+El script está envuelto en `DOMContentLoaded` para evitar errores de carga y cumple con la **pauta DSY2202 – Semana 2**.
+
+---
+
+## 🛠️ Tecnologías Utilizadas
+
+- **HTML5** (semántico)  
+- **CSS3 / Bootstrap 5**  
+- **JavaScript** (validación, manipulación DOM, feedback visual)  
+- **Flexbox / CSS Grid**  
+- **Animaciones y Transiciones (`@keyframes`, `transition`)**  
+- **Responsividad:** `@media queries` y sistema de grillas Bootstrap (XS → XL)
+
+---
+
+## ✅ Cumplimiento con Instrucciones y Pauta
+
+| Criterio | Estado | Detalle |
+|-----------|---------|---------|
+| Estructura y navegación del sitio | ✅ | Todas las páginas enlazadas y responsivas |
+| Uso de Bootstrap y diseño adaptable | ✅ | Grilla completa y navbar responsivo |
+| Validaciones del formulario en JS | ✅ | Cumple todas las reglas requeridas |
+| Feedback visual (DOM + CSS dinámico) | ✅ | `is-valid` / `is-invalid` + mensajes |
+| Campos requeridos y opcional | ✅ | Dirección opcional, resto obligatorios |
+| Integración de eventos y prevención `submit` | ✅ | `preventDefault()`, `reset()` y `alert()` implementados |
+| Entrega colaborativa (Git / Trello) | ⚠️ | Incluir los enlaces a continuación |
+
+---
+
+## 🤝 Entrega Colaborativa
+
+**Repositorio GitHub:**  
+👉 *https://github.com/patrsilvag/S1-FS2-AF1-JUEGOS-MESA.git*
+
+**Tablero Trello:**  
+👉 *(https://trello.com/b/L0CUq9qy/juegos-de-mesa)*
+
+---
+
+## 👨‍💻 Autoría
 
 | Detalle | Información |
-| **Desarrollado para** | Desarrollo Full Stack II (DSY2202) |
-| **Semana** | Semana 1 |
-| **Autor(a)** | Patricio Silva |
+|----------|--------------|
+| **Curso** | Desarrollo Full Stack II (DSY2202) |
+| **Semana** | 2 |
+| **Autor** | Patricio Silva |
+| **Institución** | I&A Tecnología |
+| **Año** | 2025 |
+
+---
+
+## 🧭 Cómo probar
+
+1. Abre `index.html` en tu navegador.  
+2. Navega a las categorías y selecciona **“Registro”**.  
+3. Completa el formulario con datos válidos y prueba las validaciones.  
+4. Usa **Inspeccionar > Consola** para verificar que no hay errores JS.
+
+---
+
