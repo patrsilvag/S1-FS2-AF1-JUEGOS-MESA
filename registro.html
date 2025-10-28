@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Registro de Compradores - Cuatro Esquinas</title>
+
+		<!-- Bootstrap CSS -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
+		<!-- Tus estilos -->
+		<link rel="stylesheet" href="css/estilos.css" />
+	</head>
+
+	<body>
+		<!-- 🔹 NAVBAR (copiar la misma de index.html) -->
+		<!-- Navbar unificada con Cuatro Esquinas -->
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+			<div class="container">
+				<a class="navbar-brand fw-bold" href="index.html">Cuatro Esquinas</a>
+				<button
+					class="navbar-toggler"
+					type="button"
+					data-bs-toggle="collapse"
+					data-bs-target="#navbarNav"
+					aria-controls="navbarNav"
+					aria-expanded="false"
+					aria-label="Toggle navigation"
+				>
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div
+					class="collapse navbar-collapse justify-content-center"
+					id="navbarNav"
+				>
+					<ul class="navbar-nav">
+						<li class="nav-item">
+							<a class="nav-link" href="index.html">Inicio</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="categorias/estrategia.html"
+								>Estrategia</a
+							>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="categorias/infantiles.html"
+								>Infantiles</a
+							>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="categorias/amigos.html">Amigos</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="categorias/cartas.html">Cartas</a>
+						</li>
+						<li class="nav-item">
+							<a
+								class="nav-link active"
+								href="registro.html"
+								aria-current="page"
+								>Regístrate</a
+							>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<main class="container py-5">
+			<div class="row justify-content-center">
+				<!-- Ancho similar a las cards: cómodo en desktop y tablet -->
+				<div class="col-xl-6 col-lg-7 col-md-9">
+					<!-- Título centrado y con el mismo color de marca -->
+					<h2 class="text-center mb-4 text-primary">Formulario de Registro</h2>
+
+					<!-- Card Bootstrap para igualar el estilo de las tarjetas -->
+					<div class="card shadow-lg border-0 rounded-4">
+						<div class="card-body p-4 p-md-5">
+							<form
+								id="registroForm"
+								class="needs-validation form-grid"
+								novalidate
+							>
+								<div class="form-row">
+									<label for="nombreCompleto" class="form-label"
+										>Nombre completo:</label
+									>
+									<input
+										type="text"
+										class="form-control form-control-lg"
+										id="nombreCompleto"
+										required
+									/>
+									<div class="invalid-feedback" id="error-nombreCompleto"></div>
+								</div>
+
+								<div class="form-row">
+									<label for="nombreUsuario" class="form-label"
+										>Nombre de usuario:</label
+									>
+									<input
+										type="text"
+										class="form-control form-control-lg"
+										id="nombreUsuario"
+										required
+									/>
+									<div class="invalid-feedback" id="error-nombreUsuario"></div>
+								</div>
+
+								<div class="form-row">
+									<label for="email" class="form-label"
+										>Correo electrónico:</label
+									>
+									<input
+										type="email"
+										class="form-control form-control-lg"
+										id="email"
+										required
+									/>
+									<div class="invalid-feedback" id="error-email"></div>
+								</div>
+
+								<div class="form-row">
+									<label for="clave" class="form-label"
+										>Clave de ingreso:</label
+									>
+									<input
+										type="password"
+										class="form-control form-control-lg"
+										id="clave"
+										required
+									/>
+									<div class="form-text">
+										6–18 caracteres, incluir mayúscula y número.
+									</div>
+									<div class="invalid-feedback" id="error-clave"></div>
+								</div>
+
+								<div class="form-row">
+									<label for="repetirClave" class="form-label"
+										>Repetir clave:</label
+									>
+									<input
+										type="password"
+										class="form-control form-control-lg"
+										id="repetirClave"
+										required
+									/>
+									<div class="invalid-feedback" id="error-repetirClave"></div>
+								</div>
+
+								<div class="form-row">
+									<label for="fechaNacimiento" class="form-label"
+										>Fecha de nacimiento:</label
+									>
+									<input
+										type="date"
+										class="form-control form-control-lg"
+										id="fechaNacimiento"
+										required
+									/>
+									<div
+										class="invalid-feedback"
+										id="error-fechaNacimiento"
+									></div>
+								</div>
+
+								<div class="form-row">
+									<label for="direccion" class="form-label"
+										>Dirección de despacho (opcional):</label
+									>
+									<input
+										type="text"
+										class="form-control form-control-lg"
+										id="direccion"
+									/>
+								</div>
+
+								<div class="text-center mt-4">
+									<button
+										type="button"
+										class="btn btn-outline-secondary px-4 me-2"
+										id="limpiarBtn"
+									>
+										Limpiar formulario
+									</button>
+									<button
+										type="submit"
+										class="btn btn-primary px-4"
+										id="enviarBtn"
+									>
+										Enviar registro
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<!-- 🔹 FOOTER (si tienes uno en index, cópialo aquí) -->
+		<footer class="text-center py-3 bg-light mt-5">
+			<small>&copy; 2025 Cuatro Esquinas - Todos los derechos reservados</small>
+		</footer>
+
+		<!-- Bootstrap JS y tu script -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="js/script.js"></script>
+	</body>
+</html>
