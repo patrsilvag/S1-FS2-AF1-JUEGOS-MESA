@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	const form = document.getElementById("registroForm");
 	const limpiarBtn = document.getElementById("limpiarBtn");
 	const enviarBtn = document.getElementById("enviarBtn");
+	const formAlert = document.getElementById("form-alert");
 
-	// Si por alguna razón el script carga antes del HTML, salimos de forma segura
 	if (!form || !limpiarBtn || !enviarBtn) return;
 
 	const inputs = {
@@ -17,9 +17,21 @@ document.addEventListener("DOMContentLoaded", () => {
 		direccion: document.getElementById("direccion"), // opcional
 	};
 
-	// === helpers ===
+	// === utilitarios ===
 	const trim = (el) =>
 		el && typeof el.value === "string" ? el.value.trim() : "";
+
+	function sanitizeTextInput(el) {
+		if (!el || typeof el.value !== "string") return;
+		el.value = el.value.normalize("NFC").trim();
+	}
+
+	function announce(msg) {
+		if (!formAlert) return;
+		formAlert.textContent = msg;
+		formAlert.classList.remove("visually-hidden");
+		setTimeout(() => formAlert.classList.add("visually-hidden"), 3000);
+	}
 
 	function noVacio(el) {
 		if (el === inputs.direccion) return true; // dirección es opcional
@@ -27,7 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function soloLetras(el) {
-		// Acepta letras (con tildes), Ñ/Ü, espacios, apóstrofes y guiones
 		const re = /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s'-]+$/;
 		const v = trim(el);
 		return v !== "" && re.test(v);
@@ -46,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (!/[A-Z]/.test(v)) {
 			return {
 				ok: false,
-				msg: "La clave debe contener al menos una letra mayúscula.",
+				msg: "La clave debe contener al menos una mayúscula.",
 			};
 		}
 		if (!/[0-9]/.test(v)) {
@@ -63,7 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (!el.value) return false;
 		const hoy = new Date();
 		const fn = new Date(el.value);
-		// Mismo mes/día pero 13 años antes
 		const limite = new Date(
 			hoy.getFullYear() - 13,
 			hoy.getMonth(),
@@ -72,16 +82,13 @@ document.addEventListener("DOMContentLoaded", () => {
 		return fn <= limite;
 	}
 
-	// feedback visual (Bootstrap)
 	function setFeedback(input, ok, msg = "") {
 		const errorSlot = document.getElementById(`error-${input.id}`);
 		input.classList.toggle("is-valid", ok);
 		input.classList.toggle("is-invalid", !ok);
-
 		if (errorSlot) {
 			errorSlot.textContent = ok ? "" : msg;
 			errorSlot.style.display = ok ? "none" : "block";
-			// Asegura rol accesible cuando hay error
 			if (!ok) errorSlot.setAttribute("role", "alert");
 			else errorSlot.removeAttribute("role");
 		}
@@ -103,9 +110,90 @@ document.addEventListener("DOMContentLoaded", () => {
 		enviarBtn.textContent = "Enviar registro";
 	}
 
+	// === Mejora UX: límite de fecha (no menores de 13) ===
+	{
+		const hoy = new Date();
+		const max = new Date(hoy.getFullYear() - 13, hoy.getMonth(), hoy.getDate());
+		const toISO = (d) => d.toISOString().slice(0, 10);
+		inputs.fechaNacimiento.setAttribute("max", toISO(max));
+	}
+
+	// === Validación de campo individual (reutilizable en 'input' y 'blur') ===
+	function validarCampo(input) {
+		switch (input.id) {
+			case "nombreCompleto":
+				if (!noVacio(input))
+					return setFeedback(
+						input,
+						false,
+						"El nombre completo es obligatorio."
+					);
+				if (!soloLetras(input))
+					return setFeedback(
+						input,
+						false,
+						"El nombre solo debe contener letras."
+					);
+				return setFeedback(input, true);
+
+			case "nombreUsuario":
+				return setFeedback(
+					input,
+					noVacio(input),
+					"El nombre de usuario es obligatorio."
+				);
+
+			case "email":
+				return setFeedback(
+					input,
+					noVacio(input) && emailValido(input),
+					"Ingrese un correo válido."
+				);
+
+			case "clave": {
+				const res = validarClave(input);
+				setFeedback(input, res.ok, res.msg || "");
+				// revalida coincidencia si ya hay repetición
+				if (inputs.repetirClave.value) {
+					setFeedback(
+						inputs.repetirClave,
+						clavesIguales(inputs.clave, inputs.repetirClave),
+						"Las claves no coinciden."
+					);
+				}
+				return;
+			}
+
+			case "repetirClave":
+				return setFeedback(
+					input,
+					clavesIguales(inputs.clave, inputs.repetirClave),
+					"Las claves no coinciden."
+				);
+
+			case "fechaNacimiento":
+				return setFeedback(
+					input,
+					edadOK(input),
+					"Debe tener al menos 13 años."
+				);
+
+			case "direccion":
+				// opcional: no marcar inválido si vacío
+				if (trim(input) === "")
+					input.classList.remove("is-valid", "is-invalid");
+				else setFeedback(input, true);
+				return;
+		}
+	}
+
 	// === validación principal ===
 	function validarFormulario(e) {
 		e.preventDefault();
+		enviarBtn.disabled = true;
+
+		// sanea entradas
+		Object.values(inputs).forEach(sanitizeTextInput);
 
 		let ok = true;
 
@@ -124,9 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				"El nombre solo debe contener letras."
 			);
 			ok = false;
-		} else {
-			setFeedback(inputs.nombreCompleto, true);
-		}
+		} else setFeedback(inputs.nombreCompleto, true);
 
 		// 2) Usuario
 		if (!noVacio(inputs.nombreUsuario)) {
@@ -136,9 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				"El nombre de usuario es obligatorio."
 			);
 			ok = false;
-		} else {
-			setFeedback(inputs.nombreUsuario, true);
-		}
+		} else setFeedback(inputs.nombreUsuario, true);
 
 		// 3) Email
 		if (!noVacio(inputs.email)) {
@@ -151,9 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				"El formato del correo electrónico es inválido."
 			);
 			ok = false;
-		} else {
-			setFeedback(inputs.email, true);
-		}
+		} else setFeedback(inputs.email, true);
 
 		// 4) Clave
 		if (!noVacio(inputs.clave)) {
@@ -164,9 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (!res.ok) {
 				setFeedback(inputs.clave, false, res.msg);
 				ok = false;
-			} else {
-				setFeedback(inputs.clave, true);
-			}
+			} else setFeedback(inputs.clave, true);
 		}
 
 		// 5) Repetir clave
@@ -176,9 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		} else if (!clavesIguales(inputs.clave, inputs.repetirClave)) {
 			setFeedback(inputs.repetirClave, false, "Las claves no coinciden.");
 			ok = false;
-		} else {
-			setFeedback(inputs.repetirClave, true);
-		}
+		} else setFeedback(inputs.repetirClave, true);
 
 		// 6) Fecha de nacimiento
 		if (!noVacio(inputs.fechaNacimiento)) {
@@ -195,14 +273,11 @@ document.addEventListener("DOMContentLoaded", () => {
 				"Debe tener al menos 13 años."
 			);
 			ok = false;
-		} else {
-			setFeedback(inputs.fechaNacimiento, true);
-		}
+		} else setFeedback(inputs.fechaNacimiento, true);
 
-		// Dirección (opcional): ok si hay algo, sin borde si está vacío
-		if (trim(inputs.direccion) !== "") {
-			setFeedback(inputs.direccion, true);
-		} else {
+		// Dirección (opcional)
+		if (trim(inputs.direccion) !== "") setFeedback(inputs.direccion, true);
+		else {
 			inputs.direccion.classList.remove("is-valid", "is-invalid");
 			const slot = document.getElementById(`error-${inputs.direccion.id}`);
 			if (slot) {
@@ -212,90 +287,34 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 		}
 
-		// Éxito
 		if (ok) {
 			alert("¡Registro exitoso! Formulario válido.");
+			announce("Registro exitoso.");
+			form.reset();
+			limpiarFeedback();
 			enviarBtn.classList.remove("btn-primary");
 			enviarBtn.classList.add("btn-success");
 			enviarBtn.textContent = "¡Registro completado!";
-			form.reset();
-			limpiarFeedback();
+		} else {
+			announce("Revisa los campos marcados en rojo.");
 		}
+
+		enviarBtn.disabled = false;
 	}
 
-	// === eventos ===
+	// eventos
 	form.addEventListener("submit", validarFormulario);
 
-	limpiarBtn.addEventListener("click", (e) => {
-		e.preventDefault(); // evita que un botón tipo submit dispare envío
+	limpiarBtn.addEventListener("click", () => {
 		form.reset();
 		limpiarFeedback();
+		announce("Formulario limpiado.");
 	});
 
-	// Validación en tiempo real (opcional pero útil)
+	// Validación en tiempo real + on blur
 	Object.values(inputs).forEach((input) => {
 		if (!input) return;
-		input.addEventListener("input", () => {
-			switch (input.id) {
-				case "nombreCompleto":
-					if (!noVacio(input)) {
-						setFeedback(input, false, "El nombre completo es obligatorio.");
-					} else if (!soloLetras(input)) {
-						setFeedback(input, false, "El nombre solo debe contener letras.");
-					} else {
-						setFeedback(input, true);
-					}
-					break;
-
-				case "nombreUsuario":
-					setFeedback(
-						input,
-						noVacio(input),
-						"El nombre de usuario es obligatorio."
-					);
-					break;
-
-				case "email":
-					setFeedback(
-						input,
-						noVacio(input) && emailValido(input),
-						"Ingrese un correo válido."
-					);
-					break;
-
-				case "clave": {
-					const res = validarClave(input);
-					setFeedback(input, res.ok, res.msg || "");
-					// si cambia la clave, revalida coincidencia
-					if (inputs.repetirClave.value) {
-						setFeedback(
-							inputs.repetirClave,
-							clavesIguales(inputs.clave, inputs.repetirClave),
-							"Las claves no coinciden."
-						);
-					}
-					break;
-				}
-
-				case "repetirClave":
-					setFeedback(
-						input,
-						clavesIguales(inputs.clave, inputs.repetirClave),
-						"Las claves no coinciden."
-					);
-					break;
-
-				case "fechaNacimiento":
-					setFeedback(input, edadOK(input), "Debe tener al menos 13 años.");
-					break;
-
-				case "direccion":
-					// opcional: no marcar como inválido si está vacío
-					if (trim(input) === "")
-						input.classList.remove("is-valid", "is-invalid");
-					else setFeedback(input, true);
-					break;
-			}
-		});
+		input.addEventListener("input", () => validarCampo(input));
+		input.addEventListener("blur", () => validarCampo(input));
 	});
 });
