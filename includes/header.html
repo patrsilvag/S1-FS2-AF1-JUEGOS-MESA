@@ -1,0 +1,31 @@
+<header class="site-header" role="banner">
+  <div class="container d-flex align-items-center justify-content-between">
+    <a class="logo text-decoration-none" href="../index.html" aria-label="Ir al inicio">Cuatro Esquinas</a>
+
+    <nav class="site-nav" role="navigation" aria-label="Navegación principal">
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-menu">☰</button>
+      <ul id="primary-menu" class="menu">
+        <li><a class="nav-link" href="../index.html">Inicio</a></li>
+        <li><a class="nav-link" href="../categorias/estrategia.html">Estrategia</a></li>
+        <li><a class="nav-link" href="../categorias/infantiles.html">Infantiles</a></li>
+        <li><a class="nav-link" href="../categorias/amigos.html">Amigos</a></li>
+        <li><a class="nav-link" href="../categorias/cartas.html">Cartas</a></li>
+        <li><a class="nav-link" href="../registro.html">Regístrate</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Corrige rutas al insertarse dinámicamente según ubicación actual
+  document.addEventListener("DOMContentLoaded", () => {
+    const links = document.querySelectorAll(".site-header a[href^='../']");
+    const depth = (window.location.pathname.match(/\//g) || []).length;
+    if (depth <= 2) {
+      // Si estamos en la raíz (index.html), quita los "../"
+      links.forEach(link => {
+        link.href = link.href.replace("../", "./");
+      });
+    }
+  });
+</script>

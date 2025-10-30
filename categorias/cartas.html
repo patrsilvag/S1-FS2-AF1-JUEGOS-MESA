@@ -1,131 +1,118 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>Juegos de Cartas | Cuatro Esquinas</title>
+	<head>
+		<meta charset="utf-8" />
+		<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+		<title>Juegos de Cartas | Cuatro Esquinas</title>
+		<meta
+			name="description"
+			content="Juegos de cartas para todas las edades: rápidos, divertidos y perfectos para jugar en grupo."
+		/>
 
-  <!-- Bootstrap CSS (sin integrity para evitar bloqueo) -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
+		<!-- Favicon (ruta relativa desde /categorias/) -->
+		<link rel="icon" href="../img/favicon.ico" />
 
-  <!-- Hoja de estilos principal -->
-  <link href="../css/estilos.css" rel="stylesheet" />
-</head>
+		<!-- Bootstrap CSS -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
 
-<body class="bg-light">
-  <!-- Navegación -->
-  <nav class="navbar navbar-expand-md navbar-dark bg-primary">
-    <div class="container">
-      <a class="navbar-brand" href="../index.html">Cuatro Esquinas</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#mainNav"
-        aria-controls="mainNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+		<!-- Hoja de estilos principal -->
+		<link href="../css/estilos.css" rel="stylesheet" />
+	</head>
 
-      <div class="collapse navbar-collapse" id="mainNav">
-        <ul class="navbar-nav ms-auto mb-2 mb-md-0">
-          <li class="nav-item"><a class="nav-link" href="../index.html">Inicio</a></li>
-          <li class="nav-item"><a class="nav-link" href="estrategia.html">Estrategia</a></li>
-          <li class="nav-item"><a class="nav-link" href="infantiles.html">Infantiles</a></li>
-          <li class="nav-item"><a class="nav-link" href="amigos.html">Amigos</a></li>
-          <li class="nav-item"><a class="nav-link active" aria-current="page" href="cartas.html">Cartas</a></li>
-          <li class="nav-item"><a class="nav-link" href="../registro.html">Regístrate</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+	<body class="bg-light">
+		<!-- Header reutilizable (cargado vía JS desde /includes/header.html) -->
+		<div id="header-placeholder"></div>
 
-  <!-- Encabezado -->
-  <header class="bg-light border-bottom">
-    <div class="container py-3">
-      <h1 class="h4 mb-0">
-        Juegos de Mesa Cuatro Esquinas — Descubre diversión sin límites para toda la familia
-      </h1>
-    </div>
-  </header>
+		<!-- Subencabezado -->
+		<div class="bg-light border-bottom">
+			<div class="container py-3">
+				<h1 class="h4 mb-0">Juegos de Cartas</h1>
+			</div>
+		</div>
 
-  <!-- Contenido principal -->
-  <main class="container my-5">
-    <h1 class="text-center mb-4">Juegos de Cartas</h1>
+		<!-- Contenido principal -->
+		<main class="container my-5">
+			<h2 class="text-center mb-4">Barajas y juegos rápidos para todos</h2>
 
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+			<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+				<!-- Exploding Kittens -->
+				<div class="col">
+					<div class="juego-ficha h-100">
+						<img
+							src="../img/exploding_kittens.jpg"
+							alt="Juego Exploding Kittens con cartas y gatitos explosivos"
+							class="card-img-top"
+						/>
+						<div class="card-body">
+							<h5 class="juego-nombre">Exploding Kittens</h5>
+							<p class="juego-descripcion">
+								Rápido y caótico: evita explotar usando cartas de defensa y
+								efectos divertidos.
+							</p>
+							<p class="juego-precio">Precio: $16.990</p>
+							<p class="juego-descuento">Descuento: 10%</p>
+						</div>
+					</div>
+				</div>
 
-      <!-- Exploding Kittens -->
-      <div class="col">
-        <div class="juego-ficha h-100">
-          <img
-            src="../img/exploding_kittens.jpg"
-            alt="Exploding Kittens"
-            class="card-img-top" />
-          <div class="card-body">
-            <h5 class="juego-nombre">Exploding Kittens</h5>
-            <p class="juego-descripcion">
-              Rápido y caótico: evita explotar usando cartas de defensa y efectos divertidos.
-            </p>
-            <p class="juego-precio">Precio: $16.990</p>
-            <p class="juego-descuento">Descuento: 10%</p>
-          </div>
-        </div>
-      </div>
+				<!-- Dobble -->
+				<div class="col">
+					<div class="juego-ficha h-100">
+						<img
+							src="../img/dobble.jpg"
+							alt="Juego Dobble, cartas circulares con símbolos para encontrar coincidencias"
+							class="card-img-top"
+						/>
+						<div class="card-body">
+							<h5 class="juego-nombre">Dobble</h5>
+							<p class="juego-descripcion">
+								Observación y velocidad: encuentra el símbolo común entre cartas
+								antes que tus rivales.
+							</p>
+							<p class="juego-precio">Precio: $10.990</p>
+							<p class="juego-descuento">Descuento: No</p>
+						</div>
+					</div>
+				</div>
 
-      <!-- Dobble -->
-      <div class="col">
-        <div class="juego-ficha h-100">
-          <img
-            src="../img/dobble.jpg"
-            alt="Dobble"
-            class="card-img-top" />
-          <div class="card-body">
-            <h5 class="juego-nombre">Dobble</h5>
-            <p class="juego-descripcion">
-              Observación y velocidad: encuentra el símbolo común entre cartas antes que tus rivales.
-            </p>
-            <p class="juego-precio">Precio: $10.990</p>
-            <p class="juego-descuento">Descuento: No</p>
-          </div>
-        </div>
-      </div>
+				<!-- Set Póker Clásico -->
+				<div class="col">
+					<div class="juego-ficha h-100">
+						<img
+							src="../img/cartas_poker.jpg"
+							alt="Set de cartas de Póker clásico con fichas"
+							class="card-img-top"
+						/>
+						<div class="card-body">
+							<h5 class="juego-nombre">Set Póker Clásico</h5>
+							<p class="juego-descripcion">
+								Baraja y fichas para partidas de póker, blackjack u otros
+								clásicos de casino en casa.
+							</p>
+							<p class="juego-precio">Precio: $19.990</p>
+							<p class="juego-descuento">Descuento: 15%</p>
+						</div>
+					</div>
+				</div>
+			</div>
 
-      <!-- Set Póker Clásico -->
-      <div class="col">
-        <div class="juego-ficha h-100">
-          <img
-            src="../img/cartas_poker.jpg"
-            alt="Set Póker Clásico"
-            class="card-img-top" />
-          <div class="card-body">
-            <h5 class="juego-nombre">Set Póker Clásico</h5>
-            <p class="juego-descripcion">
-              Baraja y fichas para partidas de póker, blackjack u otros clásicos de casino en casa.
-            </p>
-            <p class="juego-precio">Precio: $19.990</p>
-            <p class="juego-descuento">Descuento: 15%</p>
-          </div>
-        </div>
-      </div>
+			<div class="text-center mt-5">
+				<a class="btn btn-primary btn-volver" href="../index.html"
+					>← Volver al inicio</a
+				>
+			</div>
+		</main>
 
-    </div>
+		<!-- Footer -->
+		<div id="footer-placeholder"></div>
 
-    <div class="text-center mt-5">
-      <a class="btn btn-primary btn-volver" href="../index.html">← Volver al inicio</a>
-    </div>
-  </main>
+		<!-- Bootstrap JS -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Footer -->
-  <footer class="bg-primary text-white text-center py-3 mt-4">
-    <p class="mb-0">© 2025 Juegos de Mesa Cuatro Esquinas. Todos los derechos reservados.</p>
-  </footer>
-
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+		<!-- Script que inserta el header -->
+		<script src="../js/site.js" defer></script>
+	</body>
 </html>
