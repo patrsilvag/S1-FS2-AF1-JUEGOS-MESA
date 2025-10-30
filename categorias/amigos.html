@@ -27,6 +27,9 @@
 
 		<!-- 🔹 Script que carga el header reutilizable -->
 		<script src="../js/site.js" defer></script>
+		<!-- 🔹 Script array para productos -->
+		<script src="../js/productos.js"></script>
+		<script src="../js/render-productos.js"></script>
 	</head>
 
 	<body class="bg-light">
@@ -42,69 +45,9 @@
 
 		<!-- Contenido principal -->
 		<main class="container my-5">
-			<h2 class="text-center mb-4">Diviértete con los clásicos entre amigos</h2>
-
-			<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-				<!-- Pictionary -->
-				<div class="col">
-					<div class="juego-ficha h-100">
-						<img
-							src="../img/pictionary.jpg"
-							alt="Juego de Pictionary para dibujar con amigos"
-							class="card-img-top"
-						/>
-						<div class="card-body">
-							<h5 class="juego-nombre">Pictionary</h5>
-							<p class="juego-descripcion">
-								Dibuja, adivina y ríe con tus amigos en este juego donde la
-								creatividad y la rapidez mandan.
-							</p>
-							<p class="juego-precio">Precio: $18.990</p>
-							<p class="juego-descuento">Descuento: Sí</p>
-						</div>
-					</div>
-				</div>
-
-				<!-- Jenga -->
-				<div class="col">
-					<div class="juego-ficha h-100">
-						<img
-							src="../img/jenga.jpg"
-							alt="Juego de Jenga con bloques apilados"
-							class="card-img-top"
-						/>
-						<div class="card-body">
-							<h5 class="juego-nombre">Jenga</h5>
-							<p class="juego-descripcion">
-								Pon a prueba tu pulso y tus nervios retirando bloques sin que la
-								torre se derrumbe.
-							</p>
-							<p class="juego-precio">Precio: $13.990</p>
-							<p class="juego-descuento">Descuento: No</p>
-						</div>
-					</div>
-				</div>
-
-				<!-- UNO -->
-				<div class="col">
-					<div class="juego-ficha h-100">
-						<img
-							src="../img/uno.jpg"
-							alt="Juego de cartas UNO para jugar en grupo"
-							class="card-img-top"
-						/>
-						<div class="card-body">
-							<h5 class="juego-nombre">UNO</h5>
-							<p class="juego-descripcion">
-								El clásico juego de cartas donde la suerte y la estrategia se
-								combinan para dejar sin cartas a tus rivales.
-							</p>
-							<p class="juego-precio">Precio: $8.990</p>
-							<p class="juego-descuento">Descuento: Sí</p>
-						</div>
-					</div>
-				</div>
-			</div>
+			<h2 class="text-center mb-4">Juegos para Amigos</h2>
+			<!-- Aquí se pintan los productos de forma dinámica -->
+			<div data-lista-productos data-categoria="amigos"></div>
 
 			<div class="text-center mt-5">
 				<a class="btn btn-primary btn-volver" href="../index.html"
@@ -113,13 +56,10 @@
 			</div>
 		</main>
 
-		<!-- Footer -->
+		<!-- Footer.html-->
 		<div id="footer-placeholder"></div>
 
 		<!-- Bootstrap JS -->
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-		<!-- Script que inserta el header -->
-		<script src="../js/site.js" defer></script>
 	</body>
 </html>

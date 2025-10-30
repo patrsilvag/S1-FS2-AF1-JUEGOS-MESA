@@ -27,6 +27,9 @@
 
 		<!-- 🔹 Script que carga el header reutilizable -->
 		<script src="../js/site.js" defer></script>
+		<!-- 🔹 Script array para productos -->
+		<script src="../js/productos.js"></script>
+		<script src="../js/render-productos.js"></script>
 	</head>
 
 	<body class="bg-light">
@@ -42,69 +45,9 @@
 
 		<!-- Contenido principal -->
 		<main class="container my-5">
-			<h2 class="text-center mb-4">Planifica, conquista y desafía tu mente</h2>
-
-			<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-				<!-- Catan -->
-				<div class="col">
-					<div class="juego-ficha h-100">
-						<img
-							src="../img/catan.jpg"
-							alt="Juego de mesa Catan con tablero y fichas"
-							class="card-img-top"
-						/>
-						<div class="card-body">
-							<h5 class="juego-nombre">Catan</h5>
-							<p class="juego-descripcion">
-								Coloniza la isla, construye poblados y comercia para obtener
-								recursos.
-							</p>
-							<p class="juego-precio">Precio: $29.990</p>
-							<p class="juego-descuento">Descuento: Sí</p>
-						</div>
-					</div>
-				</div>
-
-				<!-- Risk -->
-				<div class="col">
-					<div class="juego-ficha h-100">
-						<img
-							src="../img/risk.jpg"
-							alt="Tablero del juego Risk con tropas y dados"
-							class="card-img-top"
-						/>
-						<div class="card-body">
-							<h5 class="juego-nombre">Risk</h5>
-							<p class="juego-descripcion">
-								Conquista el mundo mediante estrategias militares y alianzas
-								temporales.
-							</p>
-							<p class="juego-precio">Precio: $24.990</p>
-							<p class="juego-descuento">Descuento: No</p>
-						</div>
-					</div>
-				</div>
-
-				<!-- Ajedrez Clásico -->
-				<div class="col">
-					<div class="juego-ficha h-100">
-						<img
-							src="../img/ajedrez.jpg"
-							alt="Tablero de ajedrez clásico con piezas"
-							class="card-img-top"
-						/>
-						<div class="card-body">
-							<h5 class="juego-nombre">Ajedrez Clásico</h5>
-							<p class="juego-descripcion">
-								Desafía tu mente en el juego de estrategia más antiguo del
-								mundo.
-							</p>
-							<p class="juego-precio">Precio: $14.990</p>
-							<p class="juego-descuento">Descuento: 5%</p>
-						</div>
-					</div>
-				</div>
-			</div>
+			<h2 class="text-center mb-4">Planifica, conquista y desafía tu mentes</h2>
+			<!-- Aquí se pintan los productos de forma dinámica -->
+			<div data-lista-productos data-categoria="estrategia"></div>
 
 			<div class="text-center mt-5">
 				<a class="btn btn-primary btn-volver" href="../index.html"
@@ -119,7 +62,5 @@
 		<!-- Bootstrap JS -->
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-		<!-- Script que inserta el header -->
-		<script src="../js/site.js" defer></script>
 	</body>
 </html>
