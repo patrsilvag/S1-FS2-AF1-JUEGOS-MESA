@@ -15,8 +15,17 @@ El sitio incluye:
   - Infantiles  
   - Amigos  
   - Cartas  
+  - registro
 
 - **Páginas de categoría:** `estrategia.html`, `infantiles.html`, `amigos.html` y `cartas.html`.
+
+  -Includes: includes/header.html, includes/footer.html (se inyectan dinámicamente)
+  -CSS: css/estilos.css
+  -JS:
+    -js/site.js → Header/Footer dinámicos + ajuste de altura + toggle menú
+    -js/productos.js → Datos de productos
+    -js/render-productos.js → Render de cards
+    -js/validaciones.js → Validaciones del formulario de registro
 
 - **Ficha de juego:** Cada tarjeta contiene **imagen, nombre, descripción, precio y descuento**.
 
