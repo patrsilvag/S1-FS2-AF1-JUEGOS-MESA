@@ -1,67 +1,67 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Cuatro Esquinas — Juegos de Mesa</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cuatro Esquinas — Juegos de Mesa</title>
 
-		<!-- Define la ruta base del sitio para que los enlaces y recursos se resuelvan correctamente desde cualquier página -->
-		<base href="./" />
+    <!-- Define la ruta base del sitio para que los enlaces y recursos se resuelvan correctamente desde cualquier página -->
+    <base href="../" />
 
-		<!-- 🧩 Meta tags sugeridas por el profesor -->
-		<meta
-			name="description"
-			content="Descubre la colección de Juegos de Mesa Cuatro Esquinas: estrategia, infantiles, amigos y cartas. Diversión sin límites."
-		/>
-		<meta name="author" content="Cuatro Esquinas" />
-		<meta name="theme-color" content="#0d6efd" />
+    <!-- 🧩 Meta tags sugeridas por el profesor -->
+    <meta
+      name="description"
+      content="Descubre la colección de Juegos de Mesa Cuatro Esquinas: estrategia, infantiles, amigos y cartas. Diversión sin límites."
+    />
+    <meta name="author" content="Cuatro Esquinas" />
+    <meta name="theme-color" content="#0d6efd" />
 
-		<!-- 🔹 Favicon -->
-		<link rel="icon" href="../img/favicon.ico" type="image/x-icon" />
+    <!-- 🔹 Favicon -->
+    <link rel="icon" href="../img/favicon.ico" type="image/x-icon" />
 
-		<!-- 🔹 Bootstrap (base) -->
-		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-			rel="stylesheet"
-		/>
+    <!-- 🔹 Bootstrap (base) -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
 
-		<!-- 🔹 Estilos principales -->
-		<link href="../css/estilos.css" rel="stylesheet" />
-	</head>
+    <!-- 🔹 Estilos principales -->
+    <link href="../css/estilos.css" rel="stylesheet" />
+  </head>
 
-	<body class="bg-light">
-		<!-- Header reutilizable (cargado vía JS desde /includes/header.html) -->
-		<div id="header-placeholder"></div>
+  <body class="bg-light">
+    <!-- Header reutilizable (cargado vía JS desde /includes/header.html) -->
+    <div id="header-placeholder"></div>
 
-		<!-- Subencabezado -->
-		<div class="bg-light border-bottom">
-			<div class="container py-3">
-				<h1 class="h4 mb-0">Juegos de Cartas</h1>
-			</div>
-		</div>
+    <!-- Subencabezado -->
+    <div class="bg-light border-bottom">
+      <div class="container py-3">
+        <h1 class="h4 mb-0">Juegos de Cartas</h1>
+      </div>
+    </div>
 
-		<!-- Contenido principal -->
-		<main class="container my-5">
-			<h2 class="text-center mb-4">Barajas y juegos rápidos para todos</h2>
-			<!-- Aquí se pintan los productos de forma dinámica -->
-			<div data-lista-productos data-categoria="cartas"></div>
+    <!-- Contenido principal -->
+    <main class="container my-5">
+      <h2 class="text-center mb-4">Barajas y juegos rápidos para todos</h2>
+      <!-- Aquí se pintan los productos de forma dinámica -->
+      <div data-lista-productos data-categoria="cartas"></div>
 
-			<div class="text-center mt-5">
-				<a class="btn btn-primary btn-volver" href="../index.html"
-					>← Volver al inicio</a
-				>
-			</div>
-		</main>
+      <div class="text-center mt-5">
+        <a class="btn btn-primary btn-volver" href="../index.html"
+          >← Volver al inicio</a
+        >
+      </div>
+    </main>
 
-		<!-- Footer -->
-		<div id="footer-placeholder"></div>
+    <!-- Footer -->
+    <div id="footer-placeholder"></div>
 
-		<!-- Bootstrap JS -->
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-		<!-- 🔹 Script que carga el header reutilizable -->
-		<script src="../js/site.js" defer></script>
-		<!-- 🔹 Script array para productos -->
-		<script src="../js/productos.js"></script>
-		<script src="../js/render-productos.js"></script>
-	</body>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 🔹 Script que carga el header reutilizable -->
+    <script src="../js/site.js" defer></script>
+    <!-- 🔹 Script array para productos -->
+    <script src="../js/productos.js"></script>
+    <script src="../js/render-productos.js"></script>
+  </body>
 </html>

@@ -1,31 +1,61 @@
-<header class="site-header" role="banner">
-  <div class="container d-flex align-items-center justify-content-between">
-    <a class="logo text-decoration-none" href="../index.html" aria-label="Ir al inicio">Cuatro Esquinas</a>
+<header
+  class="site-header navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow-sm"
+>
+  <div class="container">
+    <!-- Logo / Nombre del sitio -->
+    <a class="navbar-brand fw-bold" href="index.html"> 🎲 Cuatro Esquinas </a>
 
-    <nav class="site-nav" role="navigation" aria-label="Navegación principal">
-      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-menu">☰</button>
-      <ul id="primary-menu" class="menu">
-        <li><a class="nav-link" href="../index.html">Inicio</a></li>
-        <li><a class="nav-link" href="../categorias/estrategia.html">Estrategia</a></li>
-        <li><a class="nav-link" href="../categorias/infantiles.html">Infantiles</a></li>
-        <li><a class="nav-link" href="../categorias/amigos.html">Amigos</a></li>
-        <li><a class="nav-link" href="../categorias/cartas.html">Cartas</a></li>
-        <li><a class="nav-link" href="../registro.html">Regístrate</a></li>
+    <!-- Botón toggle para menú móvil -->
+    <button
+      class="navbar-toggler nav-toggle"
+      type="button"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Alternar navegación"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Menú principal -->
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav align-items-center">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">Inicio</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="categoriasDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Categorías
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="categoriasDropdown">
+            <li>
+              <a class="dropdown-item" href="categorias/estrategia.html"
+                >Estrategia</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="categorias/infantiles.html"
+                >Infantiles</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="categorias/amigos.html">Amigos</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="categorias/cartas.html">Cartas</a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="registro.html">Regístrate</a>
+        </li>
       </ul>
-    </nav>
+    </div>
   </div>
 </header>
-
-<script>
-  // Corrige rutas al insertarse dinámicamente según ubicación actual
-  document.addEventListener("DOMContentLoaded", () => {
-    const links = document.querySelectorAll(".site-header a[href^='../']");
-    const depth = (window.location.pathname.match(/\//g) || []).length;
-    if (depth <= 2) {
-      // Si estamos en la raíz (index.html), quita los "../"
-      links.forEach(link => {
-        link.href = link.href.replace("../", "./");
-      });
-    }
-  });
-</script>

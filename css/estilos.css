@@ -5,8 +5,8 @@
   /* Colores principales */
   --color-primario: #0d6efd; /* Azul principal Bootstrap */
   --color-secundario: #f4f4f4; /* Fondo claro */
-  --color-texto: #333333;     /* Texto base */
-  --color-exito: #10b981;     /* Verde esmeralda */
+  --color-texto: #333333; /* Texto base */
+  --color-exito: #10b981; /* Verde esmeralda */
   --bs-primary: var(--color-primario);
 
   /* Tipografía y espaciado */
@@ -29,13 +29,16 @@
   --fs-lg: 1.25rem;
   --fs-xl: 1.75rem;
   --fs-xxl: 2.25rem;
-
 }
 
 /* ===============================
    RESETEO BÁSICO Y ESTILO GLOBAL
    =============================== */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 body {
   font-family: var(--fuente-base);
@@ -51,10 +54,12 @@ body {
    =============================== */
 .site-header {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 1050;
   background-color: var(--color-primario);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   border-bottom: none;
 }
 
@@ -63,7 +68,7 @@ body {
   margin: 0 auto;
   padding: 12px 16px;
   display: flex;
-  align-items:center;
+  align-items: center;
   justify-content: space-between;
 }
 
@@ -71,10 +76,11 @@ body {
   font-weight: bold;
   text-decoration: none;
   color: #fff;
-  
 }
 
-.site-header .site-nav { background: transparent; }
+.site-header .site-nav {
+  background: transparent;
+}
 
 .site-header .menu {
   list-style: none;
@@ -89,12 +95,14 @@ body {
   color: #fff;
   padding: 8px 12px;
   border-radius: 8px;
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition:
+    background 0.3s ease,
+    transform 0.2s ease;
 }
 
 .site-header .nav-link:hover,
 .site-header .nav-link:focus {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
 }
 
@@ -102,7 +110,7 @@ body {
 .nav-toggle {
   display: none;
   background: none;
-  border: 1px solid rgba(255,255,255,0.4);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   color: #fff;
   padding: 6px 10px;
   border-radius: 8px;
@@ -117,8 +125,12 @@ body {
     padding: 12px;
     border-radius: 12px;
   }
-  .nav-toggle { display: inline-block; }
-  .site-header.open .menu { display: flex; }
+  .nav-toggle {
+    display: inline-block;
+  }
+  .site-header.open .menu {
+    display: flex;
+  }
 }
 
 /* foco accesible */
@@ -131,7 +143,10 @@ body {
 /* ===============================
    SECCIÓN PRINCIPAL (categorías)
    =============================== */
-main { padding: calc(var(--espaciado-md) * 2); text-align: center; }
+main {
+  padding: calc(var(--espaciado-md) * 2);
+  text-align: center;
+}
 
 .categorias {
   display: grid;
@@ -144,12 +159,17 @@ main { padding: calc(var(--espaciado-md) * 2); text-align: center; }
   background-color: #fff;
   border-radius: 10px;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   overflow: hidden;
   animation: fade-in 0.8s ease-out;
 }
 
-.categoria:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+.categoria:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
 
 .categoria img {
   width: 100%;
@@ -157,7 +177,10 @@ main { padding: calc(var(--espaciado-md) * 2); text-align: center; }
   object-fit: cover;
 }
 
-.categoria h3 { margin: var(--espaciado-md) 0; color: var(--color-primario); }
+.categoria h3 {
+  margin: var(--espaciado-md) 0;
+  color: var(--color-primario);
+}
 
 /* ===============================
    FICHAS DE JUEGO
@@ -168,7 +191,10 @@ main { padding: calc(var(--espaciado-md) * 2); text-align: center; }
   padding: var(--espaciado-md);
   margin-bottom: var(--espaciado-md);
   box-shadow: var(--shadow-sm);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
   will-change: transform, box-shadow, background-color;
   animation: fade-in 0.8s ease-out;
 }
@@ -180,8 +206,15 @@ main { padding: calc(var(--espaciado-md) * 2); text-align: center; }
   transform: translateY(-4px);
 }
 
-.juego-precio { font-weight: bold; color: var(--color-primario); }
-.juego-descuento { color: var(--color-exito); font-weight: bold; animation: pulse 1.5s ease-in-out infinite; }
+.juego-precio {
+  font-weight: bold;
+  color: var(--color-primario);
+}
+.juego-descuento {
+  color: var(--color-exito);
+  font-weight: bold;
+  animation: pulse 1.5s ease-in-out infinite;
+}
 
 /* ===============================
    PIE DE PÁGINA
@@ -198,53 +231,141 @@ footer {
    ANIMACIONES CSS EXTRA
    =============================== */
 @keyframes resaltar {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
-.categoria:hover img { animation: resaltar 0.5s ease-in-out; }
+.categoria:hover img {
+  animation: resaltar 0.5s ease-in-out;
+}
 
-@keyframes fade-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes pulse   { 0%,100% { transform: scale(1);} 50% { transform: scale(1.1);} }
-@keyframes slide-up{ 0% { opacity:0; transform: translateY(40px);} 100% { opacity:1; transform: translateY(0);} }
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 @keyframes hover-wiggle {
-  0%,100%{transform: rotate(0deg);} 25%{transform: rotate(2deg);}
-  50%{transform: rotate(-2deg);} 75%{transform: rotate(2deg);}
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(2deg);
+  }
+  50% {
+    transform: rotate(-2deg);
+  }
+  75% {
+    transform: rotate(2deg);
+  }
 }
 button:hover,
 .btn-volver:hover,
 [type="button"]:hover,
-[type="submit"]:hover { animation: hover-wiggle 0.4s ease-in-out; transform-origin: center; }
+[type="submit"]:hover {
+  animation: hover-wiggle 0.4s ease-in-out;
+  transform-origin: center;
+}
 
 /* ===============================
    MEDIA QUERIES
    =============================== */
 @media (max-width: 1024px) {
-  .categorias { grid-template-columns: 1fr 1fr; }
+  .categorias {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 768px) {
-  header h1 { font-size: 1.5rem; }
-  nav ul { flex-direction: column; align-items: center; }
-  .categorias, .categoria, .juego-ficha {
+  header h1 {
+    font-size: 1.5rem;
+  }
+  nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
+  .categorias,
+  .categoria,
+  .juego-ficha {
     display: grid;
     grid-template-columns: 1fr;
     max-width: 100%;
   }
-  main { padding: var(--espaciado-md); }
+  main {
+    padding: var(--espaciado-md);
+  }
 }
 
 @media (max-width: 280px) {
-  html, body { max-width: 100%; overflow-x: hidden; }
-  main { padding: calc(var(--espaciado-md) * 0.75); }
-  header { padding: calc(var(--espaciado-md) * 1) 0; }
-  header h1 { font-size: 1.2rem; }
-  .categorias { gap: 0.75rem; }
-  .categoria img { height: 100px; }
-  .juego-ficha { padding: 0.6rem; margin-bottom: 0.6rem; box-shadow: 0 1px 4px rgba(0,0,0,0.12); }
-  .juego-nombre { font-size: 1rem; }
-  .juego-descripcion, .juego-precio, .juego-descuento { font-size: 0.9rem; }
-  .btn-volver { display:block; width:100%; text-align:center; padding:0.6rem 0.8rem; }
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  main {
+    padding: calc(var(--espaciado-md) * 0.75);
+  }
+  header {
+    padding: calc(var(--espaciado-md) * 1) 0;
+  }
+  header h1 {
+    font-size: 1.2rem;
+  }
+  .categorias {
+    gap: 0.75rem;
+  }
+  .categoria img {
+    height: 100px;
+  }
+  .juego-ficha {
+    padding: 0.6rem;
+    margin-bottom: 0.6rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  }
+  .juego-nombre {
+    font-size: 1rem;
+  }
+  .juego-descripcion,
+  .juego-precio,
+  .juego-descuento {
+    font-size: 0.9rem;
+  }
+  .btn-volver {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 0.6rem 0.8rem;
+  }
 }
 
 /* ===============================
@@ -258,29 +379,52 @@ button:hover,
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
   display: block;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease;
 }
-.card:hover .card-img-top { transform: scale(1.03); }
-@media (max-width: 576px) { .card-img-top { height: 220px; } }
+.card:hover .card-img-top {
+  transform: scale(1.03);
+}
+@media (max-width: 576px) {
+  .card-img-top {
+    height: 220px;
+  }
+}
 
 /* ===============================
    FORMULARIO REGISTRO
    =============================== */
-#registroForm label { padding-right: 0.5rem; }
+#registroForm label {
+  padding-right: 0.5rem;
+}
 
-.form-grid { display: grid; row-gap: 1rem; }
+.form-grid {
+  display: grid;
+  row-gap: 1rem;
+}
 .form-row {
   display: grid;
   grid-template-columns: 230px 1fr;
   align-items: center;
   column-gap: 12px;
 }
-.form-row .form-label { text-align: left; font-weight: 500; margin-bottom: 0; }
-.form-row .invalid-feedback, .form-row .form-text { grid-column: 2; }
+.form-row .form-label {
+  text-align: left;
+  font-weight: 500;
+  margin-bottom: 0;
+}
+.form-row .invalid-feedback,
+.form-row .form-text {
+  grid-column: 2;
+}
 @media (max-width: 576px) {
-  .form-row { grid-template-columns: 1fr; }
-  .form-row .invalid-feedback, .form-row .form-text { grid-column: 1; }
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  .form-row .invalid-feedback,
+  .form-row .form-text {
+    grid-column: 1;
+  }
 }
 
 /* ===============================
@@ -295,37 +439,97 @@ button:hover,
   }
 }
 
-
 /* =======================================================
    TIPOGRAFÍA UNIFICADA (para no romper Bootstrap)
    ======================================================= */
 
 /* Texto base */
-body { font-size: var(--fs-base); line-height: 1.6; }
+body {
+  font-size: var(--fs-base);
+  line-height: 1.6;
+}
 
 /* Encabezados */
-h1, .h1 { font-size: var(--fs-xxl); font-weight: 700; margin-bottom: 1rem; }
-h2, .h2 { font-size: var(--fs-xl);  font-weight: 600; margin-bottom: 0.8rem; }
-h3, .h3 { font-size: var(--fs-lg);  font-weight: 600; margin-bottom: 0.6rem; }
-h4, .h4 { font-size: 1.125rem;      font-weight: 500; margin-bottom: 0.5rem; }
-h5, .h5 { font-size: 1rem;          font-weight: 500; margin-bottom: 0.4rem; }
-h6, .h6 { font-size: 0.9rem;        font-weight: 500; margin-bottom: 0.3rem; }
+h1,
+.h1 {
+  font-size: var(--fs-xxl);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+h2,
+.h2 {
+  font-size: var(--fs-xl);
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+}
+h3,
+.h3 {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+h4,
+.h4 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+h5,
+.h5 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+}
+h6,
+.h6 {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
 
 /* Texto general */
-p, li, a, label, input, button { font-size: var(--fs-md); }
+p,
+li,
+a,
+label,
+input,
+button {
+  font-size: var(--fs-md);
+}
 
 /* Menú y logo del header reutilizable */
-.site-header .nav-link { font-size: var(--fs-md); font-weight: 500; }
-.site-header .logo { font-size: 1.25rem; font-weight: 700; }
+.site-header .nav-link {
+  font-size: var(--fs-md);
+  font-weight: 500;
+}
+.site-header .logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
 
 /* Títulos dentro de cards / fichas */
-.card-title, .juego-nombre { font-size: var(--fs-lg); font-weight: 600; }
+.card-title,
+.juego-nombre {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+}
 
 /* Descripciones de cards / ayudas de formulario */
-.juego-descripcion, .card-text, .form-text { font-size: var(--fs-sm); color: #444; }
+.juego-descripcion,
+.card-text,
+.form-text {
+  font-size: var(--fs-sm);
+  color: #444;
+}
 
 /* Botones */
-.btn, button, [type="submit"], [type="button"] { font-size: var(--fs-md); font-weight: 500; }
+.btn,
+button,
+[type="submit"],
+[type="button"] {
+  font-size: var(--fs-md);
+  font-weight: 500;
+}
 
 /* Ajustes en móviles para evitar saltos bruscos */
 @media (max-width: 768px) {
