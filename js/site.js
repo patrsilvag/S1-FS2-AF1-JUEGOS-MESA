@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 			throw new Error("No se pudo cargar el header desde " + headerURL);
 		placeholder.innerHTML = await res.text();
 
-		// === Control de autenticación (login / user / logout) ===
+		// === Control de autenticación (login / user / logout / profile) ===
 		(async function setupAuthNav() {
 			try {
 				const authModuleURL = projectRoot + "js/auth.repo.js"; // ruta absoluta desde la página actual
@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 				const navLogin = document.getElementById("nav-login");
 				const navLogout = document.getElementById("nav-logout");
 				const navUser = document.getElementById("nav-user");
+				const navProfile = document.getElementById("nav-profile"); // NUEVO
 
 				const show = (el) => el && el.classList.remove("d-none");
 				const hide = (el) => el && el.classList.add("d-none");
@@ -46,6 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 					}
 					hide(navLogin);
 					show(navLogout);
+					show(navProfile); // mostrar Perfil cuando hay sesión
 				} else {
 					if (navUser) {
 						navUser.textContent = "";
@@ -53,6 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 					}
 					show(navLogin);
 					hide(navLogout);
+					hide(navProfile); // ocultar Perfil sin sesión
 				}
 
 				// Logout
@@ -118,9 +121,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 			if (headerEl) {
 				const altura = headerEl.offsetHeight;
 				document.documentElement.style.setProperty(
-					"--altura-header",
+					"--estructura-altura-header",
 					altura + "px"
 				);
+				document.documentElement.style.setProperty(
+					"--altura-header",
+					altura + "px"
+				); // compatibilidad con tu CSS previo
 			}
 		};
 
