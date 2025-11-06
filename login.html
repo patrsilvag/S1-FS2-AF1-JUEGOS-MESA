@@ -2,7 +2,7 @@
 <html lang="es">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<title>Iniciar sesión</title>
 		<link
 			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -18,7 +18,10 @@
 		</style>
 	</head>
 	<body>
-		<div class="container py-5">
+		<!-- Header reutilizable -->
+		<div id="header-placeholder"></div>
+
+		<main class="container py-5" style="min-height: 60vh">
 			<div class="row justify-content-center">
 				<div class="col-12 col-sm-10 col-md-8 col-lg-5">
 					<div class="card shadow-sm">
@@ -28,7 +31,7 @@
 							<!-- Alert accesible -->
 							<div
 								id="login-alert"
-								class="alert alert-danger d-none"
+								class="alert d-none"
 								role="alert"
 								aria-live="assertive"
 							></div>
@@ -45,8 +48,13 @@
 										name="email"
 										required
 										autocomplete="username"
+										aria-describedby="error-email"
 									/>
-									<div class="invalid-feedback">Ingresa un correo válido.</div>
+									<small
+										id="error-email"
+										class="text-danger d-block"
+										style="display: none"
+									></small>
 								</div>
 
 								<div class="mb-3">
@@ -59,6 +67,7 @@
 											name="password"
 											required
 											autocomplete="current-password"
+											aria-describedby="error-password"
 										/>
 										<button
 											class="btn btn-outline-secondary"
@@ -68,8 +77,12 @@
 										>
 											👁️
 										</button>
-										<div class="invalid-feedback">Ingresa tu contraseña.</div>
 									</div>
+									<small
+										id="error-password"
+										class="text-danger d-block"
+										style="display: none"
+									></small>
 								</div>
 
 								<div
@@ -112,12 +125,17 @@
 					</p>
 				</div>
 			</div>
-		</div>
+		</main>
+
+		<!-- Footer reutilizable -->
+		<div id="footer-placeholder"></div>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="./js/site.js"></script>
 
-		<!-- Lógica de login -->
+		<!-- Lógica de login reutilizando validaciones.js -->
 		<script type="module">
+			import { emailValido, setFeedback } from "./js/validaciones.js";
 			import {
 				findUserByEmail,
 				setCurrentUser,
@@ -131,6 +149,28 @@
 			const passEl = document.getElementById("password");
 			const togglePass = document.getElementById("togglePass");
 
+			function showAlert(msg, type = "danger", ms = 3000) {
+				alertBox.className = "alert alert-" + type;
+				alertBox.textContent = msg;
+				alertBox.classList.remove("d-none");
+				if (ms) setTimeout(() => alertBox.classList.add("d-none"), ms);
+			}
+
+			// Reutiliza validaciones: email (mismo criterio que registro/recuperar)
+			emailEl.addEventListener("blur", () => {
+				setFeedback(
+					emailEl,
+					emailValido(emailEl.value),
+					"Ingresa un correo válido."
+				);
+			});
+
+			// Para login solo exigimos “no vacío” en password (la complejidad ya se validó en registro/recuperar)
+			passEl.addEventListener("blur", () => {
+				const ok = (passEl.value || "").length > 0;
+				setFeedback(passEl, ok, "Ingresa tu contraseña.");
+			});
+
 			// Mostrar/ocultar contraseña
 			togglePass.addEventListener("click", () => {
 				const isPwd = passEl.getAttribute("type") === "password";
@@ -138,60 +178,36 @@
 				togglePass.textContent = isPwd ? "🙈" : "👁️";
 			});
 
-			function showError(msg) {
-				alertBox.textContent = msg;
-				alertBox.classList.remove("d-none");
-				setTimeout(() => alertBox.classList.add("d-none"), 3000);
-			}
-			function setInvalid(el, msg) {
-				el.classList.add("is-invalid");
-				const fb =
-					el.parentElement.querySelector(".invalid-feedback") ||
-					el.nextElementSibling;
-				if (fb) fb.textContent = msg || fb.textContent;
-			}
-			function clearInvalid(...els) {
-				els.forEach((el) => el.classList.remove("is-invalid"));
-			}
-
 			form.addEventListener("submit", async (e) => {
 				e.preventDefault();
 				btn.disabled = true;
-				alertBox.classList.add("d-none");
-				clearInvalid(emailEl, passEl);
 
-				const email = (emailEl.value || "").trim();
-				const password = passEl.value || "";
+				// Validación unificada
+				const okEmail = emailValido(emailEl.value);
+				setFeedback(emailEl, okEmail, "Ingresa un correo válido.");
 
-				// Validaciones mínimas de formulario
-				let ok = true;
-				if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-					setInvalid(emailEl, "Ingresa un correo válido.");
-					ok = false;
-				}
-				if (!password) {
-					setInvalid(passEl, "Ingresa tu contraseña.");
-					ok = false;
-				}
-				if (!ok) {
+				const okPass = (passEl.value || "").length > 0;
+				setFeedback(passEl, okPass, "Ingresa tu contraseña.");
+
+				if (!(okEmail && okPass)) {
 					btn.disabled = false;
 					return;
 				}
 
 				try {
-					const user = findUserByEmail(email);
+					const user = findUserByEmail((emailEl.value || "").trim());
 					if (!user) {
-						showError("Usuario o contraseña inválidos.");
-						setInvalid(emailEl);
-						setInvalid(passEl);
+						showAlert("Usuario o contraseña inválidos.");
+						setFeedback(emailEl, false, "Revisa tu correo.");
+						setFeedback(passEl, false, "Revisa tu contraseña.");
 						btn.disabled = false;
 						return;
 					}
 
-					const hash = await sha256(password);
+					const hash = await sha256(passEl.value || "");
 					if (hash !== user.passwordHash) {
-						showError("Usuario o contraseña inválidos.");
-						setInvalid(passEl);
+						showAlert("Usuario o contraseña inválidos.");
+						setFeedback(passEl, false, "Contraseña incorrecta.");
 						btn.disabled = false;
 						return;
 					}
@@ -199,16 +215,15 @@
 					// Persistir sesión
 					setCurrentUser(user);
 
-					// "Recordarme": si quieres algo extra (p. ej., timestamp), puedes guardarlo aquí
-					if (document.getElementById("recordarme").checked) {
-						// opcional: localStorage.setItem('remember', '1');
-					}
+					// (Opcional) recordarme
+					// if (document.getElementById('recordarme').checked) { localStorage.setItem('remember', '1'); }
 
-					// Redirige a tu home
+					// Redirigir a inicio
 					window.location.href = "index.html";
 				} catch (err) {
 					console.error(err);
-					showError("Ocurrió un error al iniciar sesión.");
+					showAlert("Ocurrió un error al iniciar sesión.");
+				} finally {
 					btn.disabled = false;
 				}
 			});

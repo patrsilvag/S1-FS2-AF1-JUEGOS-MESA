@@ -1,11 +1,98 @@
-document.addEventListener("DOMContentLoaded", () => {
-	// === refs ===
+// js/validaciones.js  (ES Module compartido)
+
+// === UTILIDADES COMPARTIDAS (exportadas) ===
+export const trim = (elOrStr) => {
+	if (typeof elOrStr === "string") return elOrStr.trim();
+	return elOrStr && typeof elOrStr.value === "string"
+		? elOrStr.value.trim()
+		: "";
+};
+
+export function emailValido(valor) {
+	const v = trim(valor);
+	const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	return re.test(v);
+}
+
+export function validarClave(valor) {
+	const v = valor || "";
+	if (v.length < 6 || v.length > 18) {
+		return { ok: false, msg: "La clave debe tener entre 6 y 18 caracteres." };
+	}
+	if (!/[A-Z]/.test(v)) {
+		return { ok: false, msg: "La clave debe contener al menos una mayúscula." };
+	}
+	if (!/[0-9]/.test(v)) {
+		return { ok: false, msg: "La clave debe contener al menos un número." };
+	}
+	return { ok: true, msg: "" };
+}
+
+export function clavesIguales(a, b) {
+	const va = typeof a === "string" ? a : a?.value || "";
+	const vb = typeof b === "string" ? b : b?.value || "";
+	return va === vb;
+}
+
+/**
+ * Pinta feedback estilo Bootstrap (reutilizable en registro/recuperar)
+ * Espera que exista un <small id="error-<input.id">...</small> para el mensaje.
+ */
+export function setFeedback(inputEl, ok, msg = "") {
+	if (!inputEl) return;
+	const errorSlot = document.getElementById(`error-${inputEl.id}`);
+	inputEl.classList.toggle("is-valid", ok);
+	inputEl.classList.toggle("is-invalid", !ok);
+	if (errorSlot) {
+		errorSlot.textContent = ok ? "" : msg;
+		errorSlot.style.display = ok ? "none" : "block";
+		if (!ok) errorSlot.setAttribute("role", "alert");
+		else errorSlot.removeAttribute("role");
+	}
+}
+
+// (Si necesitas también edadOK/sanitizadores para recuperar, expórtalos aquí)
+export function edadOKInput(inputEl) {
+	if (!inputEl?.value) return false;
+	const hoy = new Date();
+	const fn = new Date(inputEl.value);
+	const limite = new Date(
+		hoy.getFullYear() - 13,
+		hoy.getMonth(),
+		hoy.getDate()
+	);
+	return fn <= limite;
+}
+export function sanitizeTextInput(el) {
+	if (!el || typeof el.value !== "string") return;
+	el.value = el.value.normalize("NFC").trim();
+}
+
+// === SOLO PARA PÁGINA DE REGISTRO ===
+// Importa persistencia (misma carpeta /js/)
+import {
+	getUsers,
+	saveUsers,
+	findUserByEmail,
+	/* opcional */ findUserByUsername,
+	sha256,
+	setCurrentUser,
+} from "./auth.repo.js";
+
+function announce(msg) {
+	const el = document.getElementById("form-alert");
+	if (!el) return;
+	el.textContent = msg;
+	el.classList.remove("visually-hidden");
+	setTimeout(() => el.classList.add("visually-hidden"), 3000);
+}
+
+// Monta la lógica de REGISTRO solo si existe el formulario en la página
+export function setupRegistroPage() {
 	const form = document.getElementById("registroForm");
 	const limpiarBtn = document.getElementById("limpiarBtn");
 	const enviarBtn = document.getElementById("enviarBtn");
-	const formAlert = document.getElementById("form-alert");
-
-	if (!form || !limpiarBtn || !enviarBtn) return;
+	if (!form || !limpiarBtn || !enviarBtn) return; // no estamos en registro.html
 
 	const inputs = {
 		nombreCompleto: document.getElementById("nombreCompleto"),
@@ -14,83 +101,74 @@ document.addEventListener("DOMContentLoaded", () => {
 		clave: document.getElementById("clave"),
 		repetirClave: document.getElementById("repetirClave"),
 		fechaNacimiento: document.getElementById("fechaNacimiento"),
-		direccion: document.getElementById("direccion"), // opcional
+		direccion: document.getElementById("direccion"),
 	};
 
-	// === utilitarios ===
-	const trim = (el) =>
-		el && typeof el.value === "string" ? el.value.trim() : "";
-
-	function sanitizeTextInput(el) {
-		if (!el || typeof el.value !== "string") return;
-		el.value = el.value.normalize("NFC").trim();
+	// Límite fecha (13+)
+	{
+		const hoy = new Date();
+		const max = new Date(hoy.getFullYear() - 13, hoy.getMonth(), hoy.getDate());
+		const toISO = (d) => d.toISOString().slice(0, 10);
+		inputs.fechaNacimiento?.setAttribute("max", toISO(max));
 	}
 
-	function announce(msg) {
-		if (!formAlert) return;
-		formAlert.textContent = msg;
-		formAlert.classList.remove("visually-hidden");
-		setTimeout(() => formAlert.classList.add("visually-hidden"), 3000);
-	}
-
-	function noVacio(el) {
-		if (el === inputs.direccion) return true; // dirección es opcional
-		return trim(el) !== "";
-	}
-
-	function soloLetras(el) {
+	const noVacio = (el) => (el === inputs.direccion ? true : trim(el) !== "");
+	const soloLetras = (el) => {
 		const re = /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s'-]+$/;
 		const v = trim(el);
 		return v !== "" && re.test(v);
-	}
+	};
 
-	function emailValido(el) {
-		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		return re.test(trim(el));
-	}
+	function validarCampo(el) {
+		switch (el.id) {
+			case "nombreCompleto":
+				if (!noVacio(el))
+					return setFeedback(el, false, "El nombre completo es obligatorio.");
+				if (!soloLetras(el))
+					return setFeedback(el, false, "El nombre solo debe contener letras.");
+				return setFeedback(el, true);
 
-	function validarClave(el) {
-		const v = el.value || "";
-		if (v.length < 6 || v.length > 18) {
-			return { ok: false, msg: "La clave debe tener entre 6 y 18 caracteres." };
-		}
-		if (!/[A-Z]/.test(v)) {
-			return {
-				ok: false,
-				msg: "La clave debe contener al menos una mayúscula.",
-			};
-		}
-		if (!/[0-9]/.test(v)) {
-			return { ok: false, msg: "La clave debe contener al menos un número." };
-		}
-		return { ok: true, msg: "" };
-	}
+			case "nombreUsuario":
+				return setFeedback(
+					el,
+					noVacio(el),
+					"El nombre de usuario es obligatorio."
+				);
 
-	function clavesIguales(a, b) {
-		return (a.value || "") === (b.value || "");
-	}
+			case "email":
+				return setFeedback(
+					el,
+					noVacio(el) && emailValido(el.value),
+					"Ingrese un correo válido."
+				);
 
-	function edadOK(el) {
-		if (!el.value) return false;
-		const hoy = new Date();
-		const fn = new Date(el.value);
-		const limite = new Date(
-			hoy.getFullYear() - 13,
-			hoy.getMonth(),
-			hoy.getDate()
-		);
-		return fn <= limite;
-	}
+			case "clave": {
+				const res = validarClave(el.value);
+				setFeedback(el, res.ok, res.msg || "");
+				if (inputs.repetirClave?.value) {
+					setFeedback(
+						inputs.repetirClave,
+						clavesIguales(inputs.clave, inputs.repetirClave),
+						"Las claves no coinciden."
+					);
+				}
+				return;
+			}
 
-	function setFeedback(input, ok, msg = "") {
-		const errorSlot = document.getElementById(`error-${input.id}`);
-		input.classList.toggle("is-valid", ok);
-		input.classList.toggle("is-invalid", !ok);
-		if (errorSlot) {
-			errorSlot.textContent = ok ? "" : msg;
-			errorSlot.style.display = ok ? "none" : "block";
-			if (!ok) errorSlot.setAttribute("role", "alert");
-			else errorSlot.removeAttribute("role");
+			case "repetirClave":
+				return setFeedback(
+					el,
+					clavesIguales(inputs.clave, el),
+					"Las claves no coinciden."
+				);
+
+			case "fechaNacimiento":
+				return setFeedback(el, edadOKInput(el), "Debe tener al menos 13 años.");
+
+			case "direccion":
+				if (trim(el) === "") el.classList.remove("is-valid", "is-invalid");
+				else setFeedback(el, true);
+				return;
 		}
 	}
 
@@ -110,94 +188,15 @@ document.addEventListener("DOMContentLoaded", () => {
 		enviarBtn.textContent = "Enviar registro";
 	}
 
-	// === Mejora UX: límite de fecha (no menores de 13) ===
-	{
-		const hoy = new Date();
-		const max = new Date(hoy.getFullYear() - 13, hoy.getMonth(), hoy.getDate());
-		const toISO = (d) => d.toISOString().slice(0, 10);
-		inputs.fechaNacimiento.setAttribute("max", toISO(max));
-	}
-
-	// === Validación de campo individual (reutilizable en 'input' y 'blur') ===
-	function validarCampo(input) {
-		switch (input.id) {
-			case "nombreCompleto":
-				if (!noVacio(input))
-					return setFeedback(
-						input,
-						false,
-						"El nombre completo es obligatorio."
-					);
-				if (!soloLetras(input))
-					return setFeedback(
-						input,
-						false,
-						"El nombre solo debe contener letras."
-					);
-				return setFeedback(input, true);
-
-			case "nombreUsuario":
-				return setFeedback(
-					input,
-					noVacio(input),
-					"El nombre de usuario es obligatorio."
-				);
-
-			case "email":
-				return setFeedback(
-					input,
-					noVacio(input) && emailValido(input),
-					"Ingrese un correo válido."
-				);
-
-			case "clave": {
-				const res = validarClave(input);
-				setFeedback(input, res.ok, res.msg || "");
-				// revalida coincidencia si ya hay repetición
-				if (inputs.repetirClave.value) {
-					setFeedback(
-						inputs.repetirClave,
-						clavesIguales(inputs.clave, inputs.repetirClave),
-						"Las claves no coinciden."
-					);
-				}
-				return;
-			}
-
-			case "repetirClave":
-				return setFeedback(
-					input,
-					clavesIguales(inputs.clave, inputs.repetirClave),
-					"Las claves no coinciden."
-				);
-
-			case "fechaNacimiento":
-				return setFeedback(
-					input,
-					edadOK(input),
-					"Debe tener al menos 13 años."
-				);
-
-			case "direccion":
-				// opcional: no marcar inválido si vacío
-				if (trim(input) === "")
-					input.classList.remove("is-valid", "is-invalid");
-				else setFeedback(input, true);
-				return;
-		}
-	}
-
-	// === validación principal ===
-	function validarFormulario(e) {
+	form.addEventListener("submit", async (e) => {
 		e.preventDefault();
 		enviarBtn.disabled = true;
 
-		// sanea entradas
+		// Sanear
 		Object.values(inputs).forEach(sanitizeTextInput);
 
 		let ok = true;
 
-		// 1) Nombre completo
 		if (!noVacio(inputs.nombreCompleto)) {
 			setFeedback(
 				inputs.nombreCompleto,
@@ -214,7 +213,6 @@ document.addEventListener("DOMContentLoaded", () => {
 			ok = false;
 		} else setFeedback(inputs.nombreCompleto, true);
 
-		// 2) Usuario
 		if (!noVacio(inputs.nombreUsuario)) {
 			setFeedback(
 				inputs.nombreUsuario,
@@ -224,11 +222,10 @@ document.addEventListener("DOMContentLoaded", () => {
 			ok = false;
 		} else setFeedback(inputs.nombreUsuario, true);
 
-		// 3) Email
 		if (!noVacio(inputs.email)) {
 			setFeedback(inputs.email, false, "El correo electrónico es obligatorio.");
 			ok = false;
-		} else if (!emailValido(inputs.email)) {
+		} else if (!emailValido(inputs.email.value)) {
 			setFeedback(
 				inputs.email,
 				false,
@@ -237,19 +234,17 @@ document.addEventListener("DOMContentLoaded", () => {
 			ok = false;
 		} else setFeedback(inputs.email, true);
 
-		// 4) Clave
 		if (!noVacio(inputs.clave)) {
 			setFeedback(inputs.clave, false, "La clave de ingreso es obligatoria.");
 			ok = false;
 		} else {
-			const res = validarClave(inputs.clave);
+			const res = validarClave(inputs.clave.value);
 			if (!res.ok) {
 				setFeedback(inputs.clave, false, res.msg);
 				ok = false;
 			} else setFeedback(inputs.clave, true);
 		}
 
-		// 5) Repetir clave
 		if (!noVacio(inputs.repetirClave)) {
 			setFeedback(inputs.repetirClave, false, "Debe repetir la clave.");
 			ok = false;
@@ -258,7 +253,6 @@ document.addEventListener("DOMContentLoaded", () => {
 			ok = false;
 		} else setFeedback(inputs.repetirClave, true);
 
-		// 6) Fecha de nacimiento
 		if (!noVacio(inputs.fechaNacimiento)) {
 			setFeedback(
 				inputs.fechaNacimiento,
@@ -266,7 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				"La fecha de nacimiento es obligatoria."
 			);
 			ok = false;
-		} else if (!edadOK(inputs.fechaNacimiento)) {
+		} else if (!edadOKInput(inputs.fechaNacimiento)) {
 			setFeedback(
 				inputs.fechaNacimiento,
 				false,
@@ -275,11 +269,12 @@ document.addEventListener("DOMContentLoaded", () => {
 			ok = false;
 		} else setFeedback(inputs.fechaNacimiento, true);
 
-		// Dirección (opcional)
 		if (trim(inputs.direccion) !== "") setFeedback(inputs.direccion, true);
 		else {
-			inputs.direccion.classList.remove("is-valid", "is-invalid");
-			const slot = document.getElementById(`error-${inputs.direccion.id}`);
+			inputs.direccion?.classList.remove("is-valid", "is-invalid");
+			const slot = inputs.direccion
+				? document.getElementById(`error-${inputs.direccion.id}`)
+				: null;
 			if (slot) {
 				slot.textContent = "";
 				slot.style.display = "none";
@@ -287,89 +282,53 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 		}
 
-		if (ok) {
-			enviarBtn.disabled = true; // bloquear mientras persiste
-
-			import("./auth.repo.js")
-				.then(
-					async ({
-						getUsers,
-						saveUsers,
-						findUserByEmail,
-						findUserByUsername,
-						sha256,
-						setCurrentUser,
-					}) => {
-						// ⚠️ Lee los valores ANTES de resetear
-						const nombreCompleto =
-							document.getElementById("nombreCompleto")?.value?.trim() || "";
-						const nombreUsuario =
-							document.getElementById("nombreUsuario")?.value?.trim() || "";
-						const email = document.getElementById("email")?.value?.trim() || "";
-						const clave = document.getElementById("clave")?.value || "";
-						const fechaNacimiento =
-							document.getElementById("fechaNacimiento")?.value || "";
-						const direccion =
-							document.getElementById("direccion")?.value?.trim() || "";
-
-						// ✅ Duplicados ANTES de guardar
-						if (findUserByEmail(email)) {
-							alert("Este correo ya está registrado.");
-							enviarBtn.disabled = false;
-							return;
-						}
-						// if (findUserByUsername(nombreUsuario)) {
-						// 	alert("Ese nombre de usuario ya existe.");
-						// 	enviarBtn.disabled = false;
-						// 	return;
-						// }
-
-						// ✅ Guardar
-						const users = getUsers();
-						const user = {
-							id: crypto.randomUUID(),
-							email,
-							nombreUsuario,
-							nombreCompleto,
-							fechaNacimiento,
-							direccion,
-							passwordHash: await sha256(clave),
-							avatarUrl: "",
-							telefono: "",
-						};
-						users.push(user);
-						saveUsers(users);
-
-						// Opcional: autologin
-						setCurrentUser(user);
-
-						// 🎉 Mensaje y limpieza DESPUÉS de guardar
-						alert("¡Registro exitoso! Formulario válido.");
-						announce("Registro exitoso.");
-						form.reset();
-						limpiarFeedback();
-						enviarBtn.classList.remove("btn-primary");
-						enviarBtn.classList.add("btn-success");
-						enviarBtn.textContent = "¡Registro completado!";
-						enviarBtn.disabled = false;
-					}
-				)
-				.catch((err) => {
-					console.error("Error importando auth.repo.js", err);
-					alert(
-						"No se pudo guardar el registro (persistencia). Revisa la consola."
-					);
-					enviarBtn.disabled = false;
-				});
-		} else {
+		if (!ok) {
 			announce("Revisa los campos marcados en rojo.");
+			enviarBtn.disabled = false;
+			return;
 		}
 
-		enviarBtn.disabled = false;
-	}
+		// Persistencia (duplicados + guardado)
+		const email = trim(inputs.email);
+		const nombreUsuario = trim(inputs.nombreUsuario);
 
-	// eventos
-	form.addEventListener("submit", validarFormulario);
+		if (findUserByEmail(email)) {
+			setFeedback(inputs.email, false, "Este correo ya está registrado.");
+			enviarBtn.disabled = false;
+			return;
+		}
+		// Si quieres validar username único, descomenta:
+		// if (findUserByUsername?.(nombreUsuario)) {
+		//   setFeedback(inputs.nombreUsuario, false, "Ese nombre de usuario ya existe.");
+		//   enviarBtn.disabled = false;
+		//   return;
+		// }
+
+		const users = getUsers();
+		const user = {
+			id: crypto.randomUUID(),
+			email,
+			nombreUsuario,
+			nombreCompleto: trim(inputs.nombreCompleto),
+			fechaNacimiento: inputs.fechaNacimiento.value,
+			direccion: trim(inputs.direccion),
+			passwordHash: await sha256(inputs.clave.value),
+			avatarUrl: "",
+			telefono: "",
+		};
+		users.push(user);
+		saveUsers(users);
+		setCurrentUser(user);
+
+		alert("¡Registro exitoso! Formulario válido.");
+		announce("Registro exitoso.");
+		form.reset();
+		limpiarFeedback();
+		enviarBtn.classList.remove("btn-primary");
+		enviarBtn.classList.add("btn-success");
+		enviarBtn.textContent = "¡Registro completado!";
+		enviarBtn.disabled = false;
+	});
 
 	limpiarBtn.addEventListener("click", () => {
 		form.reset();
@@ -377,10 +336,17 @@ document.addEventListener("DOMContentLoaded", () => {
 		announce("Formulario limpiado.");
 	});
 
-	// Validación en tiempo real + on blur
+	// Validación en tiempo real
 	Object.values(inputs).forEach((input) => {
 		if (!input) return;
 		input.addEventListener("input", () => validarCampo(input));
 		input.addEventListener("blur", () => validarCampo(input));
 	});
+}
+
+// Auto-inicializa SOLO si estamos en registro.html (existe #registroForm)
+document.addEventListener("DOMContentLoaded", () => {
+	if (document.getElementById("registroForm")) {
+		setupRegistroPage();
+	}
 });

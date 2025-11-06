@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>Recuperar contraseña</title>
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
+		<style>
+			body {
+				background: #f7f7fb;
+			}
+			.card {
+				border-radius: 1rem;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Header reutilizable -->
+		<div id="header-placeholder"></div>
+
+		<main class="container py-5" style="min-height: 60vh">
+			<div class="row justify-content-center">
+				<div class="col-12 col-sm-10 col-md-8 col-lg-6">
+					<div class="card shadow-sm">
+						<div class="card-body p-4 p-lg-5">
+							<h1 class="h4 mb-3 text-center">Recuperar contraseña</h1>
+
+							<!-- Alert accesible -->
+							<div
+								id="reset-alert"
+								class="alert d-none"
+								role="alert"
+								aria-live="assertive"
+							></div>
+
+							<!-- Paso A: solicitar código -->
+							<section id="stepA">
+								<p class="text-muted">
+									Ingresa tu correo para recibir un código de verificación.
+								</p>
+								<form id="form-solicitar" novalidate>
+									<div class="mb-3">
+										<label for="emailA" class="form-label"
+											>Correo electrónico</label
+										>
+										<input
+											type="email"
+											id="emailA"
+											name="email"
+											class="form-control"
+											required
+											autocomplete="email"
+											aria-describedby="error-emailA"
+										/>
+										<small
+											id="error-emailA"
+											class="text-danger d-block"
+											style="display: none"
+										></small>
+									</div>
+									<button type="submit" class="btn btn-primary w-100">
+										Enviar código
+									</button>
+									<div class="text-center mt-3">
+										<a href="login.html" class="small"
+											>Volver al inicio de sesión</a
+										>
+									</div>
+								</form>
+							</section>
+
+							<!-- Paso B: ingresar código + nueva clave -->
+							<section id="stepB" class="d-none">
+								<p class="text-muted">
+									Escribe el código y define tu nueva contraseña.
+								</p>
+								<form id="form-reset" novalidate>
+									<div class="mb-3">
+										<label for="emailB" class="form-label">Correo</label>
+										<input
+											type="email"
+											id="emailB"
+											name="email"
+											class="form-control"
+											readonly
+											aria-describedby="error-emailB"
+										/>
+										<small
+											id="error-emailB"
+											class="text-danger d-block"
+											style="display: none"
+										></small>
+									</div>
+
+									<div class="mb-3">
+										<label for="code" class="form-label"
+											>Código de verificación</label
+										>
+										<input
+											type="text"
+											id="code"
+											name="code"
+											class="form-control"
+											inputmode="numeric"
+											maxlength="6"
+											required
+											pattern="^\d{6}$"
+											aria-describedby="error-code"
+										/>
+										<small
+											id="error-code"
+											class="text-danger d-block"
+											style="display: none"
+										></small>
+									</div>
+
+									<div class="mb-3">
+										<label for="password" class="form-label"
+											>Nueva contraseña</label
+										>
+										<input
+											type="password"
+											id="password"
+											name="password"
+											class="form-control"
+											required
+											minlength="6"
+											maxlength="18"
+											pattern="(?=.*[A-Z])(?=.*\\d).{6,18}"
+											autocomplete="new-password"
+											aria-describedby="error-password"
+										/>
+										<div class="form-text">
+											Debe tener entre 6–18 caracteres, al menos 1 mayúscula y 1
+											número.
+										</div>
+										<small
+											id="error-password"
+											class="text-danger d-block"
+											style="display: none"
+										></small>
+									</div>
+
+									<div class="mb-3">
+										<label for="confirm" class="form-label"
+											>Confirmar contraseña</label
+										>
+										<input
+											type="password"
+											id="confirm"
+											name="confirm"
+											class="form-control"
+											required
+											minlength="6"
+											maxlength="18"
+											pattern="(?=.*[A-Z])(?=.*\\d).{6,18}"
+											autocomplete="new-password"
+											aria-describedby="error-confirm"
+										/>
+										<small
+											id="error-confirm"
+											class="text-danger d-block"
+											style="display: none"
+										></small>
+									</div>
+
+									<div class="d-flex gap-2">
+										<button
+											type="button"
+											id="btn-volver"
+											class="btn btn-outline-secondary"
+										>
+											Volver
+										</button>
+										<button type="submit" class="btn btn-success flex-grow-1">
+											Actualizar contraseña
+										</button>
+									</div>
+								</form>
+							</section>
+						</div>
+					</div>
+
+					<p class="text-center text-muted mt-4 mb-0 small">
+						Demo educativa con <code>localStorage</code>. No usar en producción.
+					</p>
+				</div>
+			</div>
+		</main>
+
+		<!-- Footer reutilizable -->
+		<div id="footer-placeholder"></div>
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="./js/site.js"></script>
+
+		<!-- Lógica: usa validaciones compartidas de js/validaciones.js -->
+		<script type="module">
+			import {
+				emailValido,
+				validarClave,
+				clavesIguales,
+				setFeedback,
+			} from "./js/validaciones.js";
+			import {
+				findUserByEmail,
+				setResetCode,
+				getResetCode,
+				clearResetCode,
+				getUsers,
+				saveUsers,
+				sha256,
+			} from "./js/auth.repo.js";
+
+			// Refs
+			const stepA = document.getElementById("stepA");
+			const stepB = document.getElementById("stepB");
+			const alertBox = document.getElementById("reset-alert");
+
+			const formSolicitar = document.getElementById("form-solicitar");
+			const emailA = document.getElementById("emailA");
+
+			const formReset = document.getElementById("form-reset");
+			const emailB = document.getElementById("emailB");
+			const codeEl = document.getElementById("code");
+			const passEl = document.getElementById("password");
+			const confEl = document.getElementById("confirm");
+			const btnVolver = document.getElementById("btn-volver");
+
+			function showStep(which) {
+				if (which === "A") {
+					stepA.classList.remove("d-none");
+					stepB.classList.add("d-none");
+				} else {
+					stepA.classList.add("d-none");
+					stepB.classList.remove("d-none");
+				}
+			}
+			function showAlert(msg, type = "info", ms = 3000) {
+				alertBox.className = "alert alert-" + type;
+				alertBox.textContent = msg;
+				alertBox.classList.remove("d-none");
+				if (ms) setTimeout(() => alertBox.classList.add("d-none"), ms);
+			}
+
+			// Si viene ?email=... abrimos paso B con email fijo
+			const params = new URLSearchParams(location.search);
+			const pre = params.get("email");
+			if (pre) {
+				emailB.value = pre;
+				showStep("B");
+			} else {
+				showStep("A");
+			}
+
+			// Paso A: solicitar código
+			formSolicitar.addEventListener("submit", (e) => {
+				e.preventDefault();
+				const email = (emailA.value || "").trim();
+
+				const okEmail = emailValido(email);
+				setFeedback(emailA, okEmail, "Ingresa un correo válido.");
+				if (!okEmail) return;
+
+				const user = findUserByEmail(email);
+				if (user) {
+					const code = Math.floor(100000 + Math.random() * 900000).toString();
+					setResetCode(email, code);
+					// DEMO: mostrar el código (en producción, se enviaría por correo)
+					showAlert("Código de verificación: " + code, "warning", 6000);
+				} else {
+					showAlert("Si el correo existe, te enviamos un código.", "info");
+				}
+
+				emailB.value = email;
+				showStep("B");
+				history.replaceState(
+					{},
+					"",
+					"recuperar.html?email=" + encodeURIComponent(email)
+				);
+			});
+
+			btnVolver.addEventListener("click", () => {
+				showStep("A");
+				history.replaceState({}, "", "recuperar.html");
+			});
+
+			// Validación en tiempo real (mismas reglas que registro)
+			passEl.addEventListener("input", () => {
+				const res = validarClave(passEl.value);
+				setFeedback(passEl, res.ok, res.msg);
+				setFeedback(
+					confEl,
+					clavesIguales(passEl.value, confEl.value),
+					"Las claves no coinciden."
+				);
+			});
+			confEl.addEventListener("input", () => {
+				setFeedback(
+					confEl,
+					clavesIguales(passEl.value, confEl.value),
+					"Las claves no coinciden."
+				);
+			});
+			emailA.addEventListener("blur", () => {
+				setFeedback(
+					emailA,
+					emailValido(emailA.value),
+					"Ingresa un correo válido."
+				);
+			});
+			codeEl.addEventListener("input", () => {
+				setFeedback(
+					codeEl,
+					/^\d{6}$/.test(codeEl.value),
+					"Código inválido (6 dígitos)."
+				);
+			});
+
+			// Paso B: resetear contraseña
+			formReset.addEventListener("submit", async (e) => {
+				e.preventDefault();
+
+				const email = (emailB.value || "").trim();
+				const code = (codeEl.value || "").trim();
+				const pass = passEl.value || "";
+				const conf = confEl.value || "";
+
+				const okEmail = emailValido(email);
+				setFeedback(emailB, okEmail, "Correo inválido.");
+
+				const vClave = validarClave(pass);
+				setFeedback(passEl, vClave.ok, vClave.msg);
+
+				const okConfirm = clavesIguales(pass, conf);
+				setFeedback(confEl, okConfirm, "Las claves no coinciden.");
+
+				const okCode = /^\d{6}$/.test(code);
+				setFeedback(codeEl, okCode, "Código inválido (6 dígitos).");
+
+				if (!(okEmail && vClave.ok && okConfirm && okCode)) return;
+
+				// Validar código guardado
+				const stored = getResetCode(email);
+				if (!stored || stored !== code) {
+					setFeedback(codeEl, false, "Código de verificación incorrecto.");
+					return;
+				}
+
+				// Actualizar passwordHash
+				const users = getUsers();
+				const idx = users.findIndex(
+					(u) => (u.email || "").toLowerCase() === email.toLowerCase()
+				);
+				if (idx === -1) {
+					showAlert("Usuario no encontrado.", "danger");
+					return;
+				}
+
+				users[idx].passwordHash = await sha256(pass);
+				saveUsers(users);
+				clearResetCode(email);
+
+				showAlert(
+					"Contraseña actualizada. Redirigiendo al inicio de sesión…",
+					"success",
+					2000
+				);
+				setTimeout(() => (window.location.href = "login.html"), 1200);
+			});
+		</script>
+	</body>
+</html>
