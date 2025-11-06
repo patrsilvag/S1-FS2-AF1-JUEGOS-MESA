@@ -1,5 +1,7 @@
 <header
 	class="site-header navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow-sm"
+	role="navigation"
+	aria-label="Barra principal"
 >
 	<div class="container">
 		<!-- Logo / Nombre del sitio -->
@@ -24,6 +26,7 @@
 				<li class="nav-item">
 					<a class="nav-link" href="index.html">Inicio</a>
 				</li>
+
 				<li class="nav-item dropdown">
 					<a
 						class="nav-link dropdown-toggle"
@@ -54,20 +57,37 @@
 						</li>
 					</ul>
 				</li>
+
 				<li class="nav-item">
 					<a class="nav-link" href="registro.html">Regístrate</a>
 				</li>
-				<!-- Botón del carrito -->
+
+				<!-- 🔹 Bloque de autenticación -->
+				<li class="nav-item">
+					<a id="nav-login" href="login.html" class="nav-link"
+						>Iniciar sesión</a
+					>
+				</li>
+				<li class="nav-item">
+					<span id="nav-user" class="nav-link d-none"></span>
+				</li>
+				<li class="nav-item">
+					<a id="nav-logout" href="#" class="nav-link d-none">Salir</a>
+				</li>
+
+				<!-- 🛒 Carrito -->
 				<li class="nav-item ms-3">
 					<a
 						href="carrito.html"
 						class="btn btn-outline-light position-relative"
 						id="btn-cart"
+						aria-label="Ver carrito"
 					>
 						🛒 Carrito
 						<span
 							id="cart-badge"
 							class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+							aria-live="polite"
 						>
 							0
 						</span>

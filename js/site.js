@@ -2,8 +2,9 @@
 //  js/site.js
 //  Header y Footer reutilizables (carga dinámica),
 //  ajuste dinámico de la altura del header fijo,
-//  y sincronización del badge del carrito.
-//  =============================== 
+//  sincronización del badge del carrito,
+//  y control de autenticación en el header.
+//  ===============================
 document.addEventListener("DOMContentLoaded", async () => {
 	const placeholder = document.getElementById("header-placeholder");
 	if (!placeholder) return;
@@ -22,7 +23,57 @@ document.addEventListener("DOMContentLoaded", async () => {
 			throw new Error("No se pudo cargar el header desde " + headerURL);
 		placeholder.innerHTML = await res.text();
 
-		// === NUEVO: Sincronización del badge del carrito (debe ir después de insertar el header)
+		// === Control de autenticación (login / user / logout) ===
+		(async function setupAuthNav() {
+			try {
+				const authModuleURL = projectRoot + "js/auth.repo.js"; // ruta absoluta desde la página actual
+				const { getCurrentUser, setCurrentUser } = await import(authModuleURL);
+
+				const user = getCurrentUser();
+				const navLogin = document.getElementById("nav-login");
+				const navLogout = document.getElementById("nav-logout");
+				const navUser = document.getElementById("nav-user");
+
+				const show = (el) => el && el.classList.remove("d-none");
+				const hide = (el) => el && el.classList.add("d-none");
+
+				if (user) {
+					if (navUser) {
+						navUser.textContent = `👋 Hola, ${
+							user.nombreUsuario || user.email
+						}`;
+						show(navUser);
+					}
+					hide(navLogin);
+					show(navLogout);
+				} else {
+					if (navUser) {
+						navUser.textContent = "";
+						hide(navUser);
+					}
+					show(navLogin);
+					hide(navLogout);
+				}
+
+				// Logout
+				navLogout?.addEventListener("click", (e) => {
+					e.preventDefault();
+					setCurrentUser(null);
+					window.location.href = projectRoot + "login.html";
+				});
+
+				// Helper global para proteger páginas
+				window.ensureAuth = function ensureAuth() {
+					const u = getCurrentUser();
+					if (!u) window.location.href = projectRoot + "login.html";
+				};
+			} catch (e) {
+				console.warn("No se pudo inicializar la navegación de auth:", e);
+			}
+		})();
+		// === FIN Control de autenticación ===
+
+		// === Sincronización del badge del carrito (tu lógica original) ===
 		(function setupCartBadge() {
 			const badge = document.getElementById("cart-badge");
 			if (!badge) return;
@@ -47,7 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 			addEventListener("cart:updated", updateFromCart);
 			updateFromCart();
 		})();
-		// === FIN NUEVO
+		// === FIN badge ===
 
 		// Activar el botón ☰ (menú móvil) (ORIGINAL)
 		const toggle = document.querySelector(".nav-toggle");
@@ -94,10 +145,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 document.addEventListener("DOMContentLoaded", async () => {
 	const placeholder = document.getElementById("footer-placeholder");
 	if (!placeholder) return;
+
 	const path = window.location.pathname;
 	const rootMatch = path.match(/^(.*?)(categorias|pages|includes|js|css)\//);
 	const projectRoot = rootMatch ? rootMatch[1] : path.replace(/[^/]*$/, "");
 	const footerURL = projectRoot + "includes/footer.html";
+
 	try {
 		const res = await fetch(footerURL, { cache: "no-store" });
 		if (!res.ok)
