@@ -1,179 +1,178 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Registro de Compradores | Cuatro Esquinas</title>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Registro de Compradores | Cuatro Esquinas</title>
 
-    <!-- 🧩 Meta tags sugeridas por el profesor -->
-    <meta
-      name="description"
-      content="Regístrate en Cuatro Esquinas y accede a juegos de mesa para toda la familia: estrategia, infantiles, amigos y cartas."
-    />
-    <meta name="author" content="Cuatro Esquinas" />
-    <meta name="theme-color" content="#0d6efd" />
+		<!-- 🧩 Meta tags sugeridas por el profesor -->
+		<meta
+			name="description"
+			content="Regístrate en Cuatro Esquinas y accede a juegos de mesa para toda la familia: estrategia, infantiles, amigos y cartas."
+		/>
+		<meta name="author" content="Cuatro Esquinas" />
+		<meta name="theme-color" content="#0d6efd" />
 
-    <!-- 🔹 Favicon -->
-    <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+		<!-- 🔹 Favicon -->
+		<link rel="icon" href="img/favicon.ico" type="image/x-icon" />
 
-    <!-- 🔹 Bootstrap -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+		<!-- 🔹 Bootstrap -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
 
-    <!-- 🔹 Tus estilos -->
-    <link rel="stylesheet" href="css/estilos.css" />
-  </head>
+		<!-- 🔹 Tus estilos -->
+		<link rel="stylesheet" href="css/estilos.css" />
+	</head>
 
-  <body class="bg-light">
-    <!-- Header reutilizable (se carga desde /includes/header.html) -->
-    <div id="header-placeholder"></div>
+	<body class="bg-light">
+		<!-- Header reutilizable (se carga desde /includes/header.html) -->
+		<div id="header-placeholder"></div>
 
-    <!-- Contenido principal -->
-    <main class="container py-5">
-      <div class="row justify-content-center">
-        <div class="col-xl-6 col-lg-7 col-md-9">
-          <h2 class="text-center mb-4 text-primary">Formulario de Registro</h2>
+		<!-- Contenido principal -->
+		<main class="container py-5">
+			<div class="row justify-content-center">
+				<div class="col-xl-6 col-lg-7 col-md-9">
+					<h2 class="text-center mb-4 text-primary">Formulario de Registro</h2>
 
-          <!-- Card de registro -->
-          <div class="card shadow-lg border-0 rounded-4">
-            <div class="card-body p-4 p-md-5">
-              <form
-                id="registroForm"
-                class="needs-validation form-grid"
-                novalidate
-              >
-                <div class="form-row">
-                  <label for="nombreCompleto" class="form-label"
-                    >Nombre completo:</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control form-control-lg"
-                    id="nombreCompleto"
-                    placeholder="Ej: Patricio Silva"
-                    required
-                  />
-                  <div class="invalid-feedback" id="error-nombreCompleto"></div>
-                </div>
+					<!-- Card de registro -->
+					<div class="card shadow-lg border-0 rounded-4">
+						<div class="card-body p-4 p-md-5">
+							<form
+								id="registroForm"
+								class="needs-validation form-grid"
+								novalidate
+							>
+								<div class="form-row">
+									<label for="nombreCompleto" class="form-label"
+										>Nombre completo:</label
+									>
+									<input
+										type="text"
+										class="form-control form-control-lg"
+										id="nombreCompleto"
+										placeholder="Ej: Patricio Silva"
+										required
+									/>
+									<div class="invalid-feedback" id="error-nombreCompleto"></div>
+								</div>
 
-                <div class="form-row">
-                  <label for="nombreUsuario" class="form-label"
-                    >Nombre de usuario:</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control form-control-lg"
-                    id="nombreUsuario"
-                    placeholder="Ej: PSilva"
-                    required
-                  />
-                  <div class="invalid-feedback" id="error-nombreUsuario"></div>
-                </div>
+								<div class="form-row">
+									<label for="nombreUsuario" class="form-label"
+										>Nombre de usuario:</label
+									>
+									<input
+										type="text"
+										class="form-control form-control-lg"
+										id="nombreUsuario"
+										placeholder="Ej: PSilva"
+										required
+									/>
+									<div class="invalid-feedback" id="error-nombreUsuario"></div>
+								</div>
 
-                <div class="form-row">
-                  <label for="email" class="form-label"
-                    >Correo electrónico:</label
-                  >
-                  <input
-                    type="email"
-                    class="form-control form-control-lg"
-                    id="email"
-                    placeholder="Ej: PSilva@gmail.com"
-                    required
-                  />
-                  <div class="invalid-feedback" id="error-email"></div>
-                </div>
+								<div class="form-row">
+									<label for="email" class="form-label"
+										>Correo electrónico:</label
+									>
+									<input
+										type="email"
+										class="form-control form-control-lg"
+										id="email"
+										placeholder="Ej: PSilva@gmail.com"
+										required
+									/>
+									<div class="invalid-feedback" id="error-email"></div>
+								</div>
 
-                <div class="form-row">
-                  <label for="clave" class="form-label"
-                    >Clave de ingreso:</label
-                  >
-                  <input
-                    type="password"
-                    class="form-control form-control-lg"
-                    id="clave"
-                    required
-                  />
-                  <div class="form-text">
-                    6–18 caracteres, incluir mayúscula y número.
-                  </div>
-                  <div class="invalid-feedback" id="error-clave"></div>
-                </div>
+								<div class="form-row">
+									<label for="clave" class="form-label"
+										>Clave de ingreso:</label
+									>
+									<input
+										type="password"
+										class="form-control form-control-lg"
+										id="clave"
+										required
+										minlength="6"
+										maxlength="18"
+									/>
+									<div class="invalid-feedback" id="error-clave"></div>
+								</div>
 
-                <div class="form-row">
-                  <label for="repetirClave" class="form-label"
-                    >Repetir clave:</label
-                  >
-                  <input
-                    type="password"
-                    class="form-control form-control-lg"
-                    id="repetirClave"
-                    required
-                  />
-                  <div class="invalid-feedback" id="error-repetirClave"></div>
-                </div>
+								<div class="form-row">
+									<label for="repetirClave" class="form-label"
+										>Repetir clave:</label
+									>
+									<input
+										type="password"
+										class="form-control form-control-lg"
+										id="repetirClave"
+										required
+									/>
+									<div class="invalid-feedback" id="error-repetirClave"></div>
+								</div>
 
-                <div class="form-row">
-                  <label for="fechaNacimiento" class="form-label"
-                    >Fecha de nacimiento:</label
-                  >
-                  <input
-                    type="date"
-                    class="form-control form-control-lg"
-                    id="fechaNacimiento"
-                    required
-                  />
-                  <div
-                    class="invalid-feedback"
-                    id="error-fechaNacimiento"
-                  ></div>
-                </div>
+								<div class="form-row">
+									<label for="fechaNacimiento" class="form-label"
+										>Fecha de nacimiento:</label
+									>
+									<input
+										type="date"
+										class="form-control form-control-lg"
+										id="fechaNacimiento"
+										required
+									/>
+									<div
+										class="invalid-feedback"
+										id="error-fechaNacimiento"
+									></div>
+								</div>
 
-                <div class="form-row">
-                  <label for="direccion" class="form-label"
-                    >Dirección de despacho (opcional):</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control form-control-lg"
-                    id="direccion"
-                  />
-                </div>
+								<div class="form-row">
+									<label for="direccion" class="form-label"
+										>Dirección de despacho (opcional):</label
+									>
+									<input
+										type="text"
+										class="form-control form-control-lg"
+										id="direccion"
+									/>
+								</div>
 
-                <div class="text-center mt-4">
-                  <button
-                    type="button"
-                    class="btn btn-outline-secondary px-4 me-2"
-                    id="limpiarBtn"
-                  >
-                    Limpiar formulario
-                  </button>
-                  <button
-                    type="submit"
-                    class="btn btn-primary px-4"
-                    id="enviarBtn"
-                  >
-                    Enviar registro
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
+								<div class="text-center mt-4">
+									<button
+										type="button"
+										class="btn btn-outline-secondary px-4 me-2"
+										id="limpiarBtn"
+									>
+										Limpiar formulario
+									</button>
+									<button
+										type="submit"
+										class="btn btn-primary px-4"
+										id="enviarBtn"
+									>
+										Enviar registro
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
 
-    <!-- Footer reutilizable (se carga desde /includes/footer.html) -->
-    <div id="footer-placeholder"></div>
+		<!-- Footer reutilizable (se carga desde /includes/footer.html) -->
+		<div id="footer-placeholder"></div>
 
-    <!-- Bootstrap JS y scripts del sitio -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- 🔹 Header reutilizable -->
-    <script src="js/site.js"></script>
-    <!-- Validaciones específicas de esta página -->
-    <script type="module" src="js/validaciones.js"></script>
-    <script type="module" src="js/auth.repo.js"></script>
-  </body>
+		<!-- Bootstrap JS y scripts del sitio -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<!-- 🔹 Header reutilizable -->
+		<script src="js/site.js"></script>
+		<!-- Validaciones específicas de esta página -->
+		<script type="module" src="js/validaciones.js"></script>
+		<script type="module" src="js/auth.repo.js"></script>
+	</body>
 </html>

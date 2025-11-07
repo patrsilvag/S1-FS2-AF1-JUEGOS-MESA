@@ -25,6 +25,12 @@ export function validarClave(valor) {
 	if (!/[0-9]/.test(v)) {
 		return { ok: false, msg: "La clave debe contener al menos un número." };
 	}
+	if (!/[a-z!@#$%^&*()_\-+=\[{\]};:'",.<>/?`~]/.test(v)) {
+		return {
+			ok: false,
+			msg: "La clave debe incluir al menos una minúscula o un carácter especial.",
+		};
+	}
 	return { ok: true, msg: "" };
 }
 

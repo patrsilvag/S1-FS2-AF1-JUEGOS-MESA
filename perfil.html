@@ -16,7 +16,7 @@
 
 		<main class="container py-5 with-fixed-header" style="min-height: 60vh">
 			<h1 class="h4 mb-4">Mi perfil</h1>
-			
+
 			<!-- tarjeta datos -->
 			<div class="card shadow-sm mb-4">
 				<div class="card-body p-4">
@@ -41,12 +41,9 @@
 									required
 									aria-describedby="error-nombreCompleto"
 								/>
-								<small
-									id="error-nombreCompleto"
-									class="text-danger d-block"
-									style="display: none"
-								></small>
+								<div id="error-nombreCompleto" class="invalid-feedback"></div>
 							</div>
+
 							<div class="col-12 col-md-6">
 								<label for="nombreUsuario" class="form-label"
 									>Nombre de usuario</label
@@ -58,12 +55,9 @@
 									required
 									aria-describedby="error-nombreUsuario"
 								/>
-								<small
-									id="error-nombreUsuario"
-									class="text-danger d-block"
-									style="display: none"
-								></small>
+								<div id="error-nombreUsuario" class="invalid-feedback"></div>
 							</div>
+
 							<div class="col-12 col-md-6">
 								<label for="email" class="form-label">Correo</label>
 								<input
@@ -73,12 +67,9 @@
 									readonly
 									aria-describedby="error-email"
 								/>
-								<small
-									id="error-email"
-									class="text-danger d-block"
-									style="display: none"
-								></small>
+								<div id="error-email" class="invalid-feedback"></div>
 							</div>
+
 							<div class="col-12 col-md-6">
 								<label for="fechaNacimiento" class="form-label"
 									>Fecha de nacimiento</label
@@ -90,12 +81,9 @@
 									required
 									aria-describedby="error-fechaNacimiento"
 								/>
-								<small
-									id="error-fechaNacimiento"
-									class="text-danger d-block"
-									style="display: none"
-								></small>
+								<div id="error-fechaNacimiento" class="invalid-feedback"></div>
 							</div>
+
 							<div class="col-12 col-md-6">
 								<label for="direccion" class="form-label"
 									>Dirección (opcional)</label
@@ -106,12 +94,9 @@
 									id="direccion"
 									aria-describedby="error-direccion"
 								/>
-								<small
-									id="error-direccion"
-									class="text-danger d-block"
-									style="display: none"
-								></small>
+								<div id="error-direccion" class="invalid-feedback"></div>
 							</div>
+
 							<div class="col-12 col-md-6">
 								<label for="telefono" class="form-label"
 									>Teléfono (opcional)</label
@@ -123,11 +108,7 @@
 									placeholder="+56 9 1234 5678"
 									aria-describedby="error-telefono"
 								/>
-								<small
-									id="error-telefono"
-									class="text-danger d-block"
-									style="display: none"
-								></small>
+								<div id="error-telefono" class="invalid-feedback"></div>
 							</div>
 						</div>
 
@@ -172,12 +153,9 @@
 									required
 									aria-describedby="error-passActual"
 								/>
-								<small
-									id="error-passActual"
-									class="text-danger d-block"
-									style="display: none"
-								></small>
+								<div id="error-passActual" class="invalid-feedback"></div>
 							</div>
+
 							<div class="col-12 col-md-4">
 								<label for="passNueva" class="form-label"
 									>Nueva contraseña</label
@@ -189,17 +167,11 @@
 									required
 									minlength="6"
 									maxlength="18"
-									aria-describedby="error-passNueva"
+									aria-describedby="help-passNueva error-passNueva"
 								/>
-								<div class="form-text">
-									6–18, al menos 1 mayúscula y 1 número.
-								</div>
-								<small
-									id="error-passNueva"
-									class="text-danger d-block"
-									style="display: none"
-								></small>
+															<div id="error-passNueva" class="invalid-feedback"></div>
 							</div>
+
 							<div class="col-12 col-md-4">
 								<label for="passConfirm" class="form-label"
 									>Confirmar nueva</label
@@ -211,11 +183,7 @@
 									required
 									aria-describedby="error-passConfirm"
 								/>
-								<small
-									id="error-passConfirm"
-									class="text-danger d-block"
-									style="display: none"
-								></small>
+								<div id="error-passConfirm" class="invalid-feedback"></div>
 							</div>
 						</div>
 
@@ -307,6 +275,7 @@
 			}
 			loadProfile();
 
+			// Guardar perfil
 			perfilForm.addEventListener("submit", (e) => {
 				e.preventDefault();
 				btnSaveProfile.disabled = true;
@@ -395,7 +364,7 @@
 
 			btnResetProfile.addEventListener("click", loadProfile);
 
-			// Password
+			// Password live feedback
 			passNueva.addEventListener("input", () => {
 				const v = validarClave(passNueva.value);
 				setFeedback(passNueva, v.ok, v.msg);
@@ -412,6 +381,8 @@
 					"Las claves no coinciden."
 				);
 			});
+
+			// Guardar nueva contraseña
 			passForm.addEventListener("submit", async (e) => {
 				e.preventDefault();
 				const cur = getCurrentUser();
@@ -463,7 +434,6 @@
 					const slot = document.getElementById("error-" + id);
 					if (slot) {
 						slot.textContent = "";
-						slot.style.display = "none";
 						slot.removeAttribute("role");
 					}
 				});
