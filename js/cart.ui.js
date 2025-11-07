@@ -9,6 +9,8 @@
  *  - Habilitar/inhabilitar "Vaciar carrito" según estado
  *  - Saneo de cantidad (min 1) y prevención de scroll-wheel
  *  - Protección para no registrar eventos múltiples
+ *  - Layout adaptativo: centrado cuando el carrito está vacío
+ *  - Scroll en el detalle con thead sticky
  * --------------------------------------------------------------
  */
 
@@ -19,6 +21,46 @@ const formatoCLP = (valor) =>
 		currency: "CLP",
 		maximumFractionDigits: 0,
 	}).format(valor);
+
+/* Aplica/quita layout para vacío vs con ítems + prepara scroll */
+function applyCartLayout(hasItems) {
+	// 🔹 Añade o quita clase global al <body> para centrar/ensanchar
+	document.body.classList.toggle("cart-empty-center", !hasItems);
+
+	// Fila principal (la que tiene .row.g-4)
+	const row = document.querySelector("main .row.g-4");
+	// Columna izquierda (tabla): intentamos ubicarla de forma robusta
+	const colTable =
+		document.querySelector("main .row.g-4 > .col-12.col-lg-8") ||
+		document.querySelector("main .row.g-4 > .col-12"); // fallback
+	// Contenedor del resumen (card a la derecha)
+	const summary = document.getElementById("cart-summary");
+
+	// 1) Centrado cuando NO hay resumen
+	if (row) {
+		row.classList.toggle("justify-content-center", !hasItems);
+	}
+
+	// 2) Ensanchar un poco la tabla cuando está vacío (de lg-8 a lg-10)
+	if (colTable) {
+		if (!hasItems) {
+			colTable.classList.add("col-lg-10");
+			colTable.classList.remove("col-lg-8");
+		} else {
+			colTable.classList.add("col-lg-8");
+			colTable.classList.remove("col-lg-10");
+		}
+	}
+
+	// 3) Preparar scroll del detalle + thead sticky (idempotente)
+	const tableWrap = document.querySelector("main .table-responsive");
+	const thead = document.querySelector("main table thead");
+	if (tableWrap) tableWrap.classList.add("cart-items-scroll");
+	if (thead) thead.classList.add("sticky-thead");
+
+	// Mostrar/ocultar resumen según estado
+	if (summary) summary.classList.toggle("d-none", !hasItems);
+}
 
 /* Render principal de la página del carrito */
 function renderCartPage() {
@@ -32,7 +74,9 @@ function renderCartPage() {
 
 	tbody.innerHTML = "";
 
-	if (items.length === 0) {
+	const hasItems = items.length > 0;
+
+	if (!hasItems) {
 		empty.classList.remove("d-none");
 		summary.classList.add("d-none");
 		// Totales en cero y botón vaciar deshabilitado
@@ -41,6 +85,9 @@ function renderCartPage() {
 		$("#envio") && ($("#envio").textContent = formatoCLP(0));
 		$("#total") && ($("#total").textContent = formatoCLP(0));
 		if (btnVaciar) btnVaciar.disabled = true;
+
+		// Ajustes de layout (centrar/ensanchar + scroll)
+		applyCartLayout(false);
 		return;
 	} else {
 		empty.classList.add("d-none");
@@ -54,7 +101,7 @@ function renderCartPage() {
 		tr.dataset.id = item.id;
 		tr.innerHTML = `
       <td data-label="Producto">
-        <div class="cart-product">
+        <div class="cart-product d-flex align-items-center gap-2">
           <img src="${item.img}" alt="${
 			item.nombre
 		}" class="cart-thumb" width="64" height="64" loading="lazy">
@@ -83,6 +130,9 @@ function renderCartPage() {
 	document.getElementById("subtotal").textContent = formatoCLP(subtotal);
 	document.getElementById("envio").textContent = formatoCLP(envio);
 	document.getElementById("total").textContent = formatoCLP(total);
+
+	// Ajustes de layout (normalizar + scroll)
+	applyCartLayout(true);
 }
 
 /* Conecta los eventos de interacción (delegación) */

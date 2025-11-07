@@ -12,27 +12,38 @@
 		}
 	}
 
+	// Cada tarjeta ya viene envuelta en la columna para cumplir:
+	// xs: 12/12 (1 por fila), md: 4/12 (3 por fila), lg: 3/12 (4 por fila)
 	function cardHTML(p) {
 		const precio = formatoCLP(p.precio);
 		const badge = p.descuento
-			? `<span class="juego-descuento d-inline-block ms-2">Descuento</span>`
+			? `<span class="badge text-bg-warning ms-2">Descuento</span>`
 			: "";
+
+		const alt = p.alt || p.nombre || "Juego de mesa";
+
 		return `
-      <div class="col">
-        <div class="juego-ficha h-100" data-id="${p.id}" data-categoria="${
-			p.categoria
-		}">
-          <img src="${p.img}" alt="${p.alt}" class="card-img-top" />
-          <div class="card-body">
-            <h5 class="juego-nombre">${p.nombre}</h5>
-            <p class="juego-descripcion">${p.desc || ""}</p>
-            <p class="juego-precio">Precio: ${precio} ${badge}</p>
-            <!-- Se establece type="button" para evitar submits accidentales -->
-            <button type="button" class="btn btn-primary btn-agregar" data-id="${
-							p.id
-						}" data-precio="${p.precio}">
-              Agregar
-            </button>
+      <div class="col-12 col-md-4 col-lg-3">
+        <div class="card h-100 shadow-sm juego-ficha" data-id="${
+					p.id
+				}" data-categoria="${p.categoria}">
+          <img src="${
+						p.img
+					}" alt="${alt}" class="card-img-top" loading="lazy" />
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title juego-nombre mb-1">${p.nombre}</h5>
+            <p class="card-text small text-muted juego-descripcion mb-2">${
+							p.desc || ""
+						}</p>
+            <p class="juego-precio mb-3">Precio: <strong>${precio}</strong> ${badge}</p>
+            <div class="mt-auto">
+              <!-- type="button" evita submits accidentales -->
+              <button type="button" class="btn btn-primary btn-agregar" data-id="${
+								p.id
+							}" data-precio="${p.precio}">
+                Agregar
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -41,16 +52,18 @@
 
 	function renderListaProductos(root) {
 		if (!window.PRODUCTOS) return;
-		const categoria = root.dataset.categoria || ""; // p.ej. "amigos"
+
+		// Asegura que el contenedor tenga las clases de fila y gap (por si falta en algún HTML)
+		// 💡 Aplica las clases Bootstrap al contenedor de productos
+		root.classList.add("row", "g-4", "justify-content-center");
+
+		const categoria = root.dataset.categoria || "";
 		const productos = categoria
 			? window.PRODUCTOS.filter((p) => p.categoria === categoria)
 			: window.PRODUCTOS.slice();
 
-		root.innerHTML = `
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-        ${productos.map(cardHTML).join("")}
-      </div>
-    `;
+		// Inyecta SOLO columnas (no otra .row)
+		root.innerHTML = productos.map(cardHTML).join("");
 
 		// Listeners directos (se mantienen)
 		root.querySelectorAll(".btn-agregar").forEach((btn) => {
@@ -75,8 +88,9 @@
 	}
 
 	document.addEventListener("DOMContentLoaded", () => {
-		const root = document.querySelector("[data-lista-productos]");
-		if (!root) return;
-		renderListaProductos(root);
+		// Soporta múltiples listas en la misma página
+		const roots = document.querySelectorAll("[data-lista-productos]");
+		if (!roots.length) return;
+		roots.forEach(renderListaProductos);
 	});
 })();

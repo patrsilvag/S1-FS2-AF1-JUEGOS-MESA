@@ -45,7 +45,6 @@ body {
   color: var(--color-texto);
   background-color: var(--color-secundario);
   line-height: 1.6;
-  /*padding: var(--espaciado-md);*/
   padding-top: var(--altura-header); /* compensa header fijo */
 }
 
@@ -76,10 +75,6 @@ body {
   font-weight: bold;
   text-decoration: none;
   color: #fff;
-}
-
-.site-header .site-nav {
-  background: transparent;
 }
 
 .site-header .menu {
@@ -231,63 +226,27 @@ footer {
    ANIMACIONES CSS EXTRA
    =============================== */
 @keyframes resaltar {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 .categoria:hover img {
   animation: resaltar 0.5s ease-in-out;
 }
 
 @keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @keyframes pulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-}
-@keyframes slide-up {
-  0% {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
 }
 @keyframes hover-wiggle {
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(2deg);
-  }
-  50% {
-    transform: rotate(-2deg);
-  }
-  75% {
-    transform: rotate(2deg);
-  }
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(2deg); }
+  50% { transform: rotate(-2deg); }
+  75% { transform: rotate(2deg); }
 }
 button:hover,
 .btn-volver:hover,
@@ -301,71 +260,18 @@ button:hover,
    MEDIA QUERIES
    =============================== */
 @media (max-width: 1024px) {
-  .categorias {
-    grid-template-columns: 1fr 1fr;
-  }
+  .categorias { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 768px) {
-  header h1 {
-    font-size: 1.5rem;
-  }
-  nav ul {
-    flex-direction: column;
-    align-items: center;
-  }
-  .categorias,
-  .categoria,
-  .juego-ficha {
+  header h1 { font-size: 1.5rem; }
+  nav ul { flex-direction: column; align-items: center; }
+  .categorias, .categoria, .juego-ficha {
     display: grid;
     grid-template-columns: 1fr;
     max-width: 100%;
   }
-  main {
-    padding: var(--espaciado-md);
-  }
-}
-
-@media (max-width: 280px) {
-  html,
-  body {
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-  main {
-    padding: calc(var(--espaciado-md) * 0.75);
-  }
-  header {
-    padding: calc(var(--espaciado-md) * 1) 0;
-  }
-  header h1 {
-    font-size: 1.2rem;
-  }
-  .categorias {
-    gap: 0.75rem;
-  }
-  .categoria img {
-    height: 100px;
-  }
-  .juego-ficha {
-    padding: 0.6rem;
-    margin-bottom: 0.6rem;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
-  }
-  .juego-nombre {
-    font-size: 1rem;
-  }
-  .juego-descripcion,
-  .juego-precio,
-  .juego-descuento {
-    font-size: 0.9rem;
-  }
-  .btn-volver {
-    display: block;
-    width: 100%;
-    text-align: center;
-    padding: 0.6rem 0.8rem;
-  }
+  main { padding: var(--espaciado-md); }
 }
 
 /* ===============================
@@ -376,56 +282,27 @@ button:hover,
   height: 200px;
   object-fit: cover;
   object-position: center;
-  border-top-left-radius: 0.5rem;
-  border-top-right-radius: 0.5rem;
+  border-radius: 0.5rem 0.5rem 0 0;
   display: block;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease;
 }
-.card:hover .card-img-top {
-  transform: scale(1.03);
-}
-@media (max-width: 576px) {
-  .card-img-top {
-    height: 220px;
-  }
-}
+.card:hover .card-img-top { transform: scale(1.03); }
 
 /* ===============================
    FORMULARIO REGISTRO
    =============================== */
-#registroForm label {
-  padding-right: 0.5rem;
-}
-
-.form-grid {
-  display: grid;
-  row-gap: 1rem;
-}
+#registroForm label { padding-right: 0.5rem; }
+.form-grid { display: grid; row-gap: 1rem; }
 .form-row {
   display: grid;
   grid-template-columns: 230px 1fr;
   align-items: center;
   column-gap: 12px;
 }
-.form-row .form-label {
-  text-align: left;
-  font-weight: 500;
-  margin-bottom: 0;
-}
+.form-row .form-label { text-align: left; font-weight: 500; margin-bottom: 0; }
 .form-row .invalid-feedback,
-.form-row .form-text {
-  grid-column: 2;
-}
-@media (max-width: 576px) {
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-  .form-row .invalid-feedback,
-  .form-row .form-text {
-    grid-column: 1;
-  }
-}
+.form-row .form-text { grid-column: 2; }
 
 /* ===============================
    MOVIMIENTO REDUCIDO (accesibilidad)
@@ -440,103 +317,61 @@ button:hover,
 }
 
 /* =======================================================
-   TIPOGRAFÍA UNIFICADA (para no romper Bootstrap)
+   TIPOGRAFÍA UNIFICADA
    ======================================================= */
+body { font-size: var(--fs-base); line-height: 1.6; }
+h1, .h1 { font-size: var(--fs-xxl); font-weight: 700; margin-bottom: 1rem; }
+h2, .h2 { font-size: var(--fs-xl); font-weight: 600; margin-bottom: 0.8rem; }
+h3, .h3 { font-size: var(--fs-lg); font-weight: 600; margin-bottom: 0.6rem; }
 
-/* Texto base */
-body {
-  font-size: var(--fs-base);
-  line-height: 1.6;
-}
+/* ===============================
+   CARRITO: tabla, resumen y estados
+   =============================== */
 
-/* Encabezados */
-h1,
-.h1 {
-  font-size: var(--fs-xxl);
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
-h2,
-.h2 {
-  font-size: var(--fs-xl);
-  font-weight: 600;
-  margin-bottom: 0.8rem;
-}
-h3,
-.h3 {
-  font-size: var(--fs-lg);
-  font-weight: 600;
-  margin-bottom: 0.6rem;
-}
-h4,
-.h4 {
-  font-size: 1.125rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-}
-h5,
-.h5 {
-  font-size: 1rem;
-  font-weight: 500;
-  margin-bottom: 0.4rem;
-}
-h6,
-.h6 {
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin-bottom: 0.3rem;
+/* Altura máxima del listado con scroll */
+.cart-items-scroll {
+  max-height: 60vh;
+  overflow: auto;
 }
 
-/* Texto general */
-p,
-li,
-a,
-label,
-input,
-button {
-  font-size: var(--fs-md);
+/* Encabezado pegajoso reforzado */
+.sticky-thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.sticky-thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: #212529;
+  color: #fff;
 }
 
-/* Menú y logo del header reutilizable */
-.site-header .nav-link {
-  font-size: var(--fs-md);
-  font-weight: 500;
-}
-.site-header .logo {
-  font-size: 1.25rem;
-  font-weight: 700;
+/* Resumen sticky sin inline styles */
+#cart-col-summary .position-sticky {
+  top: calc(var(--altura-header) + 16px);
 }
 
-/* Títulos dentro de cards / fichas */
-.card-title,
-.juego-nombre {
-  font-size: var(--fs-lg);
-  font-weight: 600;
+/* Cuando el carrito está vacío, centramos y ensanchamos */
+.cart-empty-center #cart-row { justify-content: center; }
+.cart-empty-center #cart-col-table {
+  flex: 0 0 auto;
+  width: 100%;
+}
+@media (min-width: 992px) {
+  .cart-empty-center #cart-col-table { max-width: 83.333333%; }
 }
 
-/* Descripciones de cards / ayudas de formulario */
-.juego-descripcion,
-.card-text,
-.form-text {
-  font-size: var(--fs-sm);
-  color: #444;
+/* Scrollbar personalizado (opcional) */
+.cart-items-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
 }
-
-/* Botones */
-.btn,
-button,
-[type="submit"],
-[type="button"] {
-  font-size: var(--fs-md);
-  font-weight: 500;
+.cart-items-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
 }
-
-/* Ajustes en móviles para evitar saltos bruscos */
-@media (max-width: 768px) {
-  :root {
-    --fs-base: 15px;
-    --fs-lg: 1.125rem;
-    --fs-xl: 1.5rem;
-    --fs-xxl: 1.875rem;
-  }
+.cart-items-scroll::-webkit-scrollbar-track {
+  background: transparent;
 }
