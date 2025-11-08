@@ -175,11 +175,16 @@ function setupCartEvents() {
 		Cart.remove(tr.dataset.id);
 	});
 
-	// Vaciar carrito
+	// Vaciar carrito con notificación amigable
 	const btnVaciar = document.getElementById("btn-vaciar");
 	if (btnVaciar) {
 		btnVaciar.addEventListener("click", () => {
-			if (confirm("¿Desea vaciar el carrito?")) Cart.clear();
+			if (!window.Cart)
+				return notify("El carrito no está disponible.", "danger");
+
+			Cart.clear();
+			dispatchEvent(new CustomEvent("cart:updated")); // actualiza badge si aplica
+			notify("Carrito vaciado correctamente.", "success");
 		});
 	}
 

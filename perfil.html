@@ -1,179 +1,203 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mi perfil</title>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Mi perfil</title>
 
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
-  <link rel="stylesheet" href="css/estilos.css" />
-</head>
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="css/estilos.css" />
+	</head>
 
-<body>
-  <!-- Header reutilizable -->
-  <div id="header-placeholder"></div>
+	<body>
+		<!-- Header reutilizable -->
+		<div id="header-placeholder"></div>
 
-  <main class="container py-5 with-fixed-header" style="min-height: 60vh">
-    <h1 class="h4 mb-4">Mi perfil</h1>
+		<main class="container py-5 with-fixed-header" style="min-height: 60vh">
+			<h1 class="h4 mb-4">Mi perfil</h1>
 
-    <!-- Datos Perfil -->
-    <div class="card shadow-sm mb-4">
-      <div class="card-body p-4">
-        <h2 class="h5 mb-3">Datos de perfil</h2>
-        <div id="perfil-alert" class="alert d-none" role="alert" aria-live="assertive"></div>
+			<!-- Datos Perfil -->
+			<div class="card shadow-sm mb-4">
+				<div class="card-body p-4">
+					<h2 class="h5 mb-3">Datos de perfil</h2>
+					<div
+						id="perfil-alert"
+						class="alert d-none"
+						role="alert"
+						aria-live="assertive"
+					></div>
 
-        <form id="perfilForm" novalidate>
-          <div class="row g-3">
-            <div class="col-12 col-md-6">
-              <label for="nombreCompleto" class="form-label">Nombre completo</label>
-              <input
-                type="text"
-                class="form-control"
-                id="nombreCompleto"
-                required
-                aria-describedby="error-nombreCompleto"
-              />
-              <div id="error-nombreCompleto" class="invalid-feedback"></div>
-            </div>
+					<form id="perfilForm" novalidate>
+						<div class="row g-3">
+							<div class="col-12 col-md-6">
+								<label for="nombreCompleto" class="form-label"
+									>Nombre completo</label
+								>
+								<input
+									type="text"
+									class="form-control"
+									id="nombreCompleto"
+									required
+									aria-describedby="error-nombreCompleto"
+								/>
+								<div id="error-nombreCompleto" class="invalid-feedback"></div>
+							</div>
 
-            <div class="col-12 col-md-6">
-              <label for="nombreUsuario" class="form-label">Nombre de usuario</label>
-              <input
-                type="text"
-                class="form-control"
-                id="nombreUsuario"
-                required
-                aria-describedby="error-nombreUsuario"
-              />
-              <div id="error-nombreUsuario" class="invalid-feedback"></div>
-            </div>
+							<div class="col-12 col-md-6">
+								<label for="nombreUsuario" class="form-label"
+									>Nombre de usuario</label
+								>
+								<input
+									type="text"
+									class="form-control"
+									id="nombreUsuario"
+									required
+									aria-describedby="error-nombreUsuario"
+								/>
+								<div id="error-nombreUsuario" class="invalid-feedback"></div>
+							</div>
 
-            <div class="col-12 col-md-6">
-              <label for="email" class="form-label">Correo</label>
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                readonly
-                aria-describedby="error-email"
-              />
-              <div id="error-email" class="invalid-feedback"></div>
-            </div>
+							<div class="col-12 col-md-6">
+								<label for="email" class="form-label">Correo</label>
+								<input
+									type="email"
+									class="form-control"
+									id="email"
+									readonly
+									aria-describedby="error-email"
+								/>
+								<div id="error-email" class="invalid-feedback"></div>
+							</div>
 
-            <div class="col-12 col-md-6">
-              <label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label>
-              <input
-                type="date"
-                class="form-control"
-                id="fechaNacimiento"
-                required
-                aria-describedby="error-fechaNacimiento"
-              />
-              <div id="error-fechaNacimiento" class="invalid-feedback"></div>
-            </div>
+							<div class="col-12 col-md-6">
+								<label for="fechaNacimiento" class="form-label"
+									>Fecha de nacimiento</label
+								>
+								<input
+									type="date"
+									class="form-control"
+									id="fechaNacimiento"
+									required
+									aria-describedby="error-fechaNacimiento"
+								/>
+								<div id="error-fechaNacimiento" class="invalid-feedback"></div>
+							</div>
 
-            <div class="col-12 col-md-6">
-              <label for="direccion" class="form-label">Dirección (opcional)</label>
-              <input
-                type="text"
-                class="form-control"
-                id="direccion"
-                aria-describedby="error-direccion"
-              />
-              <div id="error-direccion" class="invalid-feedback"></div>
-            </div>
-          </div>
+							<div class="col-12 col-md-6">
+								<label for="direccion" class="form-label"
+									>Dirección (opcional)</label
+								>
+								<input
+									type="text"
+									class="form-control"
+									id="direccion"
+									aria-describedby="error-direccion"
+								/>
+								<div id="error-direccion" class="invalid-feedback"></div>
+							</div>
+						</div>
 
-          <div class="d-flex gap-2 mt-4">
-            <button type="submit" id="btnSaveProfile" class="btn btn-primary">
-              Guardar cambios
-            </button>
-            <button
-              type="button"
-              id="btnResetProfile"
-              class="btn btn-outline-secondary"
-            >
-              Deshacer
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+						<div class="d-flex gap-2 mt-4">
+							<button type="submit" id="btnSaveProfile" class="btn btn-primary">
+								Guardar cambios
+							</button>
+							<button
+								type="button"
+								id="btnResetProfile"
+								class="btn btn-outline-secondary"
+							>
+								Deshacer
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
 
-    <!-- Cambiar contraseña -->
-    <div class="card shadow-sm">
-      <div class="card-body p-4">
-        <h2 class="h5 mb-3">Cambiar contraseña</h2>
-        <div id="pass-alert" class="alert d-none" role="alert" aria-live="assertive"></div>
+			<!-- Cambiar contraseña -->
+			<div class="card shadow-sm">
+				<div class="card-body p-4">
+					<h2 class="h5 mb-3">Cambiar contraseña</h2>
+					<div
+						id="pass-alert"
+						class="alert d-none"
+						role="alert"
+						aria-live="assertive"
+					></div>
 
-        <form id="passForm" novalidate>
-          <div class="row g-3">
-            <div class="col-12 col-md-4">
-              <label for="passActual" class="form-label">Contraseña actual</label>
-              <input
-                type="password"
-                class="form-control"
-                id="passActual"
-                required
-                aria-describedby="error-passActual"
-              />
-              <div id="error-passActual" class="invalid-feedback"></div>
-            </div>
+					<form id="passForm" novalidate>
+						<div class="row g-3">
+							<div class="col-12 col-md-4">
+								<label for="passActual" class="form-label"
+									>Contraseña actual</label
+								>
+								<input
+									type="password"
+									class="form-control"
+									id="passActual"
+									required
+									aria-describedby="error-passActual"
+								/>
+								<div id="error-passActual" class="invalid-feedback"></div>
+							</div>
 
-            <div class="col-12 col-md-4">
-              <label for="passNueva" class="form-label">Nueva contraseña</label>
-              <input
-                type="password"
-                class="form-control"
-                id="passNueva"
-                required
-                minlength="6"
-                maxlength="18"
-                aria-describedby="error-passNueva"
-              />
-              <div id="error-passNueva" class="invalid-feedback"></div>
-            </div>
+							<div class="col-12 col-md-4">
+								<label for="passNueva" class="form-label"
+									>Nueva contraseña</label
+								>
+								<input
+									type="password"
+									class="form-control"
+									id="passNueva"
+									required
+									minlength="6"
+									maxlength="18"
+									aria-describedby="error-passNueva"
+								/>
+								<div id="error-passNueva" class="invalid-feedback"></div>
+							</div>
 
-            <div class="col-12 col-md-4">
-              <label for="passConfirm" class="form-label">Confirmar nueva</label>
-              <input
-                type="password"
-                class="form-control"
-                id="passConfirm"
-                required
-                aria-describedby="error-passConfirm"
-              />
-              <div id="error-passConfirm" class="invalid-feedback"></div>
-            </div>
-          </div>
+							<div class="col-12 col-md-4">
+								<label for="passConfirm" class="form-label"
+									>Confirmar nueva</label
+								>
+								<input
+									type="password"
+									class="form-control"
+									id="passConfirm"
+									required
+									aria-describedby="error-passConfirm"
+								/>
+								<div id="error-passConfirm" class="invalid-feedback"></div>
+							</div>
+						</div>
 
-          <div class="d-flex gap-2 mt-4">
-            <button type="submit" id="btnSavePass" class="btn btn-success">
-              Actualizar contraseña
-            </button>
-            <button
-              type="button"
-              id="btnResetPass"
-              class="btn btn-outline-secondary"
-            >
-              Limpiar
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </main>
+						<div class="d-flex gap-2 mt-4">
+							<button type="submit" id="btnSavePass" class="btn btn-success">
+								Actualizar contraseña
+							</button>
+							<button
+								type="button"
+								id="btnResetPass"
+								class="btn btn-outline-secondary"
+							>
+								Limpiar
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</main>
 
-  <!-- Footer reutilizable -->
-  <div id="footer-placeholder"></div>
+		<!-- Footer reutilizable -->
+		<div id="footer-placeholder"></div>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<!-- Core -->
+		<script src="js/site.js"></script>
 
-  <!-- Core -->
-  <script src="js/site.js"></script>
-
-  <!-- Módulo único que inicializa el perfil -->
-  <script type="module" src="js/validaciones.js"></script>
-</body>
+		<!-- Módulo único que inicializa el perfil -->
+		<script type="module" src="js/validaciones.js"></script>
+	</body>
 </html>
