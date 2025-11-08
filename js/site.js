@@ -23,22 +23,38 @@ document.addEventListener("DOMContentLoaded", async () => {
 			throw new Error("No se pudo cargar el header desde " + headerURL);
 		placeholder.innerHTML = await res.text();
 
-		// === Control de autenticación (login / user / logout / profile) ===
+		// === Control de autenticación (login / user / logout / profile / admin) ===
 		(async function setupAuthNav() {
 			try {
 				const authModuleURL = projectRoot + "js/auth.repo.js"; // ruta absoluta desde la página actual
-				const { getCurrentUser, setCurrentUser } = await import(authModuleURL);
+				const {
+					getCurrentUser,
+					setCurrentUser,
+					refreshCurrentUser,
+					ensureAdminSeed,
+					can,
+				} = await import(authModuleURL);
 
-				const user = getCurrentUser();
+				// 🧱 Crear admin por defecto si no hay usuarios
+				await ensureAdminSeed();
+
+				// Leer usuario y sincronizar con storage por si hubo cambios
+				let user = getCurrentUser();
+				user = refreshCurrentUser() || user;
+
 				const navLogin = document.getElementById("nav-login");
 				const navLogout = document.getElementById("nav-logout");
 				const navUser = document.getElementById("nav-user");
-				const navProfile = document.getElementById("nav-profile"); // NUEVO
+				const navProfile = document.getElementById("nav-profile");
+				const navAdmin = document.getElementById("nav-admin");
+				const navCart = document.getElementById("btn-cart"); // 🛒 id real del botón en el header
 
 				const show = (el) => el && el.classList.remove("d-none");
 				const hide = (el) => el && el.classList.add("d-none");
 
-				if (user) {
+				const isActive = !!(user && user.status === "active");
+
+				if (isActive) {
 					if (navUser) {
 						navUser.textContent = `👋 Hola, ${
 							user.nombreUsuario || user.email
@@ -48,6 +64,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 					hide(navLogin);
 					show(navLogout);
 					show(navProfile); // mostrar Perfil cuando hay sesión
+
+					// Mostrar enlace Admin solo si el usuario tiene permiso
+					if (navAdmin) {
+						if (can(user, "user:list")) show(navAdmin);
+						else hide(navAdmin);
+					}
 				} else {
 					if (navUser) {
 						navUser.textContent = "";
@@ -55,7 +77,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 					}
 					show(navLogin);
 					hide(navLogout);
-					hide(navProfile); // ocultar Perfil sin sesión
+					hide(navProfile);
+					if (navAdmin) hide(navAdmin);
 				}
 
 				// Logout
@@ -65,10 +88,33 @@ document.addEventListener("DOMContentLoaded", async () => {
 					window.location.href = projectRoot + "login.html";
 				});
 
-				// Helper global para proteger páginas
+				// 🛒 Protección al presionar "Carrito"
+				if (navCart) {
+					navCart.addEventListener("click", (e) => {
+						const user = getCurrentUser();
+						if (!user) {
+							e.preventDefault();
+							alert("Debes iniciar sesión para acceder al carrito.");
+							window.location.href = projectRoot + "login.html";
+						} else if (user.status && user.status !== "active") {
+							e.preventDefault();
+							alert("Tu cuenta está deshabilitada. Contacta al administrador.");
+							window.location.href = projectRoot + "login.html";
+						}
+					});
+				}
+
+				// Helpers globales para proteger páginas
 				window.ensureAuth = function ensureAuth() {
 					const u = getCurrentUser();
-					if (!u) window.location.href = projectRoot + "login.html";
+					const ok = !!(u && u.status === "active");
+					if (!ok) window.location.href = projectRoot + "login.html";
+				};
+
+				window.ensureAdmin = function ensureAdmin() {
+					const u = getCurrentUser();
+					const ok = !!(u && u.status === "active" && can(u, "user:list"));
+					if (!ok) window.location.href = projectRoot + "login.html";
 				};
 			} catch (e) {
 				console.warn("No se pudo inicializar la navegación de auth:", e);
@@ -127,7 +173,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 				document.documentElement.style.setProperty(
 					"--altura-header",
 					altura + "px"
-				); // compatibilidad con tu CSS previo
+				); // compat con tu CSS previo
 			}
 		};
 

@@ -1,6 +1,13 @@
-// js/validaciones.js  (ES Module compartido)
+// js/validaciones.js — ES Module COMPARTIDO
+// Versión optimizada, comentada y ordenada.
+// Compatible con: registro.html, login.html, perfil.html (sin teléfono).
+// Reutiliza auth.repo.js (almacenamiento local y auth).
 
-// === UTILIDADES COMPARTIDAS (exportadas) ===
+/* ===========================
+ *  UTILIDADES (exportadas)
+ * ===========================
+ */
+
 export const trim = (elOrStr) => {
 	if (typeof elOrStr === "string") return elOrStr.trim();
 	return elOrStr && typeof elOrStr.value === "string"
@@ -10,6 +17,7 @@ export const trim = (elOrStr) => {
 
 export function emailValido(valor) {
 	const v = trim(valor);
+	// Suficientemente estricta y práctica
 	const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 	return re.test(v);
 }
@@ -25,7 +33,7 @@ export function validarClave(valor) {
 	if (!/[0-9]/.test(v)) {
 		return { ok: false, msg: "La clave debe contener al menos un número." };
 	}
-	if (!/[a-z!@#$%^&*()_\-+=\[{\]};:'",.<>/?`~]/.test(v)) {
+	if (!/[a-z!@#$%^&*()_\-+=\[{\]};:'\",.<>/?`~]/.test(v)) {
 		return {
 			ok: false,
 			msg: "La clave debe incluir al menos una minúscula o un carácter especial.",
@@ -40,10 +48,7 @@ export function clavesIguales(a, b) {
 	return va === vb;
 }
 
-/**
- * Pinta feedback estilo Bootstrap (reutilizable en registro/recuperar)
- * Espera que exista un <small id="error-<input.id">...</small> para el mensaje.
- */
+/** Feedback estilo Bootstrap para inputs con <div id="error-{id}" class="invalid-feedback"> */
 export function setFeedback(inputEl, ok, msg = "") {
 	if (!inputEl) return;
 	const errorSlot = document.getElementById(`error-${inputEl.id}`);
@@ -57,7 +62,7 @@ export function setFeedback(inputEl, ok, msg = "") {
 	}
 }
 
-// (Si necesitas también edadOK/sanitizadores para recuperar, expórtalos aquí)
+/** Edad mínima 13 años a partir de un <input type="date"> */
 export function edadOKInput(inputEl) {
 	if (!inputEl?.value) return false;
 	const hoy = new Date();
@@ -69,36 +74,78 @@ export function edadOKInput(inputEl) {
 	);
 	return fn <= limite;
 }
+
+/** Sanitiza/normaliza entradas de texto (espacios, Unicode) */
 export function sanitizeTextInput(el) {
 	if (!el || typeof el.value !== "string") return;
 	el.value = el.value.normalize("NFC").trim();
 }
 
-// === SOLO PARA PÁGINA DE REGISTRO ===
-// Importa persistencia (misma carpeta /js/)
+/* ===========================
+ *  IMPORTS COMUNES
+ * ===========================
+ */
 import {
 	getUsers,
 	saveUsers,
 	findUserByEmail,
-	/* opcional */ findUserByUsername,
+	// findUserByUsername, // no se usa ahora; mantener comentado si lo necesitas luego
 	sha256,
 	setCurrentUser,
+	getCurrentUser,
+	refreshCurrentUser,
+	updateUserById,
+	STATUS,
 } from "./auth.repo.js";
 
-function announce(msg) {
-	const el = document.getElementById("form-alert");
-	if (!el) return;
-	el.textContent = msg;
-	el.classList.remove("visually-hidden");
-	setTimeout(() => el.classList.add("visually-hidden"), 3000);
+/* ===========================
+ *  HELPERS DE UI
+ * ===========================
+ */
+
+/** Muestra una alerta Bootstrap en un contenedor ya presente (por id) */
+function showAlert(containerEl, msg, type = "info", ms = 3000) {
+	if (!containerEl) return;
+	containerEl.className = "alert alert-" + type;
+	containerEl.textContent = msg;
+	containerEl.classList.remove("d-none");
+	if (ms) {
+		setTimeout(() => containerEl.classList.add("d-none"), ms);
+	}
 }
 
-// Monta la lógica de REGISTRO solo si existe el formulario en la página
+/** Limpia feedback de una lista de inputs */
+function limpiarFeedbackInputs(inputs) {
+	inputs.forEach((i) => {
+		if (!i) return;
+		i.classList.remove("is-valid", "is-invalid");
+		const slot = document.getElementById(`error-${i.id}`);
+		if (slot) {
+			slot.textContent = "";
+			slot.style.display = "none";
+			slot.removeAttribute("role");
+		}
+	});
+}
+
+/** Aplica límite de fecha para >= 13 años a un input date */
+function setMaxFecha13(inputEl) {
+	if (!inputEl) return;
+	const hoy = new Date();
+	const max = new Date(hoy.getFullYear() - 13, hoy.getMonth(), hoy.getDate());
+	inputEl.setAttribute("max", max.toISOString().slice(0, 10));
+}
+
+/* ===========================
+ *  REGISTRO
+ * ===========================
+ */
+
 export function setupRegistroPage() {
 	const form = document.getElementById("registroForm");
 	const limpiarBtn = document.getElementById("limpiarBtn");
 	const enviarBtn = document.getElementById("enviarBtn");
-	if (!form || !limpiarBtn || !enviarBtn) return; // no estamos en registro.html
+	if (!form) return;
 
 	const inputs = {
 		nombreCompleto: document.getElementById("nombreCompleto"),
@@ -110,249 +157,369 @@ export function setupRegistroPage() {
 		direccion: document.getElementById("direccion"),
 	};
 
-	// Límite fecha (13+)
-	{
-		const hoy = new Date();
-		const max = new Date(hoy.getFullYear() - 13, hoy.getMonth(), hoy.getDate());
-		const toISO = (d) => d.toISOString().slice(0, 10);
-		inputs.fechaNacimiento?.setAttribute("max", toISO(max));
-	}
-
+	// Reglas de entrada
+	const soloLetras = (el) => /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s'-]+$/.test(trim(el));
 	const noVacio = (el) => (el === inputs.direccion ? true : trim(el) !== "");
-	const soloLetras = (el) => {
-		const re = /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s'-]+$/;
-		const v = trim(el);
-		return v !== "" && re.test(v);
-	};
 
-	function validarCampo(el) {
-		switch (el.id) {
-			case "nombreCompleto":
-				if (!noVacio(el))
-					return setFeedback(el, false, "El nombre completo es obligatorio.");
-				if (!soloLetras(el))
-					return setFeedback(el, false, "El nombre solo debe contener letras.");
-				return setFeedback(el, true);
-
-			case "nombreUsuario":
-				return setFeedback(
-					el,
-					noVacio(el),
-					"El nombre de usuario es obligatorio."
-				);
-
-			case "email":
-				return setFeedback(
-					el,
-					noVacio(el) && emailValido(el.value),
-					"Ingrese un correo válido."
-				);
-
-			case "clave": {
-				const res = validarClave(el.value);
-				setFeedback(el, res.ok, res.msg || "");
-				if (inputs.repetirClave?.value) {
-					setFeedback(
-						inputs.repetirClave,
-						clavesIguales(inputs.clave, inputs.repetirClave),
-						"Las claves no coinciden."
-					);
-				}
-				return;
-			}
-
-			case "repetirClave":
-				return setFeedback(
-					el,
-					clavesIguales(inputs.clave, el),
-					"Las claves no coinciden."
-				);
-
-			case "fechaNacimiento":
-				return setFeedback(el, edadOKInput(el), "Debe tener al menos 13 años.");
-
-			case "direccion":
-				if (trim(el) === "") el.classList.remove("is-valid", "is-invalid");
-				else setFeedback(el, true);
-				return;
-		}
-	}
-
-	function limpiarFeedback() {
-		Object.values(inputs).forEach((i) => {
-			if (!i) return;
-			i.classList.remove("is-valid", "is-invalid");
-			const slot = document.getElementById(`error-${i.id}`);
-			if (slot) {
-				slot.textContent = "";
-				slot.style.display = "none";
-				slot.removeAttribute("role");
-			}
-		});
-		enviarBtn.classList.remove("btn-success");
-		enviarBtn.classList.add("btn-primary");
-		enviarBtn.textContent = "Enviar registro";
-	}
+	// Límite de fecha (≥ 13 años)
+	setMaxFecha13(inputs.fechaNacimiento);
 
 	form.addEventListener("submit", async (e) => {
 		e.preventDefault();
-		enviarBtn.disabled = true;
+		enviarBtn && (enviarBtn.disabled = true);
 
-		// Sanear
+		// Sanitiza
 		Object.values(inputs).forEach(sanitizeTextInput);
+		// Limpia feedback
+		limpiarFeedbackInputs(Object.values(inputs));
 
+		// Validaciones
 		let ok = true;
 
-		if (!noVacio(inputs.nombreCompleto)) {
-			setFeedback(
-				inputs.nombreCompleto,
-				false,
-				"El nombre completo es obligatorio."
-			);
+		if (!soloLetras(inputs.nombreCompleto)) {
 			ok = false;
-		} else if (!soloLetras(inputs.nombreCompleto)) {
 			setFeedback(
 				inputs.nombreCompleto,
 				false,
 				"El nombre solo debe contener letras."
 			);
-			ok = false;
-		} else setFeedback(inputs.nombreCompleto, true);
+		} else setFeedback(inputs.nombreCompleto, true, "");
 
 		if (!noVacio(inputs.nombreUsuario)) {
+			ok = false;
 			setFeedback(
 				inputs.nombreUsuario,
 				false,
 				"El nombre de usuario es obligatorio."
 			);
-			ok = false;
-		} else setFeedback(inputs.nombreUsuario, true);
+		} else setFeedback(inputs.nombreUsuario, true, "");
 
-		if (!noVacio(inputs.email)) {
-			setFeedback(inputs.email, false, "El correo electrónico es obligatorio.");
+		if (!emailValido(inputs.email.value)) {
 			ok = false;
-		} else if (!emailValido(inputs.email.value)) {
-			setFeedback(
-				inputs.email,
-				false,
-				"El formato del correo electrónico es inválido."
-			);
-			ok = false;
-		} else setFeedback(inputs.email, true);
+			setFeedback(inputs.email, false, "Formato de correo inválido.");
+		} else setFeedback(inputs.email, true, "");
 
-		if (!noVacio(inputs.clave)) {
-			setFeedback(inputs.clave, false, "La clave de ingreso es obligatoria.");
+		if (!edadOKInput(inputs.fechaNacimiento)) {
 			ok = false;
-		} else {
-			const res = validarClave(inputs.clave.value);
-			if (!res.ok) {
-				setFeedback(inputs.clave, false, res.msg);
-				ok = false;
-			} else setFeedback(inputs.clave, true);
-		}
-
-		if (!noVacio(inputs.repetirClave)) {
-			setFeedback(inputs.repetirClave, false, "Debe repetir la clave.");
-			ok = false;
-		} else if (!clavesIguales(inputs.clave, inputs.repetirClave)) {
-			setFeedback(inputs.repetirClave, false, "Las claves no coinciden.");
-			ok = false;
-		} else setFeedback(inputs.repetirClave, true);
-
-		if (!noVacio(inputs.fechaNacimiento)) {
-			setFeedback(
-				inputs.fechaNacimiento,
-				false,
-				"La fecha de nacimiento es obligatoria."
-			);
-			ok = false;
-		} else if (!edadOKInput(inputs.fechaNacimiento)) {
 			setFeedback(
 				inputs.fechaNacimiento,
 				false,
 				"Debe tener al menos 13 años."
 			);
-			ok = false;
-		} else setFeedback(inputs.fechaNacimiento, true);
+		} else setFeedback(inputs.fechaNacimiento, true, "");
 
-		if (trim(inputs.direccion) !== "") setFeedback(inputs.direccion, true);
-		else {
-			inputs.direccion?.classList.remove("is-valid", "is-invalid");
-			const slot = inputs.direccion
-				? document.getElementById(`error-${inputs.direccion.id}`)
-				: null;
-			if (slot) {
-				slot.textContent = "";
-				slot.style.display = "none";
-				slot.removeAttribute("role");
-			}
-		}
+		if (!clavesIguales(inputs.clave, inputs.repetirClave)) {
+			ok = false;
+			setFeedback(inputs.repetirClave, false, "Las claves no coinciden.");
+		} else setFeedback(inputs.repetirClave, true, "");
 
 		if (!ok) {
-			announce("Revisa los campos marcados en rojo.");
-			enviarBtn.disabled = false;
+			enviarBtn && (enviarBtn.disabled = false);
 			return;
 		}
 
-		// Persistencia (duplicados + guardado)
-		const email = trim(inputs.email);
-		const nombreUsuario = trim(inputs.nombreUsuario);
-
-		if (findUserByEmail(email)) {
+		// Correo existente
+		if (findUserByEmail(trim(inputs.email))) {
 			setFeedback(inputs.email, false, "Este correo ya está registrado.");
-			enviarBtn.disabled = false;
+			enviarBtn && (enviarBtn.disabled = false);
 			return;
 		}
-		// Si quieres validar username único, descomenta:
-		// if (findUserByUsername?.(nombreUsuario)) {
-		//   setFeedback(inputs.nombreUsuario, false, "Ese nombre de usuario ya existe.");
-		//   enviarBtn.disabled = false;
-		//   return;
-		// }
 
-		const users = getUsers();
-		const user = {
-			id: crypto.randomUUID(),
-			email,
-			nombreUsuario,
-			nombreCompleto: trim(inputs.nombreCompleto),
-			fechaNacimiento: inputs.fechaNacimiento.value,
-			direccion: trim(inputs.direccion),
-			passwordHash: await sha256(inputs.clave.value),
-			avatarUrl: "",
-			telefono: "",
-		};
-		users.push(user);
-		saveUsers(users);
-		setCurrentUser(user);
-
-		alert("¡Registro exitoso! Formulario válido.");
-		announce("Registro exitoso.");
-		form.reset();
-		limpiarFeedback();
-		enviarBtn.classList.remove("btn-primary");
-		enviarBtn.classList.add("btn-success");
-		enviarBtn.textContent = "¡Registro completado!";
-		enviarBtn.disabled = false;
+		// Crear usuario
+		try {
+			const users = getUsers();
+			const user = {
+				id: crypto.randomUUID(),
+				email: trim(inputs.email),
+				nombreUsuario: trim(inputs.nombreUsuario),
+				nombreCompleto: trim(inputs.nombreCompleto),
+				fechaNacimiento: inputs.fechaNacimiento.value,
+				direccion: trim(inputs.direccion),
+				passwordHash: await sha256(inputs.clave.value),
+				role: "cliente",
+				status: "active",
+				createdAt: Date.now(),
+			};
+			users.push(user);
+			saveUsers(users);
+			setCurrentUser({ ...user, passwordHash: undefined });
+			alert("¡Registro exitoso!");
+			form.reset();
+			limpiarFeedbackInputs(Object.values(inputs));
+		} catch (err) {
+			console.error(err);
+			alert("No se pudo completar el registro.");
+		} finally {
+			enviarBtn && (enviarBtn.disabled = false);
+		}
 	});
 
-	limpiarBtn.addEventListener("click", () => {
+	// Botón limpiar
+	limpiarBtn?.addEventListener("click", () => {
 		form.reset();
-		limpiarFeedback();
-		announce("Formulario limpiado.");
-	});
-
-	// Validación en tiempo real
-	Object.values(inputs).forEach((input) => {
-		if (!input) return;
-		input.addEventListener("input", () => validarCampo(input));
-		input.addEventListener("blur", () => validarCampo(input));
+		limpiarFeedbackInputs(Object.values(inputs));
 	});
 }
 
-// Auto-inicializa SOLO si estamos en registro.html (existe #registroForm)
+// Autoinit en carga DOM (si existe el formulario)
 document.addEventListener("DOMContentLoaded", () => {
-	if (document.getElementById("registroForm")) {
-		setupRegistroPage();
+	if (document.getElementById("registroForm")) setupRegistroPage();
+});
+
+/* ===========================
+ *  LOGIN
+ * ===========================
+ */
+
+export async function loginWithEmailPassword(email, password) {
+	const u = findUserByEmail(email);
+	if (!u) throw new Error("Correo o contraseña inválidos.");
+	if (u.status !== "active" && u.status !== (STATUS?.ACTIVE || "active")) {
+		throw new Error("Tu cuenta está deshabilitada. Contacta al administrador.");
 	}
+	const hash = await sha256(password || "");
+	if (u.passwordHash !== hash)
+		throw new Error("Correo o contraseña inválidos.");
+
+	const { passwordHash, ...safeUser } = u;
+	setCurrentUser(safeUser);
+	return safeUser;
+}
+
+export function setupLoginPage() {
+	const form = document.getElementById("loginForm");
+	const emailEl = document.getElementById("loginEmail");
+	const claveEl = document.getElementById("loginClave");
+	if (!form) return;
+
+	form.addEventListener("submit", async (e) => {
+		e.preventDefault();
+
+		// Limpia feedback previo
+		limpiarFeedbackInputs([emailEl, claveEl]);
+
+		// Validaciones
+		if (!emailValido(emailEl.value)) {
+			setFeedback(emailEl, false, "Formato de correo inválido.");
+			return;
+		}
+		if (trim(claveEl) === "") {
+			setFeedback(claveEl, false, "La contraseña es obligatoria.");
+			return;
+		}
+
+		try {
+			await loginWithEmailPassword(trim(emailEl), claveEl.value);
+			window.location.href = "index.html";
+		} catch (err) {
+			console.error(err);
+			alert(err.message || "No se pudo iniciar sesión.");
+		}
+	});
+}
+
+// Autoinit en carga DOM (si existe el formulario)
+document.addEventListener("DOMContentLoaded", () => {
+	if (document.getElementById("loginForm")) setupLoginPage();
+});
+
+/* ===========================
+ *  PERFIL (sin teléfono)
+ * ===========================
+ */
+
+export function setupPerfilPage() {
+	const perfilForm = document.getElementById("perfilForm");
+	const passForm = document.getElementById("passForm");
+	if (!perfilForm) return;
+
+	const alertPerfil = document.getElementById("perfil-alert");
+	const alertPass = document.getElementById("pass-alert");
+
+	const nombreCompleto = document.getElementById("nombreCompleto");
+	const nombreUsuario = document.getElementById("nombreUsuario");
+	const email = document.getElementById("email");
+	const fechaNacimiento = document.getElementById("fechaNacimiento");
+	const direccion = document.getElementById("direccion");
+
+	const passActual = document.getElementById("passActual");
+	const passNueva = document.getElementById("passNueva");
+	const passConfirm = document.getElementById("passConfirm");
+
+	function protectWithAuth() {
+		const u = getCurrentUser();
+		if (
+			!u ||
+			(u.status !== "active" && u.status !== (STATUS?.ACTIVE || "active"))
+		) {
+			window.location.href = "login.html";
+			return false;
+		}
+		return true;
+	}
+
+	function loadProfile() {
+		const cur = getCurrentUser();
+		if (!cur) return;
+		nombreCompleto.value = cur.nombreCompleto || "";
+		nombreUsuario.value = cur.nombreUsuario || "";
+		email.value = cur.email || "";
+		fechaNacimiento.value = cur.fechaNacimiento || "";
+		direccion.value = cur.direccion || "";
+	}
+
+	// Prefill
+	loadProfile();
+	// Límite de fecha (≥ 13 años)
+	setMaxFecha13(fechaNacimiento);
+
+	// Guardar perfil
+	perfilForm.addEventListener("submit", (e) => {
+		e.preventDefault();
+		if (!protectWithAuth()) return;
+
+		// Sanitiza y limpia feedback
+		[nombreCompleto, nombreUsuario, direccion].forEach(sanitizeTextInput);
+		limpiarFeedbackInputs([
+			nombreCompleto,
+			nombreUsuario,
+			fechaNacimiento,
+			direccion,
+		]);
+
+		const cur = getCurrentUser();
+		if (!cur) return (window.location.href = "login.html");
+
+		// Validaciones mínimas
+		let ok = true;
+
+		if (trim(nombreCompleto) === "") {
+			ok = false;
+			setFeedback(nombreCompleto, false, "El nombre completo es obligatorio.");
+		} else setFeedback(nombreCompleto, true, "");
+
+		if (trim(nombreUsuario) === "") {
+			ok = false;
+			setFeedback(nombreUsuario, false, "El nombre de usuario es obligatorio.");
+		} else setFeedback(nombreUsuario, true, "");
+
+		if (!edadOKInput(fechaNacimiento)) {
+			ok = false;
+			setFeedback(fechaNacimiento, false, "Debe tener al menos 13 años.");
+		} else setFeedback(fechaNacimiento, true, "");
+
+		if (!ok) {
+			return showAlert(
+				alertPerfil,
+				"Revisa los campos del formulario.",
+				"danger",
+				4000
+			);
+		}
+
+		const patch = {
+			nombreCompleto: nombreCompleto.value.trim(),
+			nombreUsuario: nombreUsuario.value.trim(),
+			fechaNacimiento: fechaNacimiento.value,
+			direccion: direccion.value.trim(),
+		};
+
+		if (updateUserById(cur.id, patch)) {
+			refreshCurrentUser();
+			showAlert(alertPerfil, "Perfil actualizado correctamente.", "success");
+		} else {
+			showAlert(
+				alertPerfil,
+				"No se pudo actualizar el perfil.",
+				"danger",
+				4000
+			);
+		}
+	});
+
+	// Reset de perfil
+	document.getElementById("btnResetProfile")?.addEventListener("click", () => {
+		loadProfile();
+		limpiarFeedbackInputs([
+			nombreCompleto,
+			nombreUsuario,
+			fechaNacimiento,
+			direccion,
+		]);
+	});
+
+	// Feedback de contraseña en vivo
+	passNueva?.addEventListener("input", () => {
+		const v = validarClave(passNueva.value);
+		setFeedback(passNueva, v.ok, v.msg);
+		setFeedback(
+			passConfirm,
+			clavesIguales(passNueva.value, passConfirm.value),
+			"Las claves no coinciden."
+		);
+	});
+	passConfirm?.addEventListener("input", () => {
+		setFeedback(
+			passConfirm,
+			clavesIguales(passNueva.value, passConfirm.value),
+			"Las claves no coinciden."
+		);
+	});
+
+	// Guardar nueva contraseña
+	passForm?.addEventListener("submit", async (e) => {
+		e.preventDefault();
+		if (!protectWithAuth()) return;
+
+		const cur = getCurrentUser();
+		if (!cur) return (window.location.href = "login.html");
+
+		try {
+			const hashActual = await sha256(passActual.value);
+			const users = getUsers();
+			const me = users.find((u) => u.id === cur.id);
+			if (!me)
+				return showAlert(alertPass, "Usuario no encontrado.", "danger", 4000);
+			if (me.passwordHash !== hashActual) {
+				setFeedback(passActual, false, "Contraseña actual incorrecta.");
+				return showAlert(alertPass, "Contraseña actual incorrecta.", "danger");
+			}
+
+			// Validar nueva contraseña
+			const v = validarClave(passNueva.value);
+			if (!v.ok) {
+				setFeedback(passNueva, false, v.msg);
+				return showAlert(
+					alertPass,
+					"Revisa la nueva contraseña.",
+					"danger",
+					4000
+				);
+			}
+			if (!clavesIguales(passNueva.value, passConfirm.value)) {
+				setFeedback(passConfirm, false, "Las claves no coinciden.");
+				return showAlert(alertPass, "Las claves no coinciden.", "danger", 4000);
+			}
+
+			me.passwordHash = await sha256(passNueva.value);
+			saveUsers(users);
+			refreshCurrentUser();
+			showAlert(alertPass, "Contraseña actualizada correctamente.", "success");
+			passForm.reset();
+			limpiarFeedbackInputs([passActual, passNueva, passConfirm]);
+		} catch (err) {
+			console.error(err);
+			showAlert(
+				alertPass,
+				"No se pudo actualizar la contraseña.",
+				"danger",
+				4000
+			);
+		}
+	});
+}
+
+// Autoinit en carga DOM (si existe el formulario)
+document.addEventListener("DOMContentLoaded", () => {
+	if (document.getElementById("perfilForm")) setupPerfilPage();
 });

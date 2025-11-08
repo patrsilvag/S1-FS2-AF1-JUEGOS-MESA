@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<title>Panel Admin</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<!-- Bootstrap (mismo que usas en otras páginas) -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
+		<link href="css/estilos.css" rel="stylesheet" />
+	</head>
+	<body>
+		<!-- Header reutilizable -->
+		<div id="header-placeholder"></div>
+
+		<main class="container py-5 with-fixed-header" style="min-height: 60vh">
+			<div class="d-flex align-items-center justify-content-between mb-4">
+				<h1 class="h4 m-0">Panel de administración</h1>
+				<span class="badge text-bg-primary">Usuarios</span>
+			</div>
+
+			<!-- Alertas -->
+			<div
+				id="admin-alert"
+				class="alert d-none"
+				role="alert"
+				aria-live="assertive"
+			></div>
+
+			<!-- Tabla de usuarios -->
+			<div class="card shadow-sm">
+				<div class="card-body">
+					<div class="table-responsive">
+						<table id="tabla-usuarios" class="table table-hover align-middle">
+							<thead class="table-light">
+								<tr>
+									<th scope="col">Email</th>
+									<th scope="col">Usuario</th>
+									<th scope="col">Rol</th>
+									<th scope="col">Estado</th>
+									<th scope="col" class="text-end">Acciones</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- filas generadas por js/admin.js -->
+							</tbody>
+						</table>
+					</div>
+					<p class="text-muted small m-0">
+						Solo puedes <strong>activar/desactivar</strong> usuarios (sin
+						edición de datos desde este panel).
+					</p>
+				</div>
+			</div>
+		</main>
+
+		<!-- Footer reutilizable -->
+		<div id="footer-placeholder"></div>
+
+		<!-- Core: carga header/footer y controles de auth del menú -->
+		<script src="js/site.js"></script>
+
+		<!-- Protección y arranque del panel (solo admins) -->
+		<script type="module">
+			import { getCurrentUser, STATUS, ROLES } from "./js/auth.repo.js";
+
+			const alertBox = document.getElementById("admin-alert");
+			const showAlert = (msg, type = "danger") => {
+				if (!alertBox) return;
+				alertBox.className = "alert alert-" + type;
+				alertBox.textContent = msg;
+				alertBox.classList.remove("d-none");
+			};
+
+			document.addEventListener("DOMContentLoaded", async () => {
+				const user = getCurrentUser();
+
+				// Solo admins activos
+				if (
+					!user ||
+					user.status !== STATUS.ACTIVE ||
+					user.role !== ROLES.ADMIN
+				) {
+					showAlert(
+						"Acceso denegado. Solo administradores pueden ver esta sección."
+					);
+					setTimeout(() => (window.location.href = "index.html"), 900);
+					return;
+				}
+
+				// Cargar la lógica de administración
+				try {
+					const mod = await import("./js/admin.js");
+					if (typeof mod.setupAdminPage === "function") {
+						mod.setupAdminPage();
+					} else {
+						showAlert(
+							"No se pudo inicializar el panel (setupAdminPage no encontrado)."
+						);
+					}
+				} catch (err) {
+					console.error(err);
+					showAlert("No se pudo cargar el panel de administración.");
+				}
+			});
+		</script>
+
+		<!-- Bootstrap JS (si lo necesitas para el header/móvil dropdowns) -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>

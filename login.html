@@ -1,232 +1,84 @@
 <!DOCTYPE html>
 <html lang="es">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width,initial-scale=1" />
-		<title>Iniciar sesión</title>
-		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-			rel="stylesheet"
-		/>
-		<style>
-			body {
-				background: #f7f7fb;
-			}
-			.card {
-				border-radius: 1rem;
-			}
-		</style>
-	</head>
-	<body>
-		<!-- Header reutilizable -->
-		<div id="header-placeholder"></div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iniciar sesión</title>
 
-		<main class="container py-5" style="min-height: 60vh">
-			<div class="row justify-content-center">
-				<div class="col-12 col-sm-10 col-md-8 col-lg-5">
-					<div class="card shadow-sm">
-						<div class="card-body p-4 p-lg-5">
-							<h1 class="h4 mb-3 text-center">Iniciar sesión</h1>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/estilos.css" />
+</head>
 
-							<!-- Alert accesible -->
-							<div
-								id="login-alert"
-								class="alert d-none"
-								role="alert"
-								aria-live="assertive"
-							></div>
+<body>
+  <!-- Header reutilizable -->
+  <div id="header-placeholder"></div>
 
-							<form id="loginForm" novalidate>
-								<div class="mb-3">
-									<label for="email" class="form-label"
-										>Correo electrónico</label
-									>
-									<input
-										type="email"
-										class="form-control"
-										id="email"
-										name="email"
-										required
-										autocomplete="username"
-										aria-describedby="error-email"
-									/>
-									<small
-										id="error-email"
-										class="text-danger d-block"
-										style="display: none"
-									></small>
-								</div>
+  <main class="container py-5 with-fixed-header" style="min-height: 60vh">
+    <h1 class="h4 mb-4">Iniciar sesión</h1>
 
-								<div class="mb-3">
-									<label for="password" class="form-label">Contraseña</label>
-									<div class="input-group">
-										<input
-											type="password"
-											class="form-control"
-											id="password"
-											name="password"
-											required
-											autocomplete="current-password"
-											aria-describedby="error-password"
-										/>
-										<button
-											class="btn btn-outline-secondary"
-											type="button"
-											id="togglePass"
-											aria-label="Mostrar u ocultar contraseña"
-										>
-											👁️
-										</button>
-									</div>
-									<small
-										id="error-password"
-										class="text-danger d-block"
-										style="display: none"
-									></small>
-								</div>
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <!-- Contenedor de alertas (opcional; setupLoginPage usa alert()) -->
+            <div id="form-alert" class="alert visually-hidden" role="alert" aria-live="assertive"></div>
 
-								<div
-									class="d-flex justify-content-between align-items-center mb-3"
-								>
-									<div class="form-check">
-										<input
-											class="form-check-input"
-											type="checkbox"
-											value=""
-											id="recordarme"
-										/>
-										<label class="form-check-label" for="recordarme"
-											>Recordarme</label
-										>
-									</div>
-									<a href="recuperar.html" class="small"
-										>¿Olvidaste tu contraseña?</a
-									>
-								</div>
+            <form id="loginForm" novalidate>
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Correo</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="loginEmail"
+                  required
+                  autocomplete="username"
+                  aria-describedby="error-loginEmail"
+                />
+                <div id="error-loginEmail" class="invalid-feedback"></div>
+              </div>
 
-								<button
-									id="btnLogin"
-									type="submit"
-									class="btn btn-primary w-100"
-								>
-									Ingresar
-								</button>
+              <div class="mb-3">
+                <label for="loginClave" class="form-label">Contraseña</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="loginClave"
+                  required
+                  minlength="6"
+                  maxlength="18"
+                  autocomplete="current-password"
+                  aria-describedby="error-loginClave"
+                />
+                <div id="error-loginClave" class="invalid-feedback"></div>
+              </div>
 
-								<div class="text-center mt-3">
-									<span class="text-muted">¿No tienes cuenta?</span>
-									<a href="registro.html">Crear cuenta</a>
-								</div>
-							</form>
-						</div>
-					</div>
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Entrar</button>
+              </div>
+            </form>
 
-					<p class="text-center text-muted mt-4 mb-0 small">
-						Demo educativa con <code>localStorage</code>. No usar en producción.
-					</p>
-				</div>
-			</div>
-		</main>
+            <hr class="my-4" />
 
-		<!-- Footer reutilizable -->
-		<div id="footer-placeholder"></div>
+            <p class="mb-0 small text-muted">
+              ¿No tienes cuenta?
+              <a href="registro.html" class="link-primary">Regístrate aquí</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-		<script src="./js/site.js"></script>
+  <!-- Footer reutilizable -->
+  <div id="footer-placeholder"></div>
 
-		<!-- Lógica de login reutilizando validaciones.js -->
-		<script type="module">
-			import { emailValido, setFeedback } from "./js/validaciones.js";
-			import {
-				findUserByEmail,
-				setCurrentUser,
-				sha256,
-			} from "./js/auth.repo.js";
+  <!-- Core -->
+  <script src="js/site.js"></script>
 
-			const form = document.getElementById("loginForm");
-			const alertBox = document.getElementById("login-alert");
-			const btn = document.getElementById("btnLogin");
-			const emailEl = document.getElementById("email");
-			const passEl = document.getElementById("password");
-			const togglePass = document.getElementById("togglePass");
-
-			function showAlert(msg, type = "danger", ms = 3000) {
-				alertBox.className = "alert alert-" + type;
-				alertBox.textContent = msg;
-				alertBox.classList.remove("d-none");
-				if (ms) setTimeout(() => alertBox.classList.add("d-none"), ms);
-			}
-
-			// Reutiliza validaciones: email (mismo criterio que registro/recuperar)
-			emailEl.addEventListener("blur", () => {
-				setFeedback(
-					emailEl,
-					emailValido(emailEl.value),
-					"Ingresa un correo válido."
-				);
-			});
-
-			// Para login solo exigimos “no vacío” en password (la complejidad ya se validó en registro/recuperar)
-			passEl.addEventListener("blur", () => {
-				const ok = (passEl.value || "").length > 0;
-				setFeedback(passEl, ok, "Ingresa tu contraseña.");
-			});
-
-			// Mostrar/ocultar contraseña
-			togglePass.addEventListener("click", () => {
-				const isPwd = passEl.getAttribute("type") === "password";
-				passEl.setAttribute("type", isPwd ? "text" : "password");
-				togglePass.textContent = isPwd ? "🙈" : "👁️";
-			});
-
-			form.addEventListener("submit", async (e) => {
-				e.preventDefault();
-				btn.disabled = true;
-
-				// Validación unificada
-				const okEmail = emailValido(emailEl.value);
-				setFeedback(emailEl, okEmail, "Ingresa un correo válido.");
-
-				const okPass = (passEl.value || "").length > 0;
-				setFeedback(passEl, okPass, "Ingresa tu contraseña.");
-
-				if (!(okEmail && okPass)) {
-					btn.disabled = false;
-					return;
-				}
-
-				try {
-					const user = findUserByEmail((emailEl.value || "").trim());
-					if (!user) {
-						showAlert("Usuario o contraseña inválidos.");
-						setFeedback(emailEl, false, "Revisa tu correo.");
-						setFeedback(passEl, false, "Revisa tu contraseña.");
-						btn.disabled = false;
-						return;
-					}
-
-					const hash = await sha256(passEl.value || "");
-					if (hash !== user.passwordHash) {
-						showAlert("Usuario o contraseña inválidos.");
-						setFeedback(passEl, false, "Contraseña incorrecta.");
-						btn.disabled = false;
-						return;
-					}
-
-					// Persistir sesión
-					setCurrentUser(user);
-
-					// (Opcional) recordarme
-					// if (document.getElementById('recordarme').checked) { localStorage.setItem('remember', '1'); }
-
-					// Redirigir a inicio
-					window.location.href = "index.html";
-				} catch (err) {
-					console.error(err);
-					showAlert("Ocurrió un error al iniciar sesión.");
-				} finally {
-					btn.disabled = false;
-				}
-			});
-		</script>
-	</body>
+  <!-- Módulo único que inicializa el login -->
+  <script type="module" src="js/validaciones.js"></script>
+</body>
 </html>

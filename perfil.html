@@ -1,443 +1,179 @@
 <!DOCTYPE html>
 <html lang="es">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width,initial-scale=1" />
-		<title>Mi perfil</title>
-		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-			rel="stylesheet"
-		/>
-		<link href="./css/estilos.css" rel="stylesheet" />
-	</head>
-	<body>
-		<!-- Header reutilizable -->
-		<div id="header-placeholder"></div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi perfil</title>
 
-		<main class="container py-5 with-fixed-header" style="min-height: 60vh">
-			<h1 class="h4 mb-4">Mi perfil</h1>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/estilos.css" />
+</head>
 
-			<!-- tarjeta datos -->
-			<div class="card shadow-sm mb-4">
-				<div class="card-body p-4">
-					<h2 class="h5 mb-3">Datos de perfil</h2>
-					<div
-						id="perfil-alert"
-						class="alert d-none"
-						role="alert"
-						aria-live="assertive"
-					></div>
+<body>
+  <!-- Header reutilizable -->
+  <div id="header-placeholder"></div>
 
-					<form id="perfilForm" novalidate>
-						<div class="row g-3">
-							<div class="col-12 col-md-6">
-								<label for="nombreCompleto" class="form-label"
-									>Nombre completo</label
-								>
-								<input
-									type="text"
-									class="form-control"
-									id="nombreCompleto"
-									required
-									aria-describedby="error-nombreCompleto"
-								/>
-								<div id="error-nombreCompleto" class="invalid-feedback"></div>
-							</div>
+  <main class="container py-5 with-fixed-header" style="min-height: 60vh">
+    <h1 class="h4 mb-4">Mi perfil</h1>
 
-							<div class="col-12 col-md-6">
-								<label for="nombreUsuario" class="form-label"
-									>Nombre de usuario</label
-								>
-								<input
-									type="text"
-									class="form-control"
-									id="nombreUsuario"
-									required
-									aria-describedby="error-nombreUsuario"
-								/>
-								<div id="error-nombreUsuario" class="invalid-feedback"></div>
-							</div>
+    <!-- Datos Perfil -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body p-4">
+        <h2 class="h5 mb-3">Datos de perfil</h2>
+        <div id="perfil-alert" class="alert d-none" role="alert" aria-live="assertive"></div>
 
-							<div class="col-12 col-md-6">
-								<label for="email" class="form-label">Correo</label>
-								<input
-									type="email"
-									class="form-control"
-									id="email"
-									readonly
-									aria-describedby="error-email"
-								/>
-								<div id="error-email" class="invalid-feedback"></div>
-							</div>
+        <form id="perfilForm" novalidate>
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <label for="nombreCompleto" class="form-label">Nombre completo</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nombreCompleto"
+                required
+                aria-describedby="error-nombreCompleto"
+              />
+              <div id="error-nombreCompleto" class="invalid-feedback"></div>
+            </div>
 
-							<div class="col-12 col-md-6">
-								<label for="fechaNacimiento" class="form-label"
-									>Fecha de nacimiento</label
-								>
-								<input
-									type="date"
-									class="form-control"
-									id="fechaNacimiento"
-									required
-									aria-describedby="error-fechaNacimiento"
-								/>
-								<div id="error-fechaNacimiento" class="invalid-feedback"></div>
-							</div>
+            <div class="col-12 col-md-6">
+              <label for="nombreUsuario" class="form-label">Nombre de usuario</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nombreUsuario"
+                required
+                aria-describedby="error-nombreUsuario"
+              />
+              <div id="error-nombreUsuario" class="invalid-feedback"></div>
+            </div>
 
-							<div class="col-12 col-md-6">
-								<label for="direccion" class="form-label"
-									>Dirección (opcional)</label
-								>
-								<input
-									type="text"
-									class="form-control"
-									id="direccion"
-									aria-describedby="error-direccion"
-								/>
-								<div id="error-direccion" class="invalid-feedback"></div>
-							</div>
+            <div class="col-12 col-md-6">
+              <label for="email" class="form-label">Correo</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                readonly
+                aria-describedby="error-email"
+              />
+              <div id="error-email" class="invalid-feedback"></div>
+            </div>
 
-							<div class="col-12 col-md-6">
-								<label for="telefono" class="form-label"
-									>Teléfono (opcional)</label
-								>
-								<input
-									type="tel"
-									class="form-control"
-									id="telefono"
-									placeholder="+56 9 1234 5678"
-									aria-describedby="error-telefono"
-								/>
-								<div id="error-telefono" class="invalid-feedback"></div>
-							</div>
-						</div>
+            <div class="col-12 col-md-6">
+              <label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label>
+              <input
+                type="date"
+                class="form-control"
+                id="fechaNacimiento"
+                required
+                aria-describedby="error-fechaNacimiento"
+              />
+              <div id="error-fechaNacimiento" class="invalid-feedback"></div>
+            </div>
 
-						<div class="d-flex gap-2 mt-4">
-							<button type="submit" id="btnSaveProfile" class="btn btn-primary">
-								Guardar cambios
-							</button>
-							<button
-								type="button"
-								id="btnResetProfile"
-								class="btn btn-outline-secondary"
-							>
-								Deshacer
-							</button>
-						</div>
-					</form>
-				</div>
-			</div>
+            <div class="col-12 col-md-6">
+              <label for="direccion" class="form-label">Dirección (opcional)</label>
+              <input
+                type="text"
+                class="form-control"
+                id="direccion"
+                aria-describedby="error-direccion"
+              />
+              <div id="error-direccion" class="invalid-feedback"></div>
+            </div>
+          </div>
 
-			<!-- tarjeta password -->
-			<div class="card shadow-sm">
-				<div class="card-body p-4">
-					<h2 class="h5 mb-3">Cambiar contraseña</h2>
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" id="btnSaveProfile" class="btn btn-primary">
+              Guardar cambios
+            </button>
+            <button
+              type="button"
+              id="btnResetProfile"
+              class="btn btn-outline-secondary"
+            >
+              Deshacer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
 
-					<div
-						id="pass-alert"
-						class="alert d-none"
-						role="alert"
-						aria-live="assertive"
-					></div>
+    <!-- Cambiar contraseña -->
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h2 class="h5 mb-3">Cambiar contraseña</h2>
+        <div id="pass-alert" class="alert d-none" role="alert" aria-live="assertive"></div>
 
-					<form id="passForm" novalidate>
-						<div class="row g-3">
-							<div class="col-12 col-md-4">
-								<label for="passActual" class="form-label"
-									>Contraseña actual</label
-								>
-								<input
-									type="password"
-									class="form-control"
-									id="passActual"
-									required
-									aria-describedby="error-passActual"
-								/>
-								<div id="error-passActual" class="invalid-feedback"></div>
-							</div>
+        <form id="passForm" novalidate>
+          <div class="row g-3">
+            <div class="col-12 col-md-4">
+              <label for="passActual" class="form-label">Contraseña actual</label>
+              <input
+                type="password"
+                class="form-control"
+                id="passActual"
+                required
+                aria-describedby="error-passActual"
+              />
+              <div id="error-passActual" class="invalid-feedback"></div>
+            </div>
 
-							<div class="col-12 col-md-4">
-								<label for="passNueva" class="form-label"
-									>Nueva contraseña</label
-								>
-								<input
-									type="password"
-									class="form-control"
-									id="passNueva"
-									required
-									minlength="6"
-									maxlength="18"
-									aria-describedby="help-passNueva error-passNueva"
-								/>
-															<div id="error-passNueva" class="invalid-feedback"></div>
-							</div>
+            <div class="col-12 col-md-4">
+              <label for="passNueva" class="form-label">Nueva contraseña</label>
+              <input
+                type="password"
+                class="form-control"
+                id="passNueva"
+                required
+                minlength="6"
+                maxlength="18"
+                aria-describedby="error-passNueva"
+              />
+              <div id="error-passNueva" class="invalid-feedback"></div>
+            </div>
 
-							<div class="col-12 col-md-4">
-								<label for="passConfirm" class="form-label"
-									>Confirmar nueva</label
-								>
-								<input
-									type="password"
-									class="form-control"
-									id="passConfirm"
-									required
-									aria-describedby="error-passConfirm"
-								/>
-								<div id="error-passConfirm" class="invalid-feedback"></div>
-							</div>
-						</div>
+            <div class="col-12 col-md-4">
+              <label for="passConfirm" class="form-label">Confirmar nueva</label>
+              <input
+                type="password"
+                class="form-control"
+                id="passConfirm"
+                required
+                aria-describedby="error-passConfirm"
+              />
+              <div id="error-passConfirm" class="invalid-feedback"></div>
+            </div>
+          </div>
 
-						<div class="d-flex gap-2 mt-4">
-							<button type="submit" id="btnSavePass" class="btn btn-success">
-								Actualizar contraseña
-							</button>
-							<button
-								type="button"
-								id="btnResetPass"
-								class="btn btn-outline-secondary"
-							>
-								Limpiar
-							</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</main>
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" id="btnSavePass" class="btn btn-success">
+              Actualizar contraseña
+            </button>
+            <button
+              type="button"
+              id="btnResetPass"
+              class="btn btn-outline-secondary"
+            >
+              Limpiar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
 
-		<!-- Footer reutilizable -->
-		<div id="footer-placeholder"></div>
+  <!-- Footer reutilizable -->
+  <div id="footer-placeholder"></div>
 
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-		<script src="./js/site.js"></script>
+  <!-- Core -->
+  <script src="js/site.js"></script>
 
-		<script type="module">
-			window.ensureAuth && window.ensureAuth();
-
-			import {
-				setFeedback,
-				emailValido,
-				validarClave,
-				clavesIguales,
-				edadOKInput,
-				sanitizeTextInput,
-			} from "./js/validaciones.js";
-			import {
-				getCurrentUser,
-				refreshCurrentUser,
-				updateUserById,
-				sha256,
-				getUsers,
-				saveUsers,
-			} from "./js/auth.repo.js";
-
-			const perfilForm = document.getElementById("perfilForm");
-			const alertPerfil = document.getElementById("perfil-alert");
-			const btnSaveProfile = document.getElementById("btnSaveProfile");
-			const btnResetProfile = document.getElementById("btnResetProfile");
-
-			const nombreCompleto = document.getElementById("nombreCompleto");
-			const nombreUsuario = document.getElementById("nombreUsuario");
-			const email = document.getElementById("email");
-			const fechaNacimiento = document.getElementById("fechaNacimiento");
-			const direccion = document.getElementById("direccion");
-			const telefono = document.getElementById("telefono");
-
-			const passForm = document.getElementById("passForm");
-			const alertPass = document.getElementById("pass-alert");
-			const passActual = document.getElementById("passActual");
-			const passNueva = document.getElementById("passNueva");
-			const passConfirm = document.getElementById("passConfirm");
-
-			function showAlert(el, msg, type = "info", ms = 3000) {
-				el.className = "alert alert-" + type;
-				el.textContent = msg;
-				el.classList.remove("d-none");
-				if (ms) setTimeout(() => el.classList.add("d-none"), ms);
-			}
-
-			function loadProfile() {
-				const cur = getCurrentUser();
-				if (!cur) return;
-				nombreCompleto.value = cur.nombreCompleto || "";
-				nombreUsuario.value = cur.nombreUsuario || "";
-				email.value = cur.email || "";
-				fechaNacimiento.value = cur.fechaNacimiento || "";
-				direccion.value = cur.direccion || "";
-				telefono.value = cur.telefono || "";
-
-				const hoy = new Date();
-				const max = new Date(
-					hoy.getFullYear() - 13,
-					hoy.getMonth(),
-					hoy.getDate()
-				);
-				fechaNacimiento.setAttribute("max", max.toISOString().slice(0, 10));
-			}
-			loadProfile();
-
-			// Guardar perfil
-			perfilForm.addEventListener("submit", (e) => {
-				e.preventDefault();
-				btnSaveProfile.disabled = true;
-
-				[nombreCompleto, nombreUsuario, direccion, telefono].forEach(
-					sanitizeTextInput
-				);
-
-				let ok = true;
-				const reSoloLetras = /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s'-]+$/;
-
-				if (
-					!nombreCompleto.value ||
-					!reSoloLetras.test(nombreCompleto.value.trim())
-				) {
-					setFeedback(
-						nombreCompleto,
-						false,
-						"El nombre solo debe contener letras."
-					);
-					ok = false;
-				} else setFeedback(nombreCompleto, true);
-
-				if (!nombreUsuario.value.trim()) {
-					setFeedback(
-						nombreUsuario,
-						false,
-						"El nombre de usuario es obligatorio."
-					);
-					ok = false;
-				} else setFeedback(nombreUsuario, true);
-
-				if (!emailValido(email.value)) {
-					setFeedback(email, false, "Correo inválido.");
-					ok = false;
-				} else setFeedback(email, true);
-
-				if (!fechaNacimiento.value || !edadOKInput(fechaNacimiento)) {
-					setFeedback(fechaNacimiento, false, "Debe tener al menos 13 años.");
-					ok = false;
-				} else setFeedback(fechaNacimiento, true);
-
-				setFeedback(direccion, true);
-				setFeedback(telefono, true);
-
-				if (!ok) {
-					btnSaveProfile.disabled = false;
-					return;
-				}
-
-				const cur = getCurrentUser();
-				if (!cur) {
-					window.location.href = "login.html";
-					return;
-				}
-
-				const patch = {
-					nombreCompleto: nombreCompleto.value.trim(),
-					nombreUsuario: nombreUsuario.value.trim(),
-					fechaNacimiento: fechaNacimiento.value,
-					direccion: direccion.value.trim(),
-					telefono: telefono.value.trim(),
-				};
-
-				const okUpd = updateUserById(cur.id, patch);
-				if (!okUpd) {
-					showAlert(
-						alertPerfil,
-						"No se pudo actualizar el perfil.",
-						"danger",
-						4000
-					);
-					btnSaveProfile.disabled = false;
-					return;
-				}
-
-				refreshCurrentUser();
-				showAlert(
-					alertPerfil,
-					"Perfil actualizado correctamente.",
-					"success",
-					2000
-				);
-				btnSaveProfile.disabled = false;
-			});
-
-			btnResetProfile.addEventListener("click", loadProfile);
-
-			// Password live feedback
-			passNueva.addEventListener("input", () => {
-				const v = validarClave(passNueva.value);
-				setFeedback(passNueva, v.ok, v.msg);
-				setFeedback(
-					passConfirm,
-					clavesIguales(passNueva.value, passConfirm.value),
-					"Las claves no coinciden."
-				);
-			});
-			passConfirm.addEventListener("input", () => {
-				setFeedback(
-					passConfirm,
-					clavesIguales(passNueva.value, passConfirm.value),
-					"Las claves no coinciden."
-				);
-			});
-
-			// Guardar nueva contraseña
-			passForm.addEventListener("submit", async (e) => {
-				e.preventDefault();
-				const cur = getCurrentUser();
-				if (!cur) {
-					window.location.href = "login.html";
-					return;
-				}
-
-				if (!(passActual.value || "").length) {
-					setFeedback(passActual, false, "Ingresa tu contraseña actual.");
-					return;
-				} else setFeedback(passActual, true);
-
-				const r = validarClave(passNueva.value);
-				setFeedback(passNueva, r.ok, r.msg);
-
-				const okConf = clavesIguales(passNueva.value, passConfirm.value);
-				setFeedback(passConfirm, okConf, "Las claves no coinciden.");
-				if (!(r.ok && okConf)) return;
-
-				const hashActual = await sha256(passActual.value);
-				const users = getUsers();
-				const me = users.find((u) => u.id === cur.id);
-				if (!me) {
-					showAlert(alertPass, "Usuario no encontrado.", "danger", 4000);
-					return;
-				}
-
-				if (me.passwordHash !== hashActual) {
-					setFeedback(passActual, false, "La contraseña actual no coincide.");
-					showAlert(
-						alertPass,
-						"La contraseña actual no coincide.",
-						"danger",
-						3500
-					);
-					return;
-				}
-
-				me.passwordHash = await sha256(passNueva.value);
-				saveUsers(users);
-				refreshCurrentUser();
-
-				showAlert(alertPass, "Contraseña actualizada.", "success", 2000);
-				passForm.reset();
-				["passActual", "passNueva", "passConfirm"].forEach((id) => {
-					const el = document.getElementById(id);
-					el.classList.remove("is-valid", "is-invalid");
-					const slot = document.getElementById("error-" + id);
-					if (slot) {
-						slot.textContent = "";
-						slot.removeAttribute("role");
-					}
-				});
-			});
-		</script>
-	</body>
+  <!-- Módulo único que inicializa el perfil -->
+  <script type="module" src="js/validaciones.js"></script>
+</body>
 </html>
