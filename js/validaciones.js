@@ -319,14 +319,13 @@ export function setupLoginPage() {
 }
 
 // Autoinit en carga DOM (si existe el formulario)
+// Autoinit en carga DOM (si existe el formulario)
 document.addEventListener("DOMContentLoaded", () => {
-	if (document.getElementById("loginForm")) setupLoginPage();
+	if (document.getElementById("loginForm")) {
+		setupLoginPage();
+		setupLoginRecoverySMS(); // <--- importante
+	}
 });
-
-/* ===========================
- *  PERFIL (sin teléfono)
- * ===========================
- */
 
 export function setupPerfilPage() {
 	const perfilForm = document.getElementById("perfilForm");
@@ -520,6 +519,128 @@ export function setupPerfilPage() {
 }
 
 // Autoinit en carga DOM (si existe el formulario)
+
+/* ===========================
+ *  LOGIN — Recuperación por SMS (simulada)
+ * ===========================
+ */
+function setupLoginRecoverySMS() {
+	const btnSend = document.getElementById("btnSendCode");
+	const codeArea = document.getElementById("codeArea");
+	const simCodeEl = document.getElementById("simCode");
+	const recCode = document.getElementById("recCode");
+	const recCodeFeedback = document.getElementById("recCodeFeedback");
+	const btnVerify = document.getElementById("btnVerifyCode");
+	const newPassArea = document.getElementById("newPassArea");
+	const btnSave = document.getElementById("btnSaveNewPass");
+	const newPass = document.getElementById("newPass");
+	const newPass2 = document.getElementById("newPass2");
+	const newPassFeedback = document.getElementById("newPassFeedback");
+
+	// Si no estamos en login.html (no existen los nodos), salir
+	if (!document.getElementById("recoverBox")) return;
+
+	let currentCode = null;
+
+	function generateCode() {
+		return Math.floor(100000 + Math.random() * 900000).toString();
+	}
+
+	if (btnSend) {
+		btnSend.addEventListener("click", function (e) {
+			e.preventDefault();
+			currentCode = generateCode();
+			if (simCodeEl) simCodeEl.textContent = currentCode;
+			if (codeArea) codeArea.classList.remove("d-none");
+			if (recCode) {
+				recCode.value = "";
+				recCode.classList.remove("is-invalid", "is-valid");
+			}
+			if (newPassArea) newPassArea.classList.add("d-none");
+		});
+	}
+
+	if (btnVerify) {
+		btnVerify.addEventListener("click", function (e) {
+			e.preventDefault();
+			const value = (recCode && recCode.value ? recCode.value : "").trim();
+			if (value.length !== 6 || !/^[0-9]{6}$/.test(value)) {
+				if (recCode) recCode.classList.add("is-invalid");
+				if (recCodeFeedback)
+					recCodeFeedback.textContent = "Ingresa un código de 6 dígitos.";
+				return;
+			}
+			if (value !== currentCode) {
+				if (recCode) recCode.classList.add("is-invalid");
+				if (recCodeFeedback)
+					recCodeFeedback.textContent =
+						"El código no coincide. Revisa e intenta nuevamente.";
+				return;
+			}
+			if (recCode) {
+				recCode.classList.remove("is-invalid");
+				recCode.classList.add("is-valid");
+			}
+			if (newPassArea) newPassArea.classList.remove("d-none");
+			if (newPass) newPass.value = "";
+			if (newPass2) newPass2.value = "";
+			if (newPass) newPass.classList.remove("is-invalid", "is-valid");
+			if (newPass2) newPass2.classList.remove("is-invalid", "is-valid");
+			if (newPassFeedback) newPassFeedback.textContent = "";
+		});
+	}
+
+	if (btnSave) {
+		btnSave.addEventListener("click", async function (e) {
+			e.preventDefault();
+			const p1 = (newPass && newPass.value ? newPass.value : "").trim();
+			const p2 = (newPass2 && newPass2.value ? newPass2.value : "").trim();
+			if (p1.length < 6) {
+				if (newPass) newPass.classList.add("is-invalid");
+				if (newPassFeedback)
+					newPassFeedback.textContent =
+						"La contraseña debe tener al menos 6 caracteres.";
+				return;
+			}
+			if (p1 !== p2) {
+				if (newPass2) newPass2.classList.add("is-invalid");
+				if (newPassFeedback)
+					newPassFeedback.textContent = "Las contraseñas no coinciden.";
+				return;
+			}
+			if (newPass) newPass.classList.remove("is-invalid");
+			if (newPass2) newPass2.classList.remove("is-invalid");
+			if (newPass) newPass.classList.add("is-valid");
+			if (newPass2) newPass2.classList.add("is-valid");
+
+			// Opcional: persistir en "repo" si el correo existe en el formulario
+			try {
+				const emailEl = document.getElementById("loginEmail");
+				if (emailEl && emailValido(emailEl.value)) {
+					const user = findUserByEmail(emailEl.value.trim());
+					if (user) {
+						const hash = await sha256(p1);
+						updateUserById(user.id, { passwordHash: hash });
+					}
+				}
+			} catch (err) {
+				/* simulación */
+			}
+
+			alert(
+				"¡Listo! Contraseña cambiada (simulado). Ahora puedes iniciar sesión con tu nueva contraseña."
+			);
+			const collapseEl = document.getElementById("recoverBox");
+			if (collapseEl && window.bootstrap) {
+				try {
+					const c = bootstrap.Collapse.getOrCreateInstance(collapseEl);
+					c.hide();
+				} catch (err) {}
+			}
+		});
+	}
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 	if (document.getElementById("perfilForm")) setupPerfilPage();
 });

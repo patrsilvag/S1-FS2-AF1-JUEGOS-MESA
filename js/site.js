@@ -81,9 +81,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 					if (navAdmin) hide(navAdmin);
 				}
 
-				// Logout
+				// Logout (limpia carrito + sesión)
 				navLogout?.addEventListener("click", (e) => {
 					e.preventDefault();
+
+					try {
+						// 1) Limpia el carrito
+						if (window.Cart && typeof Cart.clear === "function") {
+							// Si tienes un módulo Cart con clear()
+							Cart.clear();
+						} else {
+							// Fallback: borra la clave del carrito en storage
+							localStorage.removeItem("cart"); // <-- ajusta si tu clave es "carrito"
+							sessionStorage?.removeItem?.("cart"); // por si usas sessionStorage
+						}
+
+						// 2) Refresca el badge del carrito
+						dispatchEvent(new CustomEvent("cart:updated"));
+						const badge = document.getElementById("cart-badge");
+						if (badge) badge.textContent = "0";
+					} catch (err) {
+						console.warn("No se pudo limpiar el carrito en logout:", err);
+					}
+
+					// 3) Cierra sesión y redirige
 					setCurrentUser(null);
 					window.location.href = projectRoot + "login.html";
 				});

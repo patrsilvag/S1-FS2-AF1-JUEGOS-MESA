@@ -135,7 +135,6 @@ export async function ensureAdminSeed() {
 			role: ROLES.ADMIN,
 			status: STATUS.ACTIVE,
 			createdAt: Date.now(),
-			// Campos opcionales alineados con el modelo actual (sin teléfono)
 			direccion: "",
 			fechaNacimiento: "",
 			avatarUrl: "",
