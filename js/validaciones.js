@@ -114,6 +114,13 @@ function showAlert(containerEl, msg, type = "info", ms = 3000) {
 	}
 }
 
+/** Notificación amigable: usa #form-alert si existe; si no, fallback a alert() */
+function notify(msg, type = "info", ms = 3000) {
+	const container = document.getElementById("form-alert");
+	if (container) showAlert(container, msg, type, ms);
+	else window.alert(msg);
+}
+
 /** Limpia feedback de una lista de inputs */
 function limpiarFeedbackInputs(inputs) {
 	inputs.forEach((i) => {
@@ -243,12 +250,14 @@ export function setupRegistroPage() {
 			users.push(user);
 			saveUsers(users);
 			setCurrentUser({ ...user, passwordHash: undefined });
-			alert("¡Registro exitoso!");
+			notify("¡Registro exitoso!", "success");
+
 			form.reset();
 			limpiarFeedbackInputs(Object.values(inputs));
 		} catch (err) {
 			console.error(err);
-			alert("No se pudo completar el registro.");
+
+			notify("No se pudo completar el registro.", "danger");
 		} finally {
 			enviarBtn && (enviarBtn.disabled = false);
 		}
@@ -313,7 +322,8 @@ export function setupLoginPage() {
 			window.location.href = "index.html";
 		} catch (err) {
 			console.error(err);
-			alert(err.message || "No se pudo iniciar sesión.");
+
+			notify(err.message || "No se pudo iniciar sesión.", "danger");
 		}
 	});
 }
@@ -627,9 +637,11 @@ function setupLoginRecoverySMS() {
 				/* simulación */
 			}
 
-			alert(
-				"¡Listo! Contraseña cambiada (simulado). Ahora puedes iniciar sesión con tu nueva contraseña."
+			notify(
+				"¡Listo! Contraseña cambiada (simulado). Ahora puedes iniciar sesión con tu nueva contraseña.",
+				"success"
 			);
+
 			const collapseEl = document.getElementById("recoverBox");
 			if (collapseEl && window.bootstrap) {
 				try {
