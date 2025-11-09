@@ -1,209 +1,119 @@
 <!DOCTYPE html>
-
 <html lang="es">
 	<head>
 		<meta charset="utf-8" />
-		<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Iniciar sesión</title>
-		<!-- Bootstrap CSS (debe ir en el HEAD) -->
+
+		<!-- Bootstrap CSS -->
 		<link
 			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 			rel="stylesheet"
 		/>
 		<link href="css/estilos.css" rel="stylesheet" />
 	</head>
+
 	<body>
 		<!-- Header reutilizable -->
 		<div id="header-placeholder"></div>
+
 		<main class="container py-5 with-fixed-header" style="min-height: 60vh">
-			<h1 class="h4 mb-4">Iniciar sesión</h1>
+			<h1 class="h4 mb-4 text-center">Iniciar sesión</h1>
+
 			<div class="row justify-content-center">
 				<div class="col-12 col-md-8 col-lg-6">
 					<div class="card shadow-sm">
 						<div class="card-body p-4">
-							<!-- Contenedor de alertas (opcional; setupLoginPage usa alert()) -->
-							<div
-								aria-live="assertive"
-								class="alert visually-hidden"
-								id="form-alert"
-								role="alert"
-							></div>
-							<form id="loginForm" novalidate="">
+							<form id="loginForm" novalidate>
+								<!-- Mensaje de alerta general (muestra showAlert) -->
+								<div
+									id="form-alert"
+									class="alert d-none"
+									role="alert"
+									aria-live="assertive"
+								></div>
+								<!-- Correo -->
 								<div class="mb-3">
-									<label class="form-label" for="loginEmail">Correo</label>
+									<label for="loginEmail" class="form-label">Correo</label>
 									<input
-										aria-describedby="error-loginEmail"
-										autocomplete="username"
-										class="form-control"
 										id="loginEmail"
-										required=""
 										type="email"
-										autocapitalize="off"
-										autocorrect="off"
-										spellcheck="false"
-									/>
-									<div class="invalid-feedback" id="error-loginEmail"></div>
-								</div>
-								<div class="mb-3">
-									<label class="form-label" for="loginClave">Contraseña</label>
-									<input
-										aria-describedby="error-loginClave"
-										autocomplete="current-password"
 										class="form-control"
-										id="loginClave"
-										maxlength="18"
-										minlength="6"
-										required=""
-										type="password"
+										required
+										autocomplete="username"
 										autocapitalize="off"
 										autocorrect="off"
 										spellcheck="false"
+										aria-describedby="error-loginEmail"
 									/>
-									<div class="invalid-feedback" id="error-loginClave"></div>
+									<small
+										id="error-loginEmail"
+										class="text-danger d-block"
+										style="display: none"
+									></small>
 								</div>
-								<div class="d-grid gap-2">
-									<button class="btn btn-primary" type="submit">Entrar</button>
-								</div>
-							</form>
-							<div class="text-center mt-3">
-								<button
-									class="btn btn-link py-2"
-									aria-controls="recoverBox"
-									aria-expanded="false"
-									class="btn btn-link p-0"
-									data-bs-target="#recoverBox"
-									data-bs-toggle="collapse"
-									type="button"
-								>
-									¿Olvidaste tu contraseña?
-								</button>
-							</div>
-							<div class="collapse mt-3" id="recoverBox">
-								<div class="card card-body border-0 bg-light">
-									<h6 class="mb-3">Recuperar contraseña (simulación SMS)</h6>
-									<div class="row g-2 align-items-end">
-										<div class="col-sm-6">
-											<label class="form-label" for="recPhone">Teléfono</label>
-											<input
-												autocomplete="tel"
-												class="form-control"
-												id="recPhone"
-												placeholder="+56 9 1234 5678"
-												type="tel"
-											/>
-										</div>
-										<div class="col-sm-6 d-grid">
-											<button class="btn btn-secondary" id="btnSendCode">
-												Enviar código
-											</button>
-										</div>
-									</div>
-									<div class="mt-3 d-none" id="codeArea">
-										<div
-											aria-live="polite"
-											class="alert alert-info py-2"
-											id="simCodeAlert"
-											role="alert"
-										>
-											Código enviado por SMS (simulado):
-											<strong id="simCode"></strong>
-										</div>
-										<div class="row g-2 align-items-end">
-											<div class="col-sm-6">
-												<label class="form-label" for="recCode"
-													>Ingresa el código</label
-												>
-												<input
-													autocomplete="one-time-code"
-													class="form-control"
-													id="recCode"
-													inputmode="numeric"
-													maxlength="6"
-													placeholder="######"
-													type="text"
-													pattern="[0-9]*"
-													autocorrect="off"
-													spellcheck="false"
-												/>
-												<div
-													class="invalid-feedback"
-													id="recCodeFeedback"
-												></div>
-											</div>
-											<div class="col-sm-6 d-grid">
-												<button class="btn btn-primary" id="btnVerifyCode">
-													Validar código
-												</button>
-											</div>
-										</div>
-									</div>
-									<div class="mt-3 d-none" id="newPassArea">
-										<div class="alert alert-success py-2" role="alert">
-											Código verificado. Ahora crea tu nueva contraseña.
-										</div>
-										<div class="row g-2">
-											<div class="col-sm-6">
-												<label class="form-label" for="newPass"
-													>Nueva contraseña</label
-												>
-												<input
-													autocomplete="new-password"
-													class="form-control"
-													id="newPass"
-													maxlength="18"
-													minlength="6"
-													type="password"
-												/>
-											</div>
-											<div class="col-sm-6">
-												<label class="form-label" for="newPass2"
-													>Repite la contraseña</label
-												>
-												<input
-													autocomplete="new-password"
-													class="form-control"
-													id="newPass2"
-													maxlength="18"
-													minlength="6"
-													type="password"
-												/>
-												<div
-													class="invalid-feedback"
-													id="newPassFeedback"
-												></div>
-											</div>
-										</div>
-										<div class="d-grid mt-3">
-											<button class="btn btn-success" id="btnSaveNewPass">
-												Guardar nueva contraseña
-											</button>
-										</div>
-										<p class="small text-muted mt-2 mb-0">
-											Nota: esto es una simulación en el navegador — no se
-											realiza ningún cambio real en el servidor.
-										</p>
-									</div>
-								</div>
-							</div>
 
-							<hr class="my-4" />
-							<p class="mb-0 small text-muted">
-								¿No tienes cuenta?
-								<a class="link-primary" href="registro.html">Regístrate aquí</a
-								>.
-							</p>
+								<!-- Contraseña -->
+								<div class="mb-3">
+									<label for="loginClave" class="form-label">Contraseña</label>
+									<input
+										id="loginClave"
+										type="password"
+										class="form-control"
+										required
+										minlength="6"
+										maxlength="18"
+										autocomplete="current-password"
+										autocapitalize="off"
+										autocorrect="off"
+										spellcheck="false"
+										aria-describedby="error-loginClave"
+									/>
+									<small
+										id="error-loginClave"
+										class="text-danger d-block"
+										style="display: none"
+									></small>
+								</div>
+
+								<!-- Botón principal -->
+								<div class="d-grid gap-2 mb-3">
+									<button type="submit" class="btn btn-primary">Entrar</button>
+								</div>
+
+								<!-- Enlace de recuperación -->
+								<div class="text-center">
+									<a
+										id="goRecover"
+										href="recuperar.html"
+										class="btn btn-link py-2"
+									>
+										¿Olvidaste tu contraseña?
+									</a>
+								</div>
+
+								<hr class="my-4" />
+								<p class="mb-0 small text-muted text-center">
+									¿No tienes cuenta?
+									<a class="link-primary" href="registro.html">
+										Regístrate aquí
+									</a>
+								</p>
+							</form>
 						</div>
 					</div>
 				</div>
 			</div>
 		</main>
+
 		<!-- Footer reutilizable -->
 		<div id="footer-placeholder"></div>
-		<!-- Bootstrap JS (necesario para data-bs-toggle="collapse") -->
+
+		<!-- ===========================
+		     ORDEN CORRECTO DE SCRIPTS
+		     =========================== -->
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-		<!-- Core -->
 		<script src="js/site.js"></script>
-		<!-- Módulo único que inicializa el login -->
 		<script type="module" src="js/validaciones.js"></script>
 	</body>
 </html>

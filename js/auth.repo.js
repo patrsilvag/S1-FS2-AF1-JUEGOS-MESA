@@ -1,10 +1,12 @@
-// js/auth.repo.js
+// ============================================================
+//  auth.repo.js - Gestión de usuarios, sesiones y reset codes
+// ============================================================
 
 const LS_USERS = "users";
 const LS_CURRENT = "currentUser";
 const LS_RESETS = "resetCodes";
 
-/* =============== Utils =============== */
+/* ===== Utilidades ===== */
 function safeParse(json, fallback) {
 	try {
 		return JSON.parse(json);
@@ -21,7 +23,7 @@ function toSafeUser(u) {
 	return safe;
 }
 
-/* =============== Hash =============== */
+/* ===== Hash ===== */
 export async function sha256(text) {
 	const enc = new TextEncoder().encode(text || "");
 	const hash = await crypto.subtle.digest("SHA-256", enc);
@@ -30,31 +32,18 @@ export async function sha256(text) {
 		.join("");
 }
 
-/* =============== Users =============== */
+/* ===== Usuarios ===== */
 export function getUsers() {
 	return safeParse(localStorage.getItem(LS_USERS), []) || [];
 }
 export function saveUsers(users) {
 	localStorage.setItem(LS_USERS, JSON.stringify(users || []));
 }
-
-/** Buscar por correo (normalizado) */
 export function findUserByEmail(email) {
 	const target = normEmail(email);
 	if (!target) return undefined;
 	return getUsers().find((u) => normEmail(u.email) === target);
 }
-
-/** (Opcional) Buscar por nombre de usuario */
-export function findUserByUsername(username) {
-	const u = (username || "").trim().toLowerCase();
-	if (!u) return undefined;
-	return getUsers().find(
-		(x) => (x.nombreUsuario || "").trim().toLowerCase() === u
-	);
-}
-
-/** Actualizar un usuario por id (perfil / reset pass) */
 export function updateUserById(id, patch) {
 	const users = getUsers();
 	const i = users.findIndex((u) => u.id === id);
@@ -64,17 +53,14 @@ export function updateUserById(id, patch) {
 	return true;
 }
 
-/* =============== Session =============== */
+/* ===== Sesión ===== */
 export function setCurrentUser(userOrNull) {
-	// Siempre guarda una versión segura (sin passwordHash)
 	const safe = userOrNull ? toSafeUser(userOrNull) : null;
 	localStorage.setItem(LS_CURRENT, safe ? JSON.stringify(safe) : "null");
 }
 export function getCurrentUser() {
 	return safeParse(localStorage.getItem(LS_CURRENT), null);
 }
-
-/** Sincroniza currentUser con la versión guardada */
 export function refreshCurrentUser() {
 	const cur = getCurrentUser();
 	if (!cur) return null;
@@ -84,7 +70,7 @@ export function refreshCurrentUser() {
 	return safe;
 }
 
-/* =============== Password reset (demo con localStorage) =============== */
+/* ===== Recuperar contraseña (demo) ===== */
 export function setResetCode(email, code) {
 	const map = safeParse(localStorage.getItem(LS_RESETS), {}) || {};
 	map[normEmail(email)] = String(code || "");
@@ -100,19 +86,11 @@ export function clearResetCode(email) {
 	localStorage.setItem(LS_RESETS, JSON.stringify(map));
 }
 
-/* =============== Roles, permisos y control de acceso (RBAC) =============== */
+/* ===== Roles y políticas ===== */
 export const ROLES = { ADMIN: "admin", CLIENTE: "cliente" };
 export const STATUS = { ACTIVE: "active", INACTIVE: "inactive" };
 
 const POLICY = {
-	"user:list": [ROLES.ADMIN],
-	"user:create": [ROLES.ADMIN],
-	"user:update": [ROLES.ADMIN],
-	"user:disable": [ROLES.ADMIN],
-	"user:enable": [ROLES.ADMIN],
-	"catalog:manage": [ROLES.ADMIN],
-	"reports:view": [ROLES.ADMIN],
-	"cart:checkout": [ROLES.ADMIN, ROLES.CLIENTE],
 	"profile:self": [ROLES.ADMIN, ROLES.CLIENTE],
 };
 export function can(user, action) {
@@ -121,11 +99,11 @@ export function can(user, action) {
 	return allowed.includes(user.role);
 }
 
-/* =============== Seed de admin (opcional) =============== */
+/* ===== Admin Seed opcional ===== */
 export async function ensureAdminSeed() {
 	const users = getUsers();
 	if (users.length === 0) {
-		const passwordHash = await sha256("Admin123"); // clave por defecto
+		const passwordHash = await sha256("Admin123");
 		const admin = {
 			id: crypto.randomUUID(),
 			email: "admin@local.com",
@@ -137,7 +115,6 @@ export async function ensureAdminSeed() {
 			createdAt: Date.now(),
 			direccion: "",
 			fechaNacimiento: "",
-			avatarUrl: "",
 		};
 		saveUsers([admin]);
 		console.info("✅ Admin creado: admin@local.com / Admin123");

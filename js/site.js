@@ -1,45 +1,147 @@
 // ===============================
-//  js/site.js
-//  Header y Footer reutilizables (carga dinámica),
-//  ajuste dinámico de la altura del header fijo,
-//  sincronización del badge del carrito,
-//  y control de autenticación en el header.
-//  ===============================
+// js/site.js
+// ===============================
+
+// -------------------------------------------------------------------
+// Filtro global para inputs marcados con data-only-digits
+// - Aplica en CAPTURA para máxima prioridad.
+// - Soporta tecleo, pegado y arrastrar/soltar.
+// -------------------------------------------------------------------
+(function attachOnlyDigitsFilter() {
+	const isControlKey = (k) =>
+		k === "Backspace" ||
+		k === "Delete" ||
+		k === "ArrowLeft" ||
+		k === "ArrowRight" ||
+		k === "Tab" ||
+		k === "Home" ||
+		k === "End";
+
+	// A) keydown: bloquea caracteres no numéricos y exceso de longitud
+	document.addEventListener(
+		"keydown",
+		(e) => {
+			const el = e.target;
+			if (!el || !el.matches?.("input[data-only-digits]")) return;
+
+			if (e.ctrlKey || e.metaKey || e.altKey || isControlKey(e.key)) return;
+
+			const isDigit = /^\d$/.test(e.key);
+			if (!isDigit) {
+				e.preventDefault();
+				return;
+			}
+
+			const max = parseInt(el.dataset.onlyDigits, 10) || 6;
+			const selection = (el.selectionEnd ?? 0) - (el.selectionStart ?? 0);
+			if (selection === 0 && (el.value?.length ?? 0) >= max) {
+				e.preventDefault();
+			}
+		},
+		true
+	);
+
+	// B) input: limpia siempre que se modifique el valor
+	document.addEventListener(
+		"input",
+		(e) => {
+			const el = e.target;
+			if (!el || !el.matches?.("input[data-only-digits]")) return;
+
+			const max = parseInt(el.dataset.onlyDigits, 10) || 6;
+			const s = (el.value || "").replace(/\D/g, "").slice(0, max);
+			if (el.value !== s) el.value = s;
+		},
+		true
+	);
+
+	// C) paste: inserta solo dígitos y respeta la posición del cursor
+	document.addEventListener(
+		"paste",
+		(e) => {
+			const el = e.target;
+			if (!el || !el.matches?.("input[data-only-digits]")) return;
+
+			e.preventDefault();
+			const raw =
+				(e.clipboardData || window.clipboardData)?.getData("text") || "";
+			const max = parseInt(el.dataset.onlyDigits, 10) || 6;
+			const digits = raw.replace(/\D/g, "").slice(0, max);
+
+			const start = el.selectionStart ?? el.value.length;
+			const end = el.selectionEnd ?? el.value.length;
+			el.setRangeText(digits, start, end, "end");
+			el.dispatchEvent(new Event("input", { bubbles: true }));
+		},
+		true
+	);
+
+	// D) drop: evita arrastrar/soltar texto
+	document.addEventListener(
+		"drop",
+		(e) => {
+			const el = e.target;
+			if (el && el.matches?.("input[data-only-digits]")) e.preventDefault();
+		},
+		true
+	);
+})();
+
+// ===============================
+// Carga dinámica del HEADER reutilizable
+// ===============================
 document.addEventListener("DOMContentLoaded", async () => {
 	const placeholder = document.getElementById("header-placeholder");
 	if (!placeholder) return;
 
-	// Detectar ruta raíz del proyecto (ORIGINAL)
+	// Detecta la raíz del proyecto desde la ruta actual.
 	const path = window.location.pathname;
 	const rootMatch = path.match(/^(.*?)(categorias|pages|includes|js|css)\//);
 	const projectRoot = rootMatch ? rootMatch[1] : path.replace(/[^/]*$/, "");
-
 	const headerURL = projectRoot + "includes/header.html";
 
-	// 🔔 Helper para mostrar notificaciones amigables
+	// Notificaciones amigables de UI (expuestas globalmente).
 	function notify(msg, type = "info", ms = 3000) {
-		const container = document.getElementById("form-alert");
-		if (container) {
-			container.className = "alert alert-" + type;
-			container.textContent = msg;
-			container.classList.remove("d-none");
-			if (ms) setTimeout(() => container.classList.add("d-none"), ms);
+		const box = document.getElementById("form-alert");
+		if (box) {
+			box.className = "alert alert-" + type;
+			box.textContent = String(msg || "");
+			box.classList.remove("d-none");
+			if (ms) setTimeout(() => box.classList.add("d-none"), ms);
 		} else {
 			console.log(`[${type.toUpperCase()}] ${msg}`);
 		}
 	}
 
+	window.notify = notify;
+	// ===========================================================
+	// ALERTA GLOBAL REUTILIZABLE (usa Bootstrap o fallback simple)
+	// ===========================================================
+	window.showAlert = function showAlert(id, msg, type = "success") {
+		const el = document.getElementById(id);
+		if (el) {
+			// Caso 1: el elemento existe (por ejemplo, un <div id="perfil-alert">)
+			el.textContent = msg;
+			el.className = `alert alert-${type}`;
+			el.classList.remove("d-none");
+			setTimeout(() => el.classList.add("d-none"), 2500);
+		} else {
+			// Caso 2: fallback si no existe un contenedor de alerta visible
+			console.log(`[${type.toUpperCase()}] ${msg}`);
+			alert(msg);
+		}
+	};
+
 	try {
-		// Cargar el fragmento de header (ORIGINAL)
+		// Inserta el fragmento del header.
 		const res = await fetch(headerURL, { cache: "no-store" });
-		if (!res.ok)
-			throw new Error("No se pudo cargar el header desde " + headerURL);
+		if (!res.ok) throw new Error("No se pudo cargar el header: " + headerURL);
 		placeholder.innerHTML = await res.text();
 
-		// === Control de autenticación (login / user / logout / profile / admin) ===
+		// Navegación según autenticación.
 		(async function setupAuthNav() {
 			try {
-				const authModuleURL = projectRoot + "js/auth.repo.js"; // ruta absoluta desde la página actual
+				const authModuleURL = projectRoot + "js/auth.repo.js";
 				const {
 					getCurrentUser,
 					setCurrentUser,
@@ -48,19 +150,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 					can,
 				} = await import(authModuleURL);
 
-				// 🧱 Crear admin por defecto si no hay usuarios
+				// Garantiza datos iniciales mínimos (demo).
 				await ensureAdminSeed();
 
-				// Leer usuario y sincronizar con storage por si hubo cambios
+				// Estado actual de usuario.
 				let user = getCurrentUser();
 				user = refreshCurrentUser() || user;
 
+				// Referencias de navegación.
 				const navLogin = document.getElementById("nav-login");
 				const navLogout = document.getElementById("nav-logout");
 				const navUser = document.getElementById("nav-user");
 				const navProfile = document.getElementById("nav-profile");
 				const navAdmin = document.getElementById("nav-admin");
-				const navCart = document.getElementById("btn-cart"); // 🛒 id real del botón en el header
+				const navCart = document.getElementById("btn-cart");
 				const navRegister = document.getElementById("nav-register");
 
 				const show = (el) => el && el.classList.remove("d-none");
@@ -76,14 +179,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 						show(navUser);
 					}
 					hide(navLogin);
-					hide(navRegister); // 👈 Ocultar “Regístrate”
+					hide(navRegister);
 					show(navLogout);
-					show(navProfile); // mostrar Perfil cuando hay sesión
+					show(navProfile);
 
-					// Mostrar enlace Admin solo si el usuario tiene permiso
 					if (navAdmin) {
-						if (can(user, "user:list")) show(navAdmin);
-						else hide(navAdmin);
+						if (
+							user &&
+							user.status === "active" &&
+							(user.role === "admin" || can(user, "user:list"))
+						) {
+							show(navAdmin);
+						} else {
+							hide(navAdmin);
+						}
 					}
 				} else {
 					if (navUser) {
@@ -91,26 +200,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 						hide(navUser);
 					}
 					show(navLogin);
-					show(navRegister); // 👈 Mostrar “Regístrate” solo si no hay sesión
+					show(navRegister);
 					hide(navLogout);
 					hide(navProfile);
 					if (navAdmin) hide(navAdmin);
 				}
 
-				// Logout (limpia carrito + sesión)
+				// Logout: limpia carrito, estado, badge y redirige.
 				navLogout?.addEventListener("click", (e) => {
 					e.preventDefault();
 
 					try {
-						// 1) Limpia el carrito
 						if (window.Cart && typeof Cart.clear === "function") {
 							Cart.clear();
 						} else {
 							localStorage.removeItem("cart");
 							sessionStorage?.removeItem?.("cart");
 						}
-
-						// 2) Refresca el badge del carrito
 						dispatchEvent(new CustomEvent("cart:updated"));
 						const badge = document.getElementById("cart-badge");
 						if (badge) badge.textContent = "0";
@@ -118,34 +224,42 @@ document.addEventListener("DOMContentLoaded", async () => {
 						console.warn("No se pudo limpiar el carrito en logout:", err);
 					}
 
-					// 3) Cierra sesión y redirige
 					setCurrentUser(null);
 					window.location.href = projectRoot + "login.html";
 				});
 
-				// 🛒 Protección al presionar "Carrito"
+				// Protección al navegar al carrito.
 				if (navCart) {
 					navCart.addEventListener("click", (e) => {
-						const user = getCurrentUser();
-						if (!user) {
+						const u = getCurrentUser();
+
+						// Usuario no logeado → guarda mensaje y redirige
+						if (!u) {
 							e.preventDefault();
-							notify(
-								"Debes iniciar sesión para acceder al carrito.",
-								"warning"
+							sessionStorage.setItem(
+								"loginRedirectMsg",
+								"Debes iniciar sesión para acceder al carrito."
 							);
 							window.location.href = projectRoot + "login.html";
-						} else if (user.status && user.status !== "active") {
+							return;
+						}
+
+						// Usuario inactivo → también guarda mensaje y redirige
+						if (u.status && u.status !== "active") {
 							e.preventDefault();
-							notify(
-								"Tu cuenta está deshabilitada. Contacta al administrador.",
-								"danger"
+							sessionStorage.setItem(
+								"loginRedirectMsg",
+								"Tu cuenta está deshabilitada. Contacta al administrador."
 							);
 							window.location.href = projectRoot + "login.html";
+							return;
 						}
 					});
 				}
 
-				// Helpers globales para proteger páginas
+
+
+				// Helpers globales para proteger páginas.
 				window.ensureAuth = function ensureAuth() {
 					const u = getCurrentUser();
 					const ok = !!(u && u.status === "active");
@@ -161,9 +275,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 				console.warn("No se pudo inicializar la navegación de auth:", e);
 			}
 		})();
-		// === FIN Control de autenticación ===
 
-		// === Sincronización del badge del carrito (tu lógica original) ===
+		// Sincroniza el badge del carrito.
 		(function setupCartBadge() {
 			const badge = document.getElementById("cart-badge");
 			if (!badge) return;
@@ -186,34 +299,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 			addEventListener("cart:updated", updateFromCart);
 			updateFromCart();
 		})();
-		// === FIN badge ===
 
-		// Activar el botón ☰ (menú móvil)
+		// Toggle de menú móvil.
 		const toggle = document.querySelector(".nav-toggle");
 		const header = document.querySelector(".site-header");
 		if (toggle && header) {
 			toggle.addEventListener("click", () => {
-				const abierto = header.classList.toggle("open");
-				toggle.setAttribute("aria-expanded", abierto ? "true" : "false");
+				const open = header.classList.toggle("open");
+				toggle.setAttribute("aria-expanded", open ? "true" : "false");
 			});
 		}
 
-		// ===============================
-		// Ajustar padding-top según alto real del header fijo
-		// ===============================
+		// Ajusta variables CSS con el alto real del header fijo.
 		const ajustarAlturaHeader = () => {
 			const headerEl = document.querySelector(".site-header");
-			if (headerEl) {
-				const altura = headerEl.offsetHeight;
-				document.documentElement.style.setProperty(
-					"--estructura-altura-header",
-					altura + "px"
-				);
-				document.documentElement.style.setProperty(
-					"--altura-header",
-					altura + "px"
-				);
-			}
+			if (!headerEl) return;
+			const h = headerEl.offsetHeight;
+			document.documentElement.style.setProperty(
+				"--estructura-altura-header",
+				h + "px"
+			);
+			document.documentElement.style.setProperty("--altura-header", h + "px");
 		};
 
 		ajustarAlturaHeader();
@@ -242,8 +348,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	try {
 		const res = await fetch(footerURL, { cache: "no-store" });
-		if (!res.ok)
-			throw new Error("No se pudo cargar el footer desde " + footerURL);
+		if (!res.ok) throw new Error("No se pudo cargar el footer: " + footerURL);
 		placeholder.innerHTML = await res.text();
 	} catch (err) {
 		console.error("Error cargando footer reutilizable:", err);

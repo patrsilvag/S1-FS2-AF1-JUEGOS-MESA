@@ -21,6 +21,12 @@
 		<!-- CONTENIDO PRINCIPAL -->
 		<main class="container my-5">
 			<h1 class="text-center mb-4">🛒 Carrito de Compras</h1>
+			<div
+				id="form-alert"
+				class="alert d-none text-center mt-3"
+				role="alert"
+				aria-live="assertive"
+			></div>
 
 			<div id="cart-row" class="row g-4">
 				<!-- Columna izquierda: tabla -->
@@ -120,5 +126,6 @@
 		<!-- Archivos del carrito -->
 		<script src="js/cart.state.js"></script>
 		<script src="js/cart.ui.js"></script>
+		<script type="module" src="js/cart.unauthorized.js"></script>
 	</body>
 </html>
