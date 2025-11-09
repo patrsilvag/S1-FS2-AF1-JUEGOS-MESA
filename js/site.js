@@ -113,17 +113,42 @@ document.addEventListener("DOMContentLoaded", async () => {
 	// ===========================================================
 	window.showAlert = function showAlert(id, msg, type = "success") {
 		const el = document.getElementById(id);
-		if (el) {
-			el.textContent = msg;
-			el.className = `alert alert-${type}`;
-			el.classList.remove("d-none");
-			// 🔹 Accesibilidad mínima
-			el.setAttribute("role", "alert");
-			el.setAttribute("aria-live", "assertive");
-			setTimeout(() => el.classList.add("d-none"), 2500);
-		} else {
-			console.log(`[${type.toUpperCase()}] ${msg}`);
-		}
+		if (!el) return;
+
+		// 🔹 Reset estilos previos
+		el.style.display = "";
+		el.style.opacity = "1";
+		el.classList.remove(
+			"d-none",
+			"alert-success",
+			"alert-danger",
+			"alert-info",
+			"alert-warning"
+		);
+		el.classList.add("alert", `alert-${type}`);
+
+		// 🔹 Texto y accesibilidad
+		el.textContent = msg;
+		el.setAttribute("role", "alert");
+		el.setAttribute("aria-live", "assertive");
+
+		// 🔹 Cancelar cualquier timeout previo
+		clearTimeout(el._timeout);
+
+		// 🔹 Mostrar durante 3 s y luego desvanecer con transición manual
+		el._timeout = setTimeout(() => {
+			el.style.transition = "opacity 0.5s ease";
+			el.style.opacity = "0";
+
+			// 🔹 Después del fade-out, ocultar por completo
+			setTimeout(() => {
+				el.classList.add("d-none");
+				el.style.display = "none";
+				el.style.opacity = "";
+				el.style.transition = "";
+				el.textContent = "";
+			}, 500);
+		}, 2200);
 	};
 
 	try {
@@ -319,6 +344,49 @@ document.addEventListener("DOMContentLoaded", async () => {
 		ajustarAlturaHeader();
 	} catch (err) {
 		console.error("Error cargando header reutilizable:", err);
+	}
+});
+
+// ===============================
+// 🔒 Protección de acceso directo a carrito.html
+// ===============================
+document.addEventListener("DOMContentLoaded", async () => {
+	const path = window.location.pathname;
+
+	// Detecta si la página actual es carrito.html (en cualquier subcarpeta)
+	if (path.endsWith("/carrito.html") || path.endsWith("carrito.html")) {
+		try {
+			// Calcula ruta raíz para importar el módulo correcto
+			const rootMatch = path.match(
+				/^(.*?)(categorias|pages|includes|js|css)\//
+			);
+			const projectRoot = rootMatch ? rootMatch[1] : path.replace(/[^/]*$/, "");
+			const authModuleURL = projectRoot + "js/auth.repo.js";
+
+			const { getCurrentUser } = await import(authModuleURL);
+			const user = getCurrentUser();
+
+			if (!user || user.status !== "active") {
+				sessionStorage.setItem(
+					"loginRedirectMsg",
+					"Debes iniciar sesión para acceder al carrito."
+				);
+
+				// 🔹 Muestra mensaje transitorio antes de redirigir (opcional)
+				const alert = document.createElement("div");
+				alert.textContent = "Redirigiendo al inicio de sesión...";
+				alert.className =
+					"alert alert-warning position-fixed top-0 start-50 translate-middle-x mt-3";
+				alert.style.zIndex = "2000";
+				document.body.appendChild(alert);
+
+				setTimeout(() => {
+					window.location.href = projectRoot + "login.html";
+				}, 1500);
+			}
+		} catch (err) {
+			console.warn("Error verificando acceso a carrito:", err);
+		}
 	}
 });
 

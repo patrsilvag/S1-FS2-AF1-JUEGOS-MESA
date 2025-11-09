@@ -176,7 +176,7 @@ export async function setupRegistroPage() {
 			direccion: direccionEl.value.trim(),
 		});
 
-		showAlert("registro-alert", "Usuario registrado con éxito", "success");
+		showAlert("form-alert", "Usuario registrado con éxito", "success");
 		form.reset();
 	});
 }

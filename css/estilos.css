@@ -380,3 +380,10 @@ h3, .h3 { font-size: var(--fs-lg); font-weight: 600; margin-bottom: 0.6rem; }
 .cart-items-scroll::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* ===============================
+   ALERTAS REUTILIZABLES (site.js)
+   =============================== */
+.alert.d-none {
+  display: none !important;
+}
