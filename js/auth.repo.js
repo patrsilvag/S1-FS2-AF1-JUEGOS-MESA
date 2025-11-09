@@ -58,9 +58,24 @@ export function setCurrentUser(userOrNull) {
 	const safe = userOrNull ? toSafeUser(userOrNull) : null;
 	localStorage.setItem(LS_CURRENT, safe ? JSON.stringify(safe) : "null");
 }
+
 export function getCurrentUser() {
-	return safeParse(localStorage.getItem(LS_CURRENT), null);
+	// 🔹 Lee el usuario actual directamente desde localStorage
+	const data = safeParse(localStorage.getItem(LS_CURRENT), null);
+
+	// Si no hay nada guardado, retorna null
+	if (!data) return null;
+
+	// 🔹 Si el currentUser fue guardado con hash, mantenerlo completo
+	if (data.passwordHash) return data;
+
+	// 🔹 Si no tiene hash, intentar buscar el usuario completo en la lista
+	const users = getUsers();
+	const full = users.find((u) => u.email === data.email);
+	return full || data;
 }
+
+
 export function refreshCurrentUser() {
 	const cur = getCurrentUser();
 	if (!cur) return null;
@@ -68,6 +83,14 @@ export function refreshCurrentUser() {
 	const safe = toSafeUser(updated || null);
 	setCurrentUser(safe);
 	return safe;
+}
+
+//  función extendida para guardar usuario completo (incluye hash)
+export function setCurrentUserFull(userOrNull) {
+	localStorage.setItem(
+		LS_CURRENT,
+		userOrNull ? JSON.stringify(userOrNull) : "null"
+	);
 }
 
 /* ===== Recuperar contraseña (demo) ===== */
