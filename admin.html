@@ -4,6 +4,7 @@
 		<meta charset="utf-8" />
 		<title>Panel Admin</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="Panel de administración de usuarios en Cuatro Esquinas. Solo disponible para administradores activos.">
 
 		<!-- Bootstrap (mismo que usas en otras páginas) -->
 		<link
@@ -16,9 +17,14 @@
 		<!-- Header reutilizable -->
 		<div id="header-placeholder"></div>
 
-		<main class="container py-5 with-fixed-header" style="min-height: 60vh">
+		<main
+			class="container py-5 with-fixed-header"
+			style="min-height: 60vh"
+			aria-labelledby="page-title"
+			tabindex="-1"
+		>
 			<div class="d-flex align-items-center justify-content-between mb-4">
-				<h1 class="h4 m-0">Panel de administración</h1>
+				<h1 id="page-title" class="h4 m-0">Panel de administración</h1>
 				<span class="badge text-bg-primary">Usuarios</span>
 			</div>
 
@@ -28,6 +34,7 @@
 				class="alert d-none"
 				role="alert"
 				aria-live="assertive"
+				aria-atomic="true"
 			></div>
 
 			<!-- Tabla de usuarios -->
@@ -49,7 +56,10 @@
 							</tbody>
 						</table>
 					</div>
-					<p class="text-muted small m-0">
+					<p
+						class="text-muted small m-0"
+						aria-label="En este panel solo se pueden activar o desactivar usuarios. No se permite editar sus datos."
+					>
 						Solo puedes <strong>activar/desactivar</strong> usuarios (sin
 						edición de datos desde este panel).
 					</p>
@@ -60,55 +70,13 @@
 		<!-- Footer reutilizable -->
 		<div id="footer-placeholder"></div>
 
+		<!-- Bootstrap JS ( para el header/móvil dropdowns) -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 		<!-- Core: carga header/footer y controles de auth del menú -->
 		<script src="js/site.js"></script>
 
-		<!-- Protección y arranque del panel (solo admins) -->
-		<script type="module">
-			import { getCurrentUser, STATUS, ROLES } from "./js/auth.repo.js";
-
-			const alertBox = document.getElementById("admin-alert");
-			const showAlert = (msg, type = "danger") => {
-				if (!alertBox) return;
-				alertBox.className = "alert alert-" + type;
-				alertBox.textContent = msg;
-				alertBox.classList.remove("d-none");
-			};
-
-			document.addEventListener("DOMContentLoaded", async () => {
-				const user = getCurrentUser();
-
-				// Solo admins activos
-				if (
-					!user ||
-					user.status !== STATUS.ACTIVE ||
-					user.role !== ROLES.ADMIN
-				) {
-					showAlert(
-						"Acceso denegado. Solo administradores pueden ver esta sección."
-					);
-					setTimeout(() => (window.location.href = "index.html"), 900);
-					return;
-				}
-
-				// Cargar la lógica de administración
-				try {
-					const mod = await import("./js/admin.js");
-					if (typeof mod.setupAdminPage === "function") {
-						mod.setupAdminPage();
-					} else {
-						showAlert(
-							"No se pudo inicializar el panel (setupAdminPage no encontrado)."
-						);
-					}
-				} catch (err) {
-					console.error(err);
-					showAlert("No se pudo cargar el panel de administración.");
-				}
-			});
-		</script>
-
-		<!-- Bootstrap JS (si lo necesitas para el header/móvil dropdowns) -->
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+		<!-- Lógica del panel y protección de acceso -->
+		<script type="module" src="js/admin.js"></script>
 	</body>
 </html>

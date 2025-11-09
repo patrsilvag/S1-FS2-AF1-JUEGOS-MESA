@@ -33,6 +33,31 @@ export async function sha256(text) {
 }
 
 /* ===== Usuarios ===== */
+
+// ============================================================
+// Crear nuevo usuario y guardarlo en localStorage
+// ============================================================
+export async function addUser(user) {
+	const users = getUsers();
+
+	// Verificar duplicado
+	if (users.some((u) => u.email === user.email)) {
+		throw new Error("Ya existe un usuario con este correo.");
+	}
+
+	// Asignar ID y valores por defecto
+	user.id =
+		user.id ||
+		(crypto.randomUUID ? crypto.randomUUID() : Date.now().toString());
+	user.role = user.role || ROLES.CLIENTE;
+	user.status = user.status || STATUS.ACTIVE;
+	user.createdAt = user.createdAt || Date.now();
+
+	users.push(user);
+	saveUsers(users);
+	return user;
+}
+
 export function getUsers() {
 	return safeParse(localStorage.getItem(LS_USERS), []) || [];
 }
@@ -74,7 +99,6 @@ export function getCurrentUser() {
 	const full = users.find((u) => u.email === data.email);
 	return full || data;
 }
-
 
 export function refreshCurrentUser() {
 	const cur = getCurrentUser();

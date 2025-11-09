@@ -38,7 +38,9 @@
 						<div class="row g-3">
 							<!-- Nombre completo -->
 							<div class="col-12 col-md-6">
-								<label for="nombreCompleto" class="form-label">Nombre completo</label>
+								<label for="nombreCompleto" class="form-label"
+									>Nombre completo</label
+								>
 								<input
 									type="text"
 									class="form-control"
@@ -46,12 +48,18 @@
 									required
 									aria-describedby="error-nombreCompleto"
 								/>
-								<small id="error-nombreCompleto" class="text-danger d-block" hidden></small>
+								<small
+									id="error-nombreCompleto"
+									class="text-danger d-block"
+									hidden
+								></small>
 							</div>
 
 							<!-- Nombre de usuario -->
 							<div class="col-12 col-md-6">
-								<label for="nombreUsuario" class="form-label">Nombre de usuario</label>
+								<label for="nombreUsuario" class="form-label"
+									>Nombre de usuario</label
+								>
 								<input
 									type="text"
 									class="form-control"
@@ -59,7 +67,11 @@
 									required
 									aria-describedby="error-nombreUsuario"
 								/>
-								<small id="error-nombreUsuario" class="text-danger d-block" hidden></small>
+								<small
+									id="error-nombreUsuario"
+									class="text-danger d-block"
+									hidden
+								></small>
 							</div>
 
 							<!-- Correo -->
@@ -72,12 +84,18 @@
 									readonly
 									aria-describedby="error-email"
 								/>
-								<small id="error-email" class="text-danger d-block" hidden></small>
+								<small
+									id="error-email"
+									class="text-danger d-block"
+									hidden
+								></small>
 							</div>
 
 							<!-- Fecha de nacimiento -->
 							<div class="col-12 col-md-6">
-								<label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label>
+								<label for="fechaNacimiento" class="form-label"
+									>Fecha de nacimiento</label
+								>
 								<input
 									type="date"
 									class="form-control"
@@ -85,7 +103,11 @@
 									required
 									aria-describedby="error-fechaNacimiento"
 								/>
-								<small id="error-fechaNacimiento" class="text-danger d-block" hidden></small>
+								<small
+									id="error-fechaNacimiento"
+									class="text-danger d-block"
+									hidden
+								></small>
 							</div>
 
 							<!-- Dirección -->
@@ -97,15 +119,27 @@
 									id="direccion"
 									aria-describedby="error-direccion"
 								/>
-								<small id="error-direccion" class="text-danger d-block" hidden></small>
+								<small
+									id="error-direccion"
+									class="text-danger d-block"
+									hidden
+								></small>
 							</div>
 						</div>
 
 						<div class="d-flex gap-2 mt-4">
-							<button type="submit" id="btnSaveProfile" class="btn btn-primary flex-grow-1">
+							<button
+								type="submit"
+								id="btnSaveProfile"
+								class="btn btn-primary flex-grow-1"
+							>
 								Guardar cambios
 							</button>
-							<button type="button" id="btnResetProfile" class="btn btn-outline-secondary flex-grow-1">
+							<button
+								type="button"
+								id="btnResetProfile"
+								class="btn btn-outline-secondary flex-grow-1"
+							>
 								Deshacer
 							</button>
 						</div>
@@ -131,57 +165,113 @@
 						<div class="row g-3">
 							<!-- Contraseña actual -->
 							<div class="col-12 col-md-4">
-								<label for="passActual" class="form-label">Contraseña actual</label>
-								<input
-									type="password"
-									class="form-control"
-									id="passActual"
-									required
-									aria-describedby="error-passActual"
-								/>
-								<small id="error-passActual" class="text-danger d-block" hidden></small>
+								<label for="passActual" class="form-label"
+									>Contraseña actual</label
+								>
+								<div class="input-group">
+									<input
+										type="password"
+										class="form-control"
+										id="passActual"
+										required
+										aria-describedby="error-passActual"
+									/>
+									<button
+										type="button"
+										class="btn btn-outline-secondary toggle-password"
+										aria-label="Mostrar contraseña"
+										aria-pressed="false"
+									>
+										👁️
+									</button>
+								</div>
+								<small
+									id="error-passActual"
+									class="text-danger d-block"
+									hidden
+								></small>
 							</div>
 
 							<!-- Nueva contraseña -->
 							<div class="col-12 col-md-4">
-								<label for="passNueva" class="form-label">Nueva contraseña</label>
-								<input
-									type="password"
-									class="form-control"
-									id="passNueva"
-									required
-									minlength="6"
-									maxlength="18"
-									aria-describedby="error-passNueva"
-								/>
-								<small id="error-passNueva" class="text-danger d-block" hidden></small>
-								<div class="form-text">
-									Entre 6–18 caracteres, con al menos una mayúscula y un número.
+								<label for="passNueva" class="form-label"
+									>Nueva contraseña</label
+								>
+								<div class="input-group">
+									<input
+										type="password"
+										class="form-control"
+										id="passNueva"
+										required
+										minlength="6"
+										maxlength="18"
+										aria-describedby="error-passNueva passwordHelp"
+									/>
+									<button
+										type="button"
+										class="btn btn-outline-secondary toggle-password"
+										aria-label="Mostrar contraseña"
+										aria-pressed="false"
+									>
+										👁️
+									</button>
+								</div>
+								<small
+									id="error-passNueva"
+									class="text-danger d-block"
+									hidden
+								></small>
+								<div id="passwordHelp" class="form-text">
+									Debe tener entre 6 y 18 caracteres, incluyendo al menos una
+									letra mayúscula, una minúscula, un número y un símbolo
+									especial.
 								</div>
 							</div>
 
 							<!-- Confirmar nueva contraseña -->
 							<div class="col-12 col-md-4">
-								<label for="passConfirm" class="form-label">Confirmar nueva contraseña</label>
-								<input
-									type="password"
-									class="form-control"
-									id="passConfirm"
-									required
-									aria-describedby="error-passConfirm"
-								/>
-								<small id="error-passConfirm" class="text-danger d-block" hidden></small>
+								<label for="passConfirm" class="form-label"
+									>Confirmar nueva contraseña</label
+								>
+								<div class="input-group">
+									<input
+										type="password"
+										class="form-control"
+										id="passConfirm"
+										required
+										aria-describedby="error-passConfirm"
+									/>
+									<button
+										type="button"
+										class="btn btn-outline-secondary toggle-password"
+										aria-label="Mostrar contraseña"
+										aria-pressed="false"
+									>
+										👁️
+									</button>
+								</div>
+								<small
+									id="error-passConfirm"
+									class="text-danger d-block"
+									hidden
+								></small>
 							</div>
 						</div>
 
 						<div class="d-flex gap-2 mt-4">
-							<button type="submit" id="btnSavePass" class="btn btn-success flex-grow-1">
+							<button
+								type="submit"
+								id="btnSavePass"
+								class="btn btn-success flex-grow-1"
+								aria-label="Actualizar la contraseña del perfil"
+							>
 								Actualizar contraseña
 							</button>
 							<button
 								type="button"
 								id="btnResetPass"
 								class="btn btn-outline-secondary flex-grow-1"
+								aria-label="Limpiar los campos del formulario de contraseña"
 							>
 								Limpiar
 							</button>

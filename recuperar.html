@@ -74,11 +74,12 @@
 											maxlength="6"
 											required
 											pattern="^[0-9]{6}$"
-											aria-describedby="error-code"
+											data-only-digits="6"
+											aria-describedby="error-code codeHelp"
 										/>
-										<div class="form-text">
-											Ingresa los <strong>6 dígitos numéricos</strong> del código
-											de verificación. <br />
+										<div id="codeHelp" class="form-text">
+											Ingresa los <strong>6 dígitos numéricos</strong> del
+											código de verificación. <br />
 											En esta demo usa el código fijo: <b>123456</b>.
 										</div>
 										<small
@@ -102,11 +103,10 @@
 											minlength="6"
 											maxlength="18"
 											autocomplete="new-password"
-											aria-describedby="error-password"
+											aria-describedby="error-password passwordHelp"
 										/>
-										<div class="form-text">
-											Debe tener entre 6–18 caracteres, con al menos una letra
-											mayúscula y un número.
+										<div id="passwordHelp" class="form-text">
+											Debe tener entre 6 y 18 caracteres, incluyendo al menos una letra mayúscula, una minúscula, un número y un símbolo especial
 										</div>
 										<small
 											id="error-password"
@@ -143,10 +143,15 @@
 										<a
 											href="login.html"
 											class="btn btn-outline-secondary flex-grow-1"
+											aria-label="Volver a la página de inicio de sesión"
 										>
 											Volver
 										</a>
-										<button type="submit" class="btn btn-success flex-grow-1">
+										<button
+											type="submit"
+											class="btn btn-success flex-grow-1"
+											aria-label="Actualizar la contraseña con el código ingresado"
+										>
 											Actualizar contraseña
 										</button>
 									</div>

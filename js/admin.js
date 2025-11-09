@@ -1,18 +1,33 @@
-// js/admin.js — versión estable para panel admin
-// Muestra lista de usuarios y permite activar/desactivar su estado
+// ======================================================
+// admin.js — Panel de administración accesible y seguro
+// ======================================================
 
 import {
 	getUsers,
 	updateUserById,
 	refreshCurrentUser,
+	getCurrentUser,
 	STATUS,
 	ROLES,
 } from "./auth.repo.js";
 
+// ---------- Utilidades DOM ----------
 function $(sel) {
 	return document.querySelector(sel);
 }
 
+// ---------- Alertas accesibles ----------
+const alertBox = $("#admin-alert");
+const showAlert = (msg, type = "danger") => {
+	if (!alertBox) return;
+	alertBox.className = "alert alert-" + type;
+	alertBox.textContent = msg;
+	alertBox.classList.remove("d-none");
+	alertBox.setAttribute("tabindex", "-1");
+	alertBox.focus();
+};
+
+// ---------- Generadores de contenido ----------
 function usernameOrFallback(u) {
 	return u?.nombreUsuario?.trim() || (u?.email ? u.email.split("@")[0] : "—");
 }
@@ -27,10 +42,11 @@ function statusBadge(status) {
 	return `<span class="badge ${
 		active ? "text-bg-success" : "text-bg-secondary"
 	}">
-    ${active ? "Activo" : "Inactivo"}
-  </span>`;
+		${active ? "Activo" : "Inactivo"}
+	</span>`;
 }
 
+// ---------- Renderizado accesible ----------
 function renderTable() {
 	const tbody = $("#tabla-usuarios tbody");
 	if (!tbody) return;
@@ -40,25 +56,37 @@ function renderTable() {
 
 	users.forEach((u) => {
 		const tr = document.createElement("tr");
+
+		// texto visible y atributos ARIA coherentes
+		const isActive = u.status === STATUS.ACTIVE;
+		const btnLabel = isActive
+			? `Desactivar usuario ${usernameOrFallback(u)}`
+			: `Activar usuario ${usernameOrFallback(u)}`;
+
 		tr.innerHTML = `
-      <td>${u.email}</td>
-      <td>${usernameOrFallback(u)}</td>
-      <td>${roleBadge(u.role)}</td>
-      <td>${statusBadge(u.status)}</td>
-      <td class="text-end">
-        <button type="button" class="btn btn-sm ${
-					u.status === STATUS.ACTIVE
-						? "btn-outline-danger"
-						: "btn-outline-success"
-				}" data-id="${u.id}">
-          ${u.status === STATUS.ACTIVE ? "Deshabilitar" : "Habilitar"}
-        </button>
-      </td>
-    `;
+			<td>${u.email}</td>
+			<td>${usernameOrFallback(u)}</td>
+			<td>${roleBadge(u.role)}</td>
+			<td>${statusBadge(u.status)}</td>
+			<td class="text-end">
+				<button 
+					type="button" 
+					class="btn btn-sm ${isActive ? "btn-outline-danger" : "btn-outline-success"}" 
+					data-id="${u.id}"
+					aria-label="${btnLabel}"
+					aria-pressed="${isActive}"
+					aria-describedby="acciones-info"
+				>
+					${isActive ? "Desactivar" : "Activar"}
+				</button>
+			</td>
+		`;
+
 		tbody.appendChild(tr);
 	});
 }
 
+// ---------- Acciones ----------
 function wireActions() {
 	const tbody = $("#tabla-usuarios tbody");
 	if (!tbody) return;
@@ -66,6 +94,7 @@ function wireActions() {
 	tbody.addEventListener("click", (e) => {
 		const btn = e.target.closest("button[data-id]");
 		if (!btn) return;
+
 		const id = btn.dataset.id;
 		const users = getUsers();
 		const user = users.find((x) => x.id === id);
@@ -80,7 +109,18 @@ function wireActions() {
 	});
 }
 
-export function setupAdminPage() {
+// ---------- Protección y arranque ----------
+function protectAndInit() {
+	const user = getCurrentUser();
+
+	if (!user || user.status !== STATUS.ACTIVE || user.role !== ROLES.ADMIN) {
+		showAlert("Acceso denegado. Solo administradores pueden ver esta sección.");
+		setTimeout(() => (window.location.href = "index.html"), 900);
+		return;
+	}
+
 	renderTable();
 	wireActions();
 }
+
+document.addEventListener("DOMContentLoaded", protectAndInit);

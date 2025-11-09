@@ -135,6 +135,11 @@ body {
   border-radius: 8px;
 }
 
+:focus {
+  outline: 3px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
 /* ===============================
    SECCIÓN PRINCIPAL (categorías)
    =============================== */

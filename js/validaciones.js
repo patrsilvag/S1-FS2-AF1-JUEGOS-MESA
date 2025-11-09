@@ -6,16 +6,39 @@
 export function emailValido(email) {
 	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email || "");
 }
+// Validación robusta de contraseñas (mínimo 4 criterios)
+export function validarClave(clave = "") {
+	// Eliminar espacios al inicio y fin
+	const valor = clave.trim();
 
-export function validarClave(clave) {
-	if (!clave || clave.length < 6)
+	// Longitud mínima
+	if (valor.length < 6)
 		return { ok: false, msg: "Debe tener al menos 6 caracteres." };
-	if (clave.length > 18)
+
+	// Longitud máxima
+	if (valor.length > 18)
 		return { ok: false, msg: "No puede exceder 18 caracteres." };
-	if (!/[A-Z]/.test(clave))
+
+	// Letra mayúscula
+	if (!/[A-Z]/.test(valor))
 		return { ok: false, msg: "Debe incluir al menos una letra mayúscula." };
-	if (!/\d/.test(clave))
+
+	// Letra minúscula
+	if (!/[a-z]/.test(valor))
+		return { ok: false, msg: "Debe incluir al menos una letra minúscula." };
+
+	// Número
+	if (!/\d/.test(valor))
 		return { ok: false, msg: "Debe incluir al menos un número." };
+
+	// Símbolo especial
+	if (!/[^A-Za-z0-9]/.test(valor))
+		return {
+			ok: false,
+			msg: "Debe incluir al menos un símbolo especial (por ejemplo: !, $, #, %).",
+		};
+
+	// Si pasa todas las validaciones
 	return { ok: true, msg: "" };
 }
 
@@ -38,7 +61,6 @@ export function setFeedback(input, ok, msg = "") {
 		errorEl.textContent = msg;
 	}
 }
-
 
 export function showAlert(id, msg, tipo = "info") {
 	const el = document.getElementById(id);
@@ -279,5 +301,20 @@ document.addEventListener("DOMContentLoaded", () => {
 	if (document.getElementById("loginForm")) setupLoginPage();
 	if (document.getElementById("registroForm")) setupRegistroPage();
 	if (document.getElementById("form-reset")) setupRecuperarPage();
-	
+});
+
+// ============================================================
+// Alternar visibilidad de contraseñas con botón accesible 👁️
+// ============================================================
+document.addEventListener("click", (e) => {
+	const btn = e.target.closest(".toggle-password");
+	if (!btn) return;
+	const input = btn.previousElementSibling;
+	if (!input) return;
+
+	const isVisible = input.type === "text";
+	input.type = isVisible ? "password" : "text";
+	btn.setAttribute("aria-pressed", String(!isVisible));
+	btn.setAttribute("aria-label", isVisible ? "Mostrar contraseña" : "Ocultar contraseña");
+	btn.textContent = isVisible ? "👁️" : "🙈";
 });

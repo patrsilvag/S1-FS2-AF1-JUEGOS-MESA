@@ -54,21 +54,32 @@
 								</div>
 
 								<!-- Contraseña -->
+								<!-- Contraseña -->
 								<div class="mb-3">
 									<label for="loginClave" class="form-label">Contraseña</label>
-									<input
-										id="loginClave"
-										type="password"
-										class="form-control"
-										required
-										minlength="6"
-										maxlength="18"
-										autocomplete="current-password"
-										autocapitalize="off"
-										autocorrect="off"
-										spellcheck="false"
-										aria-describedby="error-loginClave"
-									/>
+									<div class="input-group">
+										<input
+											id="loginClave"
+											type="password"
+											class="form-control"
+											required
+											minlength="6"
+											maxlength="18"
+											autocomplete="current-password"
+											autocapitalize="off"
+											autocorrect="off"
+											spellcheck="false"
+											aria-describedby="error-loginClave"
+										/>
+										<button
+											type="button"
+											class="btn btn-outline-secondary toggle-password"
+											aria-label="Mostrar contraseña"
+											aria-pressed="false"
+										>
+											👁️
+										</button>
+									</div>
 									<small
 										id="error-loginClave"
 										class="text-danger d-block"
@@ -78,7 +89,13 @@
 
 								<!-- Botón principal -->
 								<div class="d-grid gap-2 mb-3">
-									<button type="submit" class="btn btn-primary">Entrar</button>
+									<button
+										type="submit"
+										class="btn btn-primary"
+										aria-label="Iniciar sesión en la aplicación"
+									>
+										Entrar
+									</button>
 								</div>
 
 								<!-- Enlace de recuperación -->
@@ -87,6 +104,7 @@
 										id="goRecover"
 										href="recuperar.html"
 										class="btn btn-link py-2"
+										aria-label="Ir a página para recuperar contraseña"
 									>
 										¿Olvidaste tu contraseña?
 									</a>
@@ -95,7 +113,11 @@
 								<hr class="my-4" />
 								<p class="mb-0 small text-muted text-center">
 									¿No tienes cuenta?
-									<a class="link-primary" href="registro.html">
+									<a
+										class="link-primary"
+										href="registro.html"
+										aria-label="Ir a la página de registro de usuarios"
+									>
 										Regístrate aquí
 									</a>
 								</p>
