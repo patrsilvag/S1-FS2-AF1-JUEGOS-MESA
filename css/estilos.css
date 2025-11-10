@@ -1,28 +1,23 @@
-/* ===============================
-   VARIABLES CSS PERSONALIZADAS
-   =============================== */
+/* =======================================================
+   1. VARIABLES CSS PERSONALIZADAS
+   ======================================================= */
 :root {
-  /* Colores principales */
-  --color-primario: #0d6efd; /* Azul principal Bootstrap */
-  --color-secundario: #f4f4f4; /* Fondo claro */
-  --color-texto: #333333; /* Texto base */
-  --color-exito: #10b981; /* Verde esmeralda */
+  --color-primario: #0d6efd;
+  --color-secundario: #f4f4f4;
+  --color-texto: #333333;
+  --color-exito: #10b981;
   --bs-primary: var(--color-primario);
 
-  /* Tipografía y espaciado */
   --fuente-base: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   --espaciado-md: 1rem;
 
-  /* Fichas */
   --ficha-bg: #ffffff;
   --ficha-bg-hover: #f9fbff;
   --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.15);
 
-  /* Header fijo */
   --altura-header: 64px;
 
-  /**/
   --fs-base: 16px;
   --fs-sm: 0.9rem;
   --fs-md: 1rem;
@@ -31,26 +26,34 @@
   --fs-xxl: 2.25rem;
 }
 
-/* ===============================
-   RESETEO BÁSICO Y ESTILO GLOBAL
-   =============================== */
+/* =======================================================
+   2. RESETEO BÁSICO Y ESTILO GLOBAL
+   ======================================================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
 body {
   font-family: var(--fuente-base);
   color: var(--color-texto);
   background-color: var(--color-secundario);
   line-height: 1.6;
-  padding-top: var(--altura-header); /* compensa header fijo */
+  padding-top: var(--altura-header);
+}
+:focus-visible {
+  outline: 3px solid var(--color-primario);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+:focus {
+  outline: 3px solid var(--color-primario);
+  outline-offset: 2px;
 }
 
-/* ===============================
-   HEADER FIJO (reutilizable)
-   =============================== */
+/* =======================================================
+   3. HEADER FIJO
+   ======================================================= */
 .site-header {
   position: fixed;
   top: 0;
@@ -59,9 +62,7 @@ body {
   z-index: 1050;
   background-color: var(--color-primario);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  border-bottom: none;
 }
-
 .site-header .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -70,91 +71,44 @@ body {
   align-items: center;
   justify-content: space-between;
 }
-
 .site-header .logo {
   font-weight: bold;
   text-decoration: none;
   color: #fff;
 }
-
 .site-header .menu {
   list-style: none;
-  display: flex;
-  gap: 16px;
-  margin: 0;
-  padding: 0;
-}
-
-.site-header .nav-link {
-  text-decoration: none;
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition:
-    background 0.3s ease,
-    transform 0.2s ease;
-}
-
-.site-header .nav-link:hover,
-.site-header .nav-link:focus {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
-}
-
-/* botón ☰ móvil */
-.nav-toggle {
   display: none;
+  flex-direction: column;
+  background-color: var(--color-primario);
+  padding: 12px;
+  border-radius: 12px;
+}
+.nav-toggle {
+  display: inline-block;
   background: none;
   border: 1px solid rgba(255, 255, 255, 0.4);
   color: #fff;
   padding: 6px 10px;
   border-radius: 8px;
 }
-
-/* responsive del header */
-@media (max-width: 768px) {
-  .site-header .menu {
-    display: none;
-    flex-direction: column;
-    background-color: var(--color-primario);
-    padding: 12px;
-    border-radius: 12px;
-  }
-  .nav-toggle {
-    display: inline-block;
-  }
-  .site-header.open .menu {
-    display: flex;
-  }
+.site-header.open .menu {
+  display: flex;
 }
 
-/* foco accesible */
-:focus-visible {
-  outline: 3px solid var(--color-primario);
-  outline-offset: 3px;
-  border-radius: 8px;
-}
-
-:focus {
-  outline: 3px solid var(--color-primario);
-  outline-offset: 2px;
-}
-
-/* ===============================
-   SECCIÓN PRINCIPAL (categorías)
-   =============================== */
+/* =======================================================
+   4. SECCIÓN PRINCIPAL (CATEGORÍAS)
+   ======================================================= */
 main {
   padding: calc(var(--espaciado-md) * 2);
   text-align: center;
 }
-
 .categorias {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: 1fr;
   gap: 1.5rem;
   margin-top: var(--espaciado-md);
 }
-
 .categoria {
   background-color: #fff;
   border-radius: 10px;
@@ -165,26 +119,23 @@ main {
   overflow: hidden;
   animation: fade-in 0.8s ease-out;
 }
-
 .categoria:hover {
   transform: translateY(-6px);
   box-shadow: var(--shadow-lg);
 }
-
 .categoria img {
   width: 100%;
   height: 150px;
   object-fit: cover;
 }
-
 .categoria h3 {
   margin: var(--espaciado-md) 0;
   color: var(--color-primario);
 }
 
-/* ===============================
-   FICHAS DE JUEGO
-   =============================== */
+/* =======================================================
+   5. FICHAS DE JUEGO
+   ======================================================= */
 .juego-ficha {
   background-color: var(--ficha-bg);
   border-radius: 10px;
@@ -198,14 +149,12 @@ main {
   will-change: transform, box-shadow, background-color;
   animation: fade-in 0.8s ease-out;
 }
-
 .juego-ficha:hover,
 .juego-ficha:focus-within {
   background-color: var(--ficha-bg-hover);
   box-shadow: var(--shadow-lg);
   transform: translateY(-4px);
 }
-
 .juego-precio {
   font-weight: bold;
   color: var(--color-primario);
@@ -216,9 +165,9 @@ main {
   animation: pulse 1.5s ease-in-out infinite;
 }
 
-/* ===============================
-   PIE DE PÁGINA
-   =============================== */
+/* =======================================================
+   6. PIE DE PÁGINA
+   ======================================================= */
 footer {
   background-color: var(--color-primario);
   color: #fff;
@@ -227,18 +176,32 @@ footer {
   margin-top: calc(var(--espaciado-md) * 2);
 }
 
-/* ===============================
-   ANIMACIONES CSS EXTRA
-   =============================== */
-@keyframes resaltar {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+/* =======================================================
+   7. FORMULARIO REGISTRO
+   ======================================================= */
+#registroForm label { padding-right: 0.5rem; }
+.form-grid { display: grid; row-gap: 1rem; }
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  row-gap: 0.5rem;
 }
-.categoria:hover img {
-  animation: resaltar 0.5s ease-in-out;
-}
+.form-row .form-label { font-weight: 500; margin-bottom: 0; }
+.form-row .invalid-feedback,
+.form-row .form-text { grid-column: 1; }
 
+/* =======================================================
+   8. TIPOGRAFÍA UNIFICADA
+   ======================================================= */
+body { font-size: var(--fs-base); line-height: 1.6; }
+h1, .h1 { font-size: var(--fs-xxl); font-weight: 700; margin-bottom: 1rem; }
+h2, .h2 { font-size: var(--fs-xl); font-weight: 600; margin-bottom: 0.8rem; }
+h3, .h3 { font-size: var(--fs-lg); font-weight: 600; margin-bottom: 0.6rem; }
+
+/* =======================================================
+   9. ANIMACIONES
+   ======================================================= */
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -247,71 +210,62 @@ footer {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.1); }
 }
-@keyframes hover-wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(2deg); }
-  50% { transform: rotate(-2deg); }
-  75% { transform: rotate(2deg); }
-}
 button:hover,
 .btn-volver:hover,
 [type="button"]:hover,
 [type="submit"]:hover {
-  animation: hover-wiggle 0.4s ease-in-out;
-  transform-origin: center;
+  animation: pulse 0.4s ease-in-out;
 }
 
-/* ===============================
-   MEDIA QUERIES
-   =============================== */
-@media (max-width: 1024px) {
-  .categorias { grid-template-columns: 1fr 1fr; }
+/* =======================================================
+   10. ALERTAS REUTILIZABLES (site.js)
+   ======================================================= */
+.alert.d-none {
+  display: none !important;
 }
 
-@media (max-width: 768px) {
-  header h1 { font-size: 1.5rem; }
-  nav ul { flex-direction: column; align-items: center; }
-  .categorias, .categoria, .juego-ficha {
-    display: grid;
-    grid-template-columns: 1fr;
-    max-width: 100%;
+/* =======================================================
+   11. MEDIA QUERIES (Mobile → Desktop)
+   ======================================================= */
+
+/* Tablet (≥768px) */
+@media (min-width: 768px) {
+  .site-header .menu {
+    flex-direction: row;
+    display: flex;
+    gap: 16px;
+    background: none;
+    padding: 0;
   }
-  main { padding: var(--espaciado-md); }
+  .nav-toggle {
+    display: none;
+  }
+  .categorias {
+    grid-template-columns: 1fr 1fr;
+  }
+  .form-row {
+    grid-template-columns: 230px 1fr;
+    column-gap: 12px;
+  }
 }
 
-/* ===============================
-   IMÁGENES UNIFORMES
-   =============================== */
-.card-img-top {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  object-position: center;
-  border-radius: 0.5rem 0.5rem 0 0;
-  display: block;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease;
+/* Escritorio (≥1024px) */
+@media (min-width: 1024px) {
+  .categorias {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
 }
-.card:hover .card-img-top { transform: scale(1.03); }
 
-/* ===============================
-   FORMULARIO REGISTRO
-   =============================== */
-#registroForm label { padding-right: 0.5rem; }
-.form-grid { display: grid; row-gap: 1rem; }
-.form-row {
-  display: grid;
-  grid-template-columns: 230px 1fr;
-  align-items: center;
-  column-gap: 12px;
+/* Grandes (≥1200px) */
+@media (min-width: 1200px) {
+  .site-header .container {
+    max-width: 1200px;
+  }
 }
-.form-row .form-label { text-align: left; font-weight: 500; margin-bottom: 0; }
-.form-row .invalid-feedback,
-.form-row .form-text { grid-column: 2; }
 
-/* ===============================
-   MOVIMIENTO REDUCIDO (accesibilidad)
-   =============================== */
+/* =======================================================
+   12. MOVIMIENTO REDUCIDO (Accesibilidad)
+   ======================================================= */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.001ms !important;
@@ -319,71 +273,4 @@ button:hover,
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-/* =======================================================
-   TIPOGRAFÍA UNIFICADA
-   ======================================================= */
-body { font-size: var(--fs-base); line-height: 1.6; }
-h1, .h1 { font-size: var(--fs-xxl); font-weight: 700; margin-bottom: 1rem; }
-h2, .h2 { font-size: var(--fs-xl); font-weight: 600; margin-bottom: 0.8rem; }
-h3, .h3 { font-size: var(--fs-lg); font-weight: 600; margin-bottom: 0.6rem; }
-
-/* ===============================
-   CARRITO: tabla, resumen y estados
-   =============================== */
-
-/* Altura máxima del listado con scroll */
-.cart-items-scroll {
-  max-height: 60vh;
-  overflow: auto;
-}
-
-/* Encabezado pegajoso reforzado */
-.sticky-thead {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-}
-.sticky-thead th {
-  position: sticky;
-  top: 0;
-  z-index: 3;
-  background: #212529;
-  color: #fff;
-}
-
-/* Resumen sticky sin inline styles */
-#cart-col-summary .position-sticky {
-  top: calc(var(--altura-header) + 16px);
-}
-
-/* Cuando el carrito está vacío, centramos y ensanchamos */
-.cart-empty-center #cart-row { justify-content: center; }
-.cart-empty-center #cart-col-table {
-  flex: 0 0 auto;
-  width: 100%;
-}
-@media (min-width: 992px) {
-  .cart-empty-center #cart-col-table { max-width: 83.333333%; }
-}
-
-/* Scrollbar personalizado (opcional) */
-.cart-items-scroll::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-.cart-items-scroll::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 6px;
-}
-.cart-items-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* ===============================
-   ALERTAS REUTILIZABLES (site.js)
-   =============================== */
-.alert.d-none {
-  display: none !important;
 }
