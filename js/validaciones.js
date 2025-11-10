@@ -202,8 +202,7 @@ export async function setupRecuperarPage() {
 		const conf = confEl.value;
 
 		let ok = true;
-		const { emailValido, validarClave, clavesIguales, setFeedback } =
-			await import("./utils.js");
+		// const { emailValido, validarClave, clavesIguales, setFeedback } = 			await import("./utils.js");
 		if (!emailValido(email)) {
 			setFeedback(emailEl, false, "Correo inválido.");
 			ok = false;

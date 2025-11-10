@@ -36,7 +36,7 @@
 		<!-- Subencabezado -->
 		<div class="bg-light border-bottom border-primary-subtle">
 			<div class="container py-3">
-				<h1  id="page-title" class="h4 mb-0">Juegos de Cartas</h1>
+				<h1 id="page-title" class="h4 mb-0">Juegos de Cartas</h1>
 			</div>
 		</div>
 
@@ -44,10 +44,13 @@
 		<main class="container my-5" aria-labelledby="page-title">
 			<h2 class="text-center mb-4">Barajas y juegos rápidos para todos</h2>
 			<!-- Aquí se pintan los productos de forma dinámica -->
-			<div data-lista-productos data-categoria="cartas"></div>
+			<div class="row g-4" data-lista-productos data-categoria="cartas"></div>
 
 			<div class="text-center mt-5">
-				<a class="btn btn-primary btn-volver" href="index.html" aria-label="Volver a la página principal"
+				<a
+					class="btn btn-primary btn-volver"
+					href="index.html"
+					aria-label="Volver a la página principal"
 					>← Volver al inicio</a
 				>
 			</div>
@@ -65,6 +68,5 @@
 		<!-- NUEVO: Archivos del carrito -->
 		<script src="js/cart.state.js"></script>
 		<script src="js/render-productos.js"></script>
-		
 	</body>
 </html>
