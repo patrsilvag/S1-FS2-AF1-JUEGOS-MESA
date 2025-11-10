@@ -1,4 +1,6 @@
-// js/productos.js
+// ============================================================
+// js/productos.js Define el catálogo estático de productos disponibles, organizado por categorías
+// ============================================================
 window.PRODUCTOS = [
 	// Estrategia
 	{

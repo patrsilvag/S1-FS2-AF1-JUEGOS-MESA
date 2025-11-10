@@ -1,5 +1,6 @@
 // ===========================================================
-// PERFIL - Inicialización y manejo de formularios
+// PERFIL - Permite a los usuarios ver y actualizar su perfil o cambiar su contraseña
+// validando los datos antes de guardarlos
 // ===========================================================
 
 import { validarPerfil } from "./validaciones.js";

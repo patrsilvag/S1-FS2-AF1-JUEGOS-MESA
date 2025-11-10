@@ -24,41 +24,39 @@ const formatoCLP = (valor) =>
 
 /* Aplica/quita layout para vacío vs con ítems + prepara scroll */
 function applyCartLayout(hasItems) {
-	// 🔹 Añade o quita clase global al <body> para centrar/ensanchar
+	// Añade o quita clase global al body
 	document.body.classList.toggle("cart-empty-center", !hasItems);
 
-	// Fila principal (la que tiene .row.g-4)
 	const row = document.querySelector("main .row.g-4");
-	// Columna izquierda (tabla): intentamos ubicarla de forma robusta
-	const colTable =
-		document.querySelector("main .row.g-4 > .col-12.col-lg-8") ||
-		document.querySelector("main .row.g-4 > .col-12"); // fallback
-	// Contenedor del resumen (card a la derecha)
+	const colTable = document.querySelector("#cart-col-table"); // ✅ selector robusto
 	const summary = document.getElementById("cart-summary");
 
-	// 1) Centrado cuando NO hay resumen
+	// 1) Centrado del layout solo en desktop
 	if (row) {
-		row.classList.toggle("justify-content-center", !hasItems);
-	}
-
-	// 2) Ensanchar un poco la tabla cuando está vacío (de lg-8 a lg-10)
-	if (colTable) {
-		if (!hasItems) {
-			colTable.classList.add("col-lg-10");
-			colTable.classList.remove("col-lg-8");
+		if (window.innerWidth >= 992) {
+			row.classList.toggle("justify-content-center", !hasItems);
 		} else {
-			colTable.classList.add("col-lg-8");
-			colTable.classList.remove("col-lg-10");
+			row.classList.remove("justify-content-center");
 		}
 	}
 
-	// 3) Preparar scroll del detalle + thead sticky (idempotente)
+	// 2) Ajuste de ancho de columna solo en desktop
+	if (colTable && window.innerWidth >= 992) {
+		colTable.classList.toggle("col-lg-10", !hasItems);
+		colTable.classList.toggle("col-lg-8", hasItems);
+	}
+
+	// 3) Scroll y sticky thead (forzar siempre)
 	const tableWrap = document.querySelector("main .table-responsive");
 	const thead = document.querySelector("main table thead");
-	if (tableWrap) tableWrap.classList.add("cart-items-scroll");
-	if (thead) thead.classList.add("sticky-thead");
+	if (tableWrap && !tableWrap.classList.contains("cart-items-scroll")) {
+		tableWrap.classList.add("cart-items-scroll");
+	}
+	if (thead && !thead.classList.contains("sticky-thead")) {
+		thead.classList.add("sticky-thead");
+	}
 
-	// Mostrar/ocultar resumen según estado
+	// 4) Mostrar/ocultar resumen
 	if (summary) summary.classList.toggle("d-none", !hasItems);
 }
 

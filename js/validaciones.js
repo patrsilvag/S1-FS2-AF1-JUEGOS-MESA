@@ -1,5 +1,6 @@
 // ===========================================================
 // validaciones.js
+// Centraliza las validaciones de formularios (login, registro, recuperación y perfil) y provee feedback visual
 // ===========================================================
 
 /* ---------- Funciones base ---------- */
@@ -161,7 +162,17 @@ export async function setupRegistroPage() {
 		if (!fechaEl.value) {
 			setFeedback(fechaEl, false, "Debes ingresar una fecha válida.");
 			ok = false;
-		} else setFeedback(fechaEl, true, "");
+		} else {
+			const f = new Date(fechaEl.value);
+			const hoy = new Date();
+			hoy.setHours(0, 0, 0, 0);
+			if (f > hoy) {
+				setFeedback(fechaEl, false, "La fecha no puede ser futura.");
+				ok = false;
+			} else {
+				setFeedback(fechaEl, true, "");
+			}
+		}
 
 		if (!ok) return;
 

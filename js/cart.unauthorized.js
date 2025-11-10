@@ -1,5 +1,6 @@
 // ===========================================================
-// CART - Validación de acceso sin duplicar site.js
+// CART - Evita el acceso al carrito si el usuario no ha iniciado sesión, mostrando una alerta o mensaje alternativo
+//  sin duplicar site.js
 // ===========================================================
 
 import { getCurrentUser } from "./auth.repo.js";

@@ -1,5 +1,7 @@
 // ===============================
 // js/site.js
+// Gestiona el comportamiento global del sitio: validación de inputs, carga dinámica del header/footer, 
+// autenticación, logout y badge del carrito
 // ===============================
 
 // -------------------------------------------------------------------

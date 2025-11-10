@@ -46,13 +46,13 @@
 							>
 								<!-- Mensaje de alerta general -->
 								<div
-									id="form-alert"
+									id="reset-alert"
 									class="alert d-none"
 									role="alert"
-									aria-live="assertive"
+									aria-live="polite"
 								></div>
 
-								<div class="form-row">
+								<div class="mb-3">
 									<label for="nombreCompleto" class="form-label"
 										>Nombre completo:</label
 									>
@@ -64,10 +64,10 @@
 										aria-describedby="error-nombreCompleto"
 										required
 									/>
-									<div class="invalid-feedback" id="error-nombreCompleto"></div>
+									<small id="error-nombreCompleto" class="text-danger d-block" style="display: none"></small>
 								</div>
 
-								<div class="form-row">
+								<div class="mb-3">
 									<label for="nombreUsuario" class="form-label"
 										>Nombre de usuario:</label
 									>
@@ -79,10 +79,10 @@
 										aria-describedby="error-nombreUsuario"
 										required
 									/>
-									<div class="invalid-feedback" id="error-nombreUsuario"></div>
+									<small id="error-nombreUsuario" class="text-danger d-block" style="display: none"></small>
 								</div>
 
-								<div class="form-row">
+								<div class="mb-3">
 									<label for="email" class="form-label"
 										>Correo electrónico:</label
 									>
@@ -94,10 +94,10 @@
 										placeholder="Ej: PSilva@gmail.com"
 										required
 									/>
-									<div class="invalid-feedback" id="error-email"></div>
+									<small id="error-email" class="text-danger d-block" style="display: none"></small>
 								</div>
 
-								<div class="form-row">
+								<div class="mb-3">
 									<label for="clave" class="form-label"
 										>Clave de ingreso:</label
 									>
@@ -120,9 +120,10 @@
 											👁️
 										</button>
 									</div>
-									<div class="invalid-feedback" id="error-clave"></div>
+									<small id="error-clave" class="text-danger d-block" style="display: none"></small>
 								</div>
-								<div class="form-row">
+
+								<div class="mb-3">
 									<label for="repetirClave" class="form-label"
 										>Repetir clave:</label
 									>
@@ -143,10 +144,10 @@
 											👁️
 										</button>
 									</div>
-									<div class="invalid-feedback" id="error-repetirClave"></div>
+									<small id="error-repetirClave" class="text-danger d-block" style="display: none"></small>
 								</div>
 
-								<div class="form-row">
+								<div class="mb-3">
 									<label for="fechaNacimiento" class="form-label"
 										>Fecha de nacimiento:</label
 									>
@@ -157,13 +158,10 @@
 										aria-describedby="error-fechaNacimiento"
 										required
 									/>
-									<div
-										class="invalid-feedback"
-										id="error-fechaNacimiento"
-									></div>
+									<small id="error-fechaNacimiento" class="text-danger d-block" style="display: none"></small>
 								</div>
 
-								<div class="form-row">
+								<div class="mb-3">
 									<label for="direccion" class="form-label"
 										>Dirección de despacho (opcional):</label
 									>

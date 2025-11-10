@@ -1,4 +1,7 @@
-// js/cart.state.js
+// ============================================================
+//  js/cart.state.js - Administra el estado del carrito (items, cantidades, totales)
+// y sincroniza los datos con localStorage
+// ============================================================
 window.Cart = (() => {
 	let items = [];
 

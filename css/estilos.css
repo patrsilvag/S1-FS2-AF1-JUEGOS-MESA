@@ -343,3 +343,254 @@ button:hover,
     margin-top: 0.5rem; /* Espacio entre botones apilados */
   }
 }
+
+/* =======================================================
+   🧭 Carrito Mobile First – Layout apilado en móviles
+   ======================================================= */
+
+/* Base móvil (≤576px): formato "cards" */
+#cart-col-table table.table,
+#cart-col-table thead,
+#cart-col-table tbody,
+#cart-col-table th,
+#cart-col-table td,
+#cart-col-table tr {
+  display: block;
+  width: 100%;
+}
+
+#cart-col-table thead {
+  display: none; /* ocultar encabezados clásicos */
+}
+
+#cart-col-table tr {
+  background: #fff;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  padding: 0.75rem;
+}
+
+#cart-col-table td {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
+  border: none;
+}
+
+#cart-col-table td::before {
+  content: attr(data-label);
+  font-weight: 600;
+  color: var(--color-primario);
+  flex: 0 0 45%;
+  text-align: left;
+}
+
+.cart-product {
+  flex-direction: row;
+  align-items: center;
+  text-align: left;
+  gap: 0.5rem;
+}
+
+.cart-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 6px;
+}
+
+/* Botón eliminar compacto */
+.btn-eliminar {
+  padding: 0.35rem 0.55rem;
+  font-size: 0.75rem;
+}
+/* =======================================================
+   Tablet ≥768px: vuelve a tabla tradicional correctamente
+   ======================================================= */
+@media (min-width: 768px) {
+  #cart-col-table table.table {
+    display: table;
+    width: 100%;
+    table-layout: auto;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+
+  #cart-col-table thead {
+    display: table-header-group;
+    background: #212529;
+    color: #fff;
+  }
+
+  #cart-col-table tbody {
+    display: table-row-group;
+  }
+
+  #cart-col-table tr {
+    display: table-row;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    margin-bottom: 0;
+    padding: 0;
+  }
+
+  #cart-col-table th,
+  #cart-col-table td {
+    display: table-cell;
+    padding: 0.5rem;
+    vertical-align: middle;
+    text-align: center;
+    border: 1px solid #dee2e6;
+  }
+
+  #cart-col-table th:first-child,
+  #cart-col-table td:first-child {
+    text-align: left;
+  }
+
+  #cart-col-table td::before {
+    content: none; /* Quita los data-label del modo mobile */
+  }
+
+  /* Ajusta ancho de la columna Acciones */
+  #cart-col-table th:last-child,
+  #cart-col-table td:last-child {
+    width: 100px;
+  }
+
+  /* Restaura el layout de producto en fila */
+  .cart-product {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: 0.75rem;
+  }
+
+  .cart-thumb {
+    width: 60px;
+    height: 60px;
+  }
+
+  /* Elimina sombras y márgenes del modo mobile */
+  #cart-col-table tr,
+  #cart-col-table td {
+    box-shadow: none !important;
+    background: none !important;
+  }
+}
+
+/* ============================================================
+   💎 Formulario de Registro - Ajuste máximo ultracompacto
+   ============================================================ */
+
+#registroForm .mb-3 {
+  margin-bottom: 0.3rem !important; /* mínima separación entre campos */
+}
+
+#registroForm .form-label {
+  margin-bottom: 0.05rem !important;
+  font-size: 0.85rem !important;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+/* Inputs grandes reducidos al mínimo confortable */
+#registroForm .form-control-lg {
+  padding-top: 0.2rem !important;
+  padding-bottom: 0.2rem !important;
+  font-size: 0.88rem !important;
+  height: auto !important;
+  line-height: 1.15 !important;
+  border-radius: 0.3rem !important;
+}
+
+/* Compactar aún más los mensajes de error */
+#registroForm small.text-danger {
+  margin-top: 0.05rem !important;
+  font-size: 0.76rem !important;
+  line-height: 1.05;
+}
+
+/* Alineación de input-group con botón 👁️ */
+#registroForm .input-group {
+  align-items: center;
+}
+
+#registroForm .input-group > .form-control {
+  margin-bottom: 0;
+}
+
+#registroForm .toggle-password {
+  padding-inline: 0.4rem !important;
+  font-size: 0.8rem !important;
+}
+
+/* Compactar contenedor general */
+.card-body.p-4.p-md-5 {
+  padding: 1.1rem 1rem !important; /* menos espacio interno */
+}
+
+/* Tarjeta visual más ligera */
+.card.shadow-lg.rounded-4 {
+  border-radius: 0.6rem !important;
+  box-shadow: 0 0.12rem 0.3rem rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Inputs sin margen adicional */
+#registroForm .form-control {
+  margin-bottom: 0 !important;
+}
+
+/* Compactar botones inferiores */
+#registroForm .d-flex.gap-2.mt-4 {
+  margin-top: 0.8rem !important;
+  gap: 0.4rem !important;
+}
+
+/* Ajustar ancho visual */
+#registroForm {
+  max-width: 440px;
+  margin-inline: auto;
+}
+
+/* Ajustar título para mantener equilibrio visual */
+h2.text-primary {
+  margin-bottom: 1rem !important;
+  font-size: 1.25rem !important;
+}
+
+/* ===========================================
+   🛒 Ajuste visual - Scroll en carrito
+   =========================================== */
+
+/* Contenedor que permite scroll en la tabla */
+.cart-items-scroll {
+  max-height: 420px; /* ajusta según la vista deseada */
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+}
+
+/* Encabezado fijo mientras se hace scroll */
+.sticky-thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: #212529;
+  color: #fff;
+}
+
+/* Mejora de apariencia de la barra de desplazamiento */
+.cart-items-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.cart-items-scroll::-webkit-scrollbar-thumb {
+  background: #adb5bd;
+  border-radius: 4px;
+}
+.cart-items-scroll::-webkit-scrollbar-thumb:hover {
+  background: #868e96;
+}

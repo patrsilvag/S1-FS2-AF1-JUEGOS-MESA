@@ -1,4 +1,7 @@
+// ============================================================
 // js/render-productos.js
+// Genera dinámicamente las tarjetas de productos y conecta los botones “Agregar” con el carrito
+// ============================================================
 (function () {
 	function formatoCLP(n) {
 		try {
