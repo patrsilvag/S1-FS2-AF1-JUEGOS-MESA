@@ -23,7 +23,7 @@
 		const alt = p.alt || p.nombre || "Juego de mesa";
 
 		return `
-      <div class="col-12 col-md-4 col-lg-3">
+      <div class="col-12 col-sm-6 col-lg-3">
         <div class="card h-100 shadow-sm juego-ficha" data-id="${
 					p.id
 				}" data-categoria="${p.categoria}">
@@ -55,7 +55,7 @@
 
 		// Asegura que el contenedor tenga las clases de fila y gap (por si falta en algún HTML)
 		// 💡 Aplica las clases Bootstrap al contenedor de productos
-		root.classList.add("row", "g-4", "justify-content-center");
+		root.classList.add("row", "g-4", "justify-content-lg-center");
 
 		const categoria = root.dataset.categoria || "";
 		const productos = categoria

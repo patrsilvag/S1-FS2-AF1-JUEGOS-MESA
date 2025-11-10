@@ -104,9 +104,6 @@ main {
   text-align: center;
 }
 .categorias {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
   margin-top: var(--espaciado-md);
 }
 .categoria {
@@ -125,8 +122,16 @@ main {
 }
 .categoria img {
   width: 100%;
-  height: 150px;
-  object-fit: cover;
+  height: 200px;              /* 🔹 Altura uniforme */
+  object-fit: cover;          /* 🔹 Mantiene proporciones */
+  object-position: center;    /* 🔹 Centra el recorte */
+  border-radius: 0.5rem 0.5rem 0 0;
+  display: block;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+.categoria:hover img {
+  transform: scale(1.03);
 }
 .categoria h3 {
   margin: var(--espaciado-md) 0;
@@ -228,7 +233,7 @@ button:hover,
    11. MEDIA QUERIES (Mobile → Desktop)
    ======================================================= */
 
-/* Tablet (≥768px) */
+/* Tablet pequeña (≥768px) */
 @media (min-width: 768px) {
   .site-header .menu {
     flex-direction: row;
@@ -240,28 +245,35 @@ button:hover,
   .nav-toggle {
     display: none;
   }
-  .categorias {
-    grid-template-columns: 1fr 1fr;
+  .categoria img {
+    height: 180px;
+    object-fit: cover;
   }
+
   .form-row {
     grid-template-columns: 230px 1fr;
     column-gap: 12px;
   }
 }
 
-/* Escritorio (≥1024px) */
+/* Escritorio medio (≥1024px) */
 @media (min-width: 1024px) {
   .categorias {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
   }
 }
 
-/* Grandes (≥1200px) */
-@media (min-width: 1200px) {
+/* Grandes pantallas (≥1400px) */
+@media (min-width: 1400px) {
+  .categorias {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
   .site-header .container {
-    max-width: 1200px;
+    max-width: 1320px;
   }
 }
+
 
 /* =======================================================
    12. MOVIMIENTO REDUCIDO (Accesibilidad)
@@ -272,5 +284,62 @@ button:hover,
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* =======================================================
+   Ajuste botones en formulario de registro (Tablets)
+   ======================================================= */
+@media (max-width: 992px) {
+  #registroForm .d-flex {
+    flex-direction: column !important;
+    align-items: stretch;
+  }
+
+  #registroForm .d-flex button {
+    width: 100%;
+  }
+
+  #registroForm .d-flex button + button {
+    margin-top: 0.5rem; /* espacio entre botones apilados */
+  }
+}
+
+/* =======================================================
+   Ajuste botones en formulario de recuperar contraseña (Tablets)
+   ======================================================= */
+@media (max-width: 992px) {
+  #form-reset .d-flex {
+    flex-direction: column !important;
+    align-items: stretch;
+  }
+
+  #form-reset .d-flex button {
+    width: 100%;
+  }
+
+  #form-reset .d-flex button + button {
+    margin-top: 0.5rem; /* espacio entre botones apilados */
+  }
+}
+
+/* =======================================================
+   Ajuste responsive: botones en formularios de perfil
+   ======================================================= */
+@media (max-width: 992px) {
+  #perfilForm .d-flex,
+  #passForm .d-flex {
+    flex-direction: column !important;
+    align-items: stretch;
+  }
+
+  #perfilForm .d-flex button,
+  #passForm .d-flex button {
+    width: 100%;
+  }
+
+  #perfilForm .d-flex button + button,
+  #passForm .d-flex button + button {
+    margin-top: 0.5rem; /* Espacio entre botones apilados */
   }
 }
