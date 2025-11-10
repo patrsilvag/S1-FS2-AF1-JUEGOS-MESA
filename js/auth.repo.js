@@ -150,7 +150,7 @@ export function can(user, action) {
 export async function ensureAdminSeed() {
 	const users = getUsers();
 	if (users.length === 0) {
-		const passwordHash = await sha256("Admin123");
+		const passwordHash = await sha256("Admin123!");
 		const admin = {
 			id: crypto.randomUUID(),
 			email: "admin@local.com",

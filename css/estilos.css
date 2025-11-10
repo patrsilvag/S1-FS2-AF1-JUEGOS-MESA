@@ -594,3 +594,81 @@ h2.text-primary {
 .cart-items-scroll::-webkit-scrollbar-thumb:hover {
   background: #868e96;
 }
+
+/* =======================================================
+   🧭 Panel Admin – Mobile First
+   ======================================================= */
+
+/* Base (móviles ≤576px): tabla como tarjetas apiladas */
+#tabla-usuarios,
+#tabla-usuarios thead,
+#tabla-usuarios tbody,
+#tabla-usuarios th,
+#tabla-usuarios td,
+#tabla-usuarios tr {
+  display: block;
+  width: 100%;
+}
+
+#tabla-usuarios thead {
+  display: none; /* ocultamos encabezado */
+}
+
+#tabla-usuarios tr {
+  background: #fff;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  padding: 0.75rem;
+}
+
+#tabla-usuarios td {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.35rem 0;
+  border: none;
+}
+
+#tabla-usuarios td::before {
+  content: attr(data-label);
+  font-weight: 600;
+  color: var(--color-primario);
+  flex: 0 0 45%;
+  text-align: left;
+}
+
+/* Botón 'Desactivar' compacto */
+#tabla-usuarios .btn {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.8rem;
+}
+
+/* ==========================================
+   Tablet ≥768px: vuelve a tabla tradicional
+   ========================================== */
+@media (min-width: 768px) {
+  #tabla-usuarios,
+  #tabla-usuarios thead,
+  #tabla-usuarios tbody,
+  #tabla-usuarios th,
+  #tabla-usuarios td,
+  #tabla-usuarios tr {
+    display: revert;
+  }
+
+  #tabla-usuarios thead {
+    display: table-header-group;
+  }
+
+  #tabla-usuarios tr {
+    background: transparent;
+    box-shadow: none;
+    margin-bottom: 0;
+    padding: 0;
+  }
+
+  #tabla-usuarios td::before {
+    content: none;
+  }
+}

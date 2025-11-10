@@ -49,7 +49,6 @@
 											id="emailB"
 											name="email"
 											class="form-control"
-											readonly
 											required
 											aria-describedby="error-emailB"
 										/>
@@ -90,23 +89,36 @@
 									</div>
 
 									<!-- Nueva contraseña -->
-									<div class="mb-3">
+									<div class="mb-3 position-relative">
 										<label for="password" class="form-label"
 											>Nueva contraseña</label
 										>
-										<input
-											type="password"
-											id="password"
-											name="password"
-											class="form-control"
-											required
-											minlength="6"
-											maxlength="18"
-											autocomplete="new-password"
-											aria-describedby="error-password passwordHelp"
-										/>
+										<div class="input-group">
+											<input
+												type="password"
+												id="password"
+												name="password"
+												class="form-control"
+												required
+												minlength="6"
+												maxlength="18"
+												autocomplete="new-password"
+												aria-describedby="error-password passwordHelp"
+											/>
+											<button
+												type="button"
+												class="btn btn-outline-secondary toggle-password"
+												tabindex="-1"
+												aria-label="Mostrar contraseña"
+												aria-pressed="false"
+											>
+												👁️
+											</button>
+										</div>
 										<div id="passwordHelp" class="form-text">
-											Debe tener entre 6 y 18 caracteres, incluyendo al menos una letra mayúscula, una minúscula, un número y un símbolo especial
+											Debe tener entre 6 y 18 caracteres, incluyendo al menos
+											una letra mayúscula, una minúscula, un número y un símbolo
+											especial.
 										</div>
 										<small
 											id="error-password"
@@ -116,21 +128,32 @@
 									</div>
 
 									<!-- Confirmar contraseña -->
-									<div class="mb-3">
+									<div class="mb-3 position-relative">
 										<label for="confirm" class="form-label"
 											>Confirmar contraseña</label
 										>
-										<input
-											type="password"
-											id="confirm"
-											name="confirm"
-											class="form-control"
-											required
-											minlength="6"
-											maxlength="18"
-											autocomplete="new-password"
-											aria-describedby="error-confirm"
-										/>
+										<div class="input-group">
+											<input
+												type="password"
+												id="confirm"
+												name="confirm"
+												class="form-control"
+												required
+												minlength="6"
+												maxlength="18"
+												autocomplete="new-password"
+												aria-describedby="error-confirm"
+											/>
+											<button
+												type="button"
+												class="btn btn-outline-secondary toggle-password"
+												tabindex="-1"
+												aria-label="Mostrar contraseña"
+												aria-pressed="false"
+											>
+												👁️
+											</button>
+										</div>
 										<small
 											id="error-confirm"
 											class="text-danger d-block"

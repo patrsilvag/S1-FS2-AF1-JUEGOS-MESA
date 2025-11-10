@@ -64,11 +64,11 @@ function renderTable() {
 			: `Activar usuario ${usernameOrFallback(u)}`;
 
 		tr.innerHTML = `
-			<td>${u.email}</td>
-			<td>${usernameOrFallback(u)}</td>
-			<td>${roleBadge(u.role)}</td>
-			<td>${statusBadge(u.status)}</td>
-			<td class="text-end">
+			<td data-label="Email">${u.email}</td>
+			<td data-label="Usuario">${usernameOrFallback(u)}</td>
+			<td data-label="Rol">${roleBadge(u.role)}</td>
+			<td data-label="Estado">${statusBadge(u.status)}</td>
+			<td data-label="Acciones" class="text-end">
 				<button 
 					type="button" 
 					class="btn btn-sm ${isActive ? "btn-outline-danger" : "btn-outline-success"}" 
